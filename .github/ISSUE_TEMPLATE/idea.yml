@@ -1,0 +1,11 @@
+name: Idea or request
+description: Suggest a feature or an improvement
+labels: [idea]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would you like?
+      description: What it should do, and the setup or film where you'd use it.
+    validations:
+      required: true

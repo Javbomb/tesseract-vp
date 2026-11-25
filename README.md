@@ -2,13 +2,17 @@
 
 **An HDR video processor for the Fire TV Cube (3rd generation).**
 
-Tesseract VP turns a Fire TV Cube into a video processor that sits between your sources and your screen. It tone maps every HDR picture to your display's real brightness, frame by frame. That covers the streaming apps (Netflix and Disney+ included), Kodi and the Cube's HDMI input. It is built for projectors and other displays that can't reach HDR brightness. It also gives you full control of the signal that leaves the box: output format, frame rate, aspect and masking, and calibration.
+Tesseract VP turns a Fire TV Cube into a video processor that sits between your sources and your screen. It tone maps every HDR picture to your display's real brightness, frame by frame. That covers the streaming apps (Netflix and Disney+ included), Kodi and the Cube's HDMI input. It is built for projectors and other displays that can't reach HDR brightness. It also gives you full control of the signal and sound that leave the box: output format, frame rate, aspect and masking, calibration and lossless audio.
 
-![The Tesseract VP control page: the signal in and out, the measured peak, colour and clipping, a live waveform, the tone curve and the Picture settings](docs/control-page.jpg)
+![The Tesseract VP control page during a film: the signal in and out, the measured peak, colour and clipping, the picture on screen, a live waveform, the tone curve and the Picture settings](docs/control-page.jpg)
 
 *The control page, open in any browser on your network.*
 
-This repository holds Tesseract VP's **signed releases** and its [roadmap](ROADMAP.md). Installed Cubes update themselves from here.
+This repository holds Tesseract VP's **signed releases**, its [roadmap](ROADMAP.md) and the [wiki](https://github.com/Javbomb/tesseract-vp/wiki). Installed Cubes update themselves from here.
+
+**[Download Tesseract VP Setup for Windows](https://github.com/Javbomb/tesseract-vp/releases/download/stable/Tesseract-VP-Setup.exe)** · [All releases](https://github.com/Javbomb/tesseract-vp/releases) · [Install](#installing) · [Wiki](https://github.com/Javbomb/tesseract-vp/wiki)
+
+> **Testers wanted.** The first Stable release, **20261126**, is out. If you have an unlocked Fire TV Cube (3rd generation), please try it and tell us how it goes: the wiki's [Testing guide](https://github.com/Javbomb/tesseract-vp/wiki/Testing-guide) lists what to try, and problems go in [Issues](https://github.com/Javbomb/tesseract-vp/issues/new/choose).
 
 ---
 
@@ -17,17 +21,22 @@ This repository holds Tesseract VP's **signed releases** and its [roadmap](ROADM
 ### Dynamic tone mapping
 - **Every frame is measured and gets its own curve.** Each picture is fitted to your screen's real peak brightness.
 - **Faithful to the grade.** Shadows and mid-tones stay as the film was mastered. Only light your screen can't show is brought into range. The picture never clips, never pumps, and colours keep their hue.
+- **Highlights and shadows with room to breathe.** Bright highlights keep their shape right up to your screen's peak. Deep shadows stay deep, and in bright scenes the shadow detail is kept.
 - **Look-ahead.** Films are measured several frames before they are shown, so a scene cut gets the right curve on the frame it happens. Small, bright highlights are caught too.
 - **Protected streams included.** Netflix, Disney+ and other DRM video can't be read by software. Tesseract VP measures them in the video hardware instead, ahead of the screen. On a Disney+ 4K film, 99.5 % of frames reached the screen with their own curve, with 4K kept and no protection errors.
 - **HDR10, HDR10+ and Dolby Vision titles.** HDR10+ films get the same tone mapping as HDR10. For Dolby Vision titles, from the streaming apps and Kodi, you choose:
   - Tesseract VP's tone mapping of the HDR10 base;
   - **LLDV:** Dolby's own processing, finished by Tesseract VP's tone mapping;
   - Dolby Vision out to a Dolby Vision display.
-- **Dolby Vision FEL.** Full-enhancement-layer films are rebuilt to their full 12-bit picture in a player that supports it (Kodi FEL, VLC FEL or Wholphin FEL), then sent as Dolby Vision or tone mapped.
+- **Dolby Vision FEL.** Full-enhancement-layer films are rebuilt to their full 12-bit picture in a player that supports it (Kodi FEL, VLC FEL or Wholphin FEL), then sent as Dolby Vision or tone mapped. Tesseract VP Setup installs Kodi FEL in one step and can copy your Kodi library into it.
+- **SDR or HDR10 out.** Send the tone-mapped picture as SDR, or as HDR10 aimed at your display's peak, with the menus and subtitles converted in at the right brightness.
 - **Controls you can tune live:**
-  - brightness, highlights and shadows;
+  - Brightness, Highlights, Shadows and Punch, with the tuned setting in the middle of each;
+  - Local contrast and Shadow separation, off by default;
   - highlight colour and adaptation speed;
   - an auto black floor for films mastered with raised blacks.
+
+  Every change ramps in smoothly, with no flicker.
 
 ### Games and the HDMI input
 - **HDR10 consoles, tone mapped live.** An Xbox on the HDMI input gets a curve made from each of its own frames.
@@ -51,10 +60,11 @@ This repository holds Tesseract VP's **signed releases** and its [roadmap](ROADM
   Anything a mode can't carry is lowered automatically to what HDMI 2.0 and your display support.
 - **Colour.** Keep your display in BT.2020, and menus, SDR and console pictures are converted in without oversaturation. Or use a BT.709 display, and films' wider colours are mapped in along constant hue instead of being clipped.
 - **Upscaling and chroma.**
-  - A choice of upscalers for 1080p and smaller pictures.
+  - A choice of upscalers for 1080p and smaller pictures, Lanczos 4 by default.
   - Smooth chroma upsampling for 4K films.
 
-  Both run in the hardware, at no CPU cost.
+  Both run in the video hardware, at no CPU cost.
+- **Colour upgrade.** 1080p and smaller films in Kodi get full 4:4:4 colour, rebuilt on the Cube's GPU on every frame.
 
 ### Aspect, masking and subtitles
 - **Black bar detection in every source:** apps, Kodi, the HDMI input, protected streams and Dolby Vision, FEL included. A film that changes shape (an IMAX scene) is followed on the frame it changes.
@@ -65,9 +75,11 @@ This repository holds Tesseract VP's **signed releases** and its [roadmap](ROADM
   - scope zoom for 2.35, 2.37 and 2.40 screens;
   - masking for each edge.
 - **Subtitles kept in view.** Burned-in subtitles in a bar are recognised, and Fill keeps just enough of that bar to show them.
+- **Lens memory.** When the film's shape changes, the projector's own lens memory is recalled, on projectors Tesseract VP can control over the network.
 
 ### Sound
-- **Atmos and DTS:X kept.** Dolby Atmos from Netflix and Disney+ reaches your receiver as Atmos. TrueHD Atmos and DTS:X Master from Kodi go to the receiver untouched. A built-in version for every player is in development.
+- **Lossless audio, built in.** Dolby TrueHD Atmos, DTS-HD Master Audio and DTS:X go to your receiver untouched, bitstreamed, with no extra module to install. Dolby Atmos from Netflix and Disney+ reaches your receiver as Atmos.
+- **What's playing, on the page.** The signal card shows the sound format going out: codec, channels, Atmos or DTS:X.
 
 ### Calibration
 - **Fine controls in the output**, held for every source and the menus:
@@ -75,18 +87,23 @@ This repository holds Tesseract VP's **signed releases** and its [roadmap](ROADM
   - red, green and blue gain and offset.
 
   Their steps are far finer than a display's own controls.
+- **3D LUT and greyscale.** Upload a 3D LUT and a greyscale and gamma table for each calibration set.
+- **Gamut guardrail.** Colours held inside BT.709, DCI-P3, BT.2020 or your display's measured primaries.
+- **Calibration software.** Calman, HCFR, DisplayCAL and ColourSpace drive the Cube's patterns directly.
 - **Separate SDR and HDR calibration**, each picked by what is playing.
 - **Built-in test patterns:** ramps, windows, average-light patches and single-pixel 4K checks, in SDR and HDR, shown tone mapped or untouched.
 
 ### Control
-- **Control page.** Every setting is one line, with the live picture, waveform and tone curve kept in view, so you see each change as you make it.
+- **Control page.** Every setting is one line, with the live picture (menus and subtitles included), waveform and tone curve kept in view, so you see each change as you make it.
 - **Other ways in:**
   - an on-screen menu on the Fire TV remote;
   - a full-screen settings page on the Cube itself;
   - a phone app that finds every Tesseract VP on your Wi-Fi, with **one-tap scenes**: Movie night wakes the projector and amp, picks the input and dims the lights; Off puts it all to sleep. From the app, a home-screen widget or a quick-settings tile.
+  - **Problem alerts**, if you want them: one quiet notification when an update didn't install, a version was rolled back, or a Cube restarted unexpectedly or stopped answering.
 - **Profiles with automatic rules.** Game, HDMI, Film, Video and SDR each load their own preset when the source changes.
-- **HDMI-CEC for every device.** Power, input and the amp's volume. One press of the remote's power button wakes or sleeps the projector or TV and the amp with the Cube.
-- **IR** (in testing). Learn any IR remote's buttons and tie them to what plays: lights off when a film starts, back on when it stops.
+- **HDMI-CEC for every device.** Your HDMI chain in signal order, with each device's power, name and input, and the amp's volume. One press of the remote's power button wakes or sleeps the projector or TV and the amp with the Cube.
+- **Nothing wakes by itself.** Your projector and amp turn on when you press the remote or run a scene, never because the Cube woke up on its own.
+- **IR.** Learn any IR remote's buttons and tie them to what plays: lights off when a film starts, back on when it stops.
 - **API and webhooks.** Events for Home Assistant or anything else as the source, HDR type, output mode or picture shape changes.
 - **Its own launcher**: a home screen with the glowing cube, your HDMI devices, your own apps, a Last played strip and one place for all the settings.
 - **Several Cubes.** Switch between every Tesseract VP on your network from the control page.
@@ -105,20 +122,30 @@ This repository holds Tesseract VP's **signed releases** and its [roadmap](ROADM
 - A **Fire TV Cube, 3rd generation** (model AFTGAZL), **unlocked and rooted** (Magisk). Tesseract VP Setup can run the community unlock for you, or install straight onto a Cube that is already rooted.
   - The unlock only works on firmware up to the version it was made for, so prepare a new Cube before it ever updates.
   - The unlock itself is a third-party tool and is not included in Tesseract VP.
-- A Windows PC for **Tesseract VP Setup**. On a Mac or Linux, the installer is one command.
-- [Android platform-tools](https://developer.android.com/tools/releases/platform-tools) (`adb`), and ADB debugging turned on on the Cube.
+- A Windows 10 or 11 PC for **Tesseract VP Setup**. On a Mac or Linux, the installer is one command.
+- ADB debugging turned on on the Cube (**Settings › My Fire TV › Developer options**). Setup downloads Google's Android platform-tools for you the first time it opens.
 
 ## Installing
 
-1. Download `tesseract-vp-<date>.zip` from the [latest release](https://github.com/Javbomb/tesseract-vp/releases) and unzip it.
-2. Double-click **Tesseract VP Setup**, press **Find Cubes** (or type the Cube's address), and follow the large first button. It backs up the Cube, unlocks it if needed and installs, showing each step as it runs.
-3. Open the control page at `http://<cube>:8090/`.
+1. Download **[Tesseract-VP-Setup.exe](https://github.com/Javbomb/tesseract-vp/releases/download/stable/Tesseract-VP-Setup.exe)** and run it. It installs for your Windows account only, with no administrator prompt, and adds Tesseract VP Setup to the Start menu.
+   - Windows may say it "protected your PC" because the installer is new. Choose **More info › Run anyway**.
+2. Tesseract VP Setup opens. The first time, it offers to download Google's platform-tools (about 8 MB), which it needs to talk to a Cube.
+3. Press **Find Cubes** (or type the Cube's address), then follow the large first button. It backs up the Cube, unlocks it if needed and installs, showing each step as it runs.
+4. Open the control page at `http://<cube>:8090/`.
 
-The package's own `README.md` describes every step, including doing it by hand.
+Or paste one line into PowerShell, which downloads and installs the same thing and opens Setup:
+
+```powershell
+irm https://github.com/Javbomb/tesseract-vp/releases/download/stable/go.ps1 | iex
+```
+
+Backups are kept in **Documents › Tesseract VP › backups**. To remove Tesseract VP Setup from the PC, use **Settings › Apps** like any other program; your Cubes keep running.
+
+**Mac or Linux, or by hand:** download `tesseract-vp.zip` from the [latest release](https://github.com/Javbomb/tesseract-vp/releases), unzip it and run `install.sh <cube-address>`. The package's own `README.md` describes every step.
 
 ## Releases
 
-- **stable**: tested releases. A Cube checks for these once a day and tells you when one is ready. It never installs one by itself.
+- **stable**: tested releases. The current one is **20261126** ([release notes](https://github.com/Javbomb/tesseract-vp/releases/tag/stable)). A Cube checks for these once a day and tells you when one is ready. It never installs one by itself.
 - **nightly**: the newest builds, checked only when you ask.
 
 ## Updating a Cube
@@ -128,27 +155,27 @@ On the control page, open **Profiles › Updates**, choose Stable or Nightly, th
 - from the Cube's own **Settings › Tesseract VP** page;
 - from Tesseract VP Setup's **Manage › Check for updates**.
 
+Updates keep the parts you installed up to date too, such as Dolby Vision FEL and lossless audio.
+
 ## Roadmap
 
 **Live now:** everything above.
 
 **Next:**
-- Picture quality: sharpening, downscaling, contrast and shadow detail.
-- A colour upgrade to full 4:4:4 for 1080p films.
-- Lossless audio (TrueHD Atmos, DTS:X) from every player, built in.
-- Netflix at 24.000 through any receiver, by fine-tuning the HDMI clock instead of a mode change.
+- Netflix at its own frame rate through any receiver, set before the film starts.
 - A dynamic contrast guard for displays that dim in dark scenes.
-- Geometry correction (keystone, curved screens, lens distortion) in the Cube's own hardware.
-- Lens memory with the projector.
 
 **Then:**
-- Debanding.
-- Convergence correction.
-- LUT upload and meter calibration.
+- Sharpening, debanding and downscaling, once the hardware can run them at full quality.
 - Two-projector stacking.
 
 The full plan, item by item, is in **[ROADMAP.md](ROADMAP.md)**.
 
+## Help and feedback
+
+- **[Wiki](https://github.com/Javbomb/tesseract-vp/wiki)**: installing, your first film, every page of the control page, troubleshooting and known issues.
+- **[Issues](https://github.com/Javbomb/tesseract-vp/issues/new/choose)**: report a problem or suggest something. Please include the version, your display and receiver, and what was playing.
+
 ---
 
-Tesseract VP is an independent project. It is not affiliated with or endorsed by Amazon or Dolby. Unlocking a Fire TV Cube is at your own risk and may void its warranty.
+Tesseract VP is an independent project. It is not affiliated with or endorsed by Amazon or Dolby. Fire TV is a trademark of Amazon; Dolby, Dolby Vision and Dolby Atmos are trademarks of Dolby Laboratories; DTS and DTS:X are trademarks of DTS, Inc. Calman, ColourSpace, DisplayCAL and HCFR belong to their owners. Unlocking a Fire TV Cube is at your own risk and may void its warranty.

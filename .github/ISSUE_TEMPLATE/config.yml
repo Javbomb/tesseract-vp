@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Wiki
+    url: https://github.com/Javbomb/tesseract-vp/wiki
+    about: Installing, your first film, the control page, troubleshooting and known issues.

@@ -1,6 +1,6 @@
 # Tesseract VP roadmap
 
-*Updated 25 November 2026.*
+*Updated 26 November 2026: the first Stable release (20261126) is out.*
 
 This roadmap takes Tesseract VP from a tone-mapping box to a full video processor. Phases are listed in the order we work on them. Most of the processing runs in the Cube's video hardware, so features are built to cost little or no CPU while a film plays.
 
@@ -8,6 +8,7 @@ This roadmap takes Tesseract VP from a tone-mapping box to a full video processo
 - ✅ **Live**: in the current release.
 - 🔶 **Partly**: built or partly live; testing or the rest to come.
 - ⬜ **Planned**: designed, not built yet.
+- ➖ **Not possible** on this hardware.
 
 ---
 
@@ -20,7 +21,9 @@ This roadmap takes Tesseract VP from a tone-mapping box to a full video processo
 | ✅ | **Netflix, Disney+ and YouTube in 4K HDR** | Tone mapped like any other source, with a choice for Dolby Vision titles: our tone mapping, Dolby's own mapping, or Dolby Vision out to the display. |
 | ✅ | **Look-ahead for protected video** | <ul><li>DRM frames can't be read by software, so they are measured in the video hardware, ahead of the screen.</li><li>Disney+ 4K: 99.5 % of frames reached the screen with their own curve. Netflix: 95–97 %.</li><li>4K kept and no protection errors on either.</li></ul> |
 | ✅ | **HDR10+ films** | Tone mapped from their HDR10 base, like any HDR10 film. |
-| ✅ | **Picture controls** | <ul><li>Brightness, highlights and shadows.</li><li>Highlight colour and adaptation speed.</li><li>Scene brightness, a clip guard and more under Advanced.</li></ul> |
+| ✅ | **SDR or HDR10 out** | The tone-mapped picture goes out as SDR, or as HDR10 aimed at the display's peak. In HDR10, menus and subtitles are converted in at graphics white. |
+| ✅ | **Highlights and shadows refined** | <ul><li>Highlights keep their shape right up to the screen's peak.</li><li>Deep shadows stay deep, and bright scenes keep their shadow detail.</li><li>Highlight colour is fitted to the gamut exactly, so saturated skin never bands.</li></ul> |
+| ✅ | **Picture controls** | <ul><li>Brightness, Highlights, Shadows and Punch, with the tuned setting in the middle of each.</li><li>Every change ramps in smoothly, with no flicker.</li><li>Highlight colour and adaptation speed.</li><li>Scene brightness, a clip guard and more under Advanced.</li></ul> |
 | ✅ | **Auto black floor** | Films mastered with a raised black are corrected gently. The floor is learned over the whole title, never shot by shot, so foggy or night scenes stay as graded. |
 
 ## Phase 1: Games and output
@@ -38,19 +41,20 @@ This roadmap takes Tesseract VP from a tone-mapping box to a full video processo
 | ✅ | **Profiles with automatic rules** | Game, HDMI, Film, Video and SDR each load their own preset when the source changes. |
 | ✅ | **LLDV** | Dolby Vision from apps and Kodi arrives as low-latency Dolby Vision, and our tone mapping finishes it at 24 fps, zoom included. |
 | ✅ | **Dolby Vision, three modes** | <ul><li>**Off (HDR10):** our tone mapping.</li><li>**LLDV:** Dolby's processing, finished by our tone mapping.</li><li>**Dolby Vision:** Dolby's processing end to end, to a Dolby Vision display.</li></ul>Live for streaming apps and Kodi, through an AV receiver too. The HDMI input takes HDR10. |
-| ⬜ | **VRR pass-through and glass-to-glass lag measurement** | |
+| 🔶 | **Lag measurement** | <ul><li>The delay Tesseract VP adds is measured live and shown while the HDMI input runs.</li><li>The display's own share needs a light sensor on the screen.</li></ul> |
+| ➖ | **VRR pass-through** | The Cube's HDMI output can't carry variable refresh rate. |
 
 ## Phase 2: Picture quality
 
 | | Feature | Details |
 |---|---|---|
-| 🔶 | **Upscaling 1080p → 4K** | <ul><li>A choice of upscalers: the super-scaler, Bicubic, Lanczos 3, Lanczos 4 and Soft.</li><li>Switched live in the hardware, at no CPU cost.</li><li>Next: pick the best default on a resolution chart.</li></ul> |
-| 🔶 | **Chroma upsampling** | 4K films' colour is interpolated up to full resolution instead of repeated, and goes out at 4:4:4 12-bit. |
-| 🔶 | **Colour upgrade for 1080p** | <ul><li>1080p films' colour is rebuilt to full 4:4:4 on the Cube's GPU.</li><li>It runs for films up to 30 fps, and steps aside by itself if it can't keep up.</li><li>Built. Testing live.</li></ul> |
-| ⬜ | **Downscaling 4K → 1080p** | Anti-aliased Sharp, Balanced and Soft settings. 4K's colour lands as true 4:4:4 1080p. |
-| ⬜ | **Contrast and shadow detail** | Local contrast and shadow-separation options for the curve. |
-| ⬜ | **Sharpening and detail** | Within what the scaler and post-processing hardware offer. Off by default. |
-| ⬜ | **Debanding** | Smooths 8- and 10-bit gradient banding without softening edges. A feasibility study comes first. |
+| ✅ | **Upscaling 1080p → 4K** | <ul><li>A choice of upscalers: Lanczos 4, Lanczos 3, Bicubic, Soft and the super-scaler.</li><li>Lanczos 4 by default, picked from the scaler hardware's own response: the flattest detail and the least ringing.</li><li>Switched live in the hardware, at no CPU cost.</li></ul> |
+| ✅ | **Chroma upsampling** | 4K films' colour is interpolated up to full resolution instead of repeated, and goes out at 4:4:4 12-bit. |
+| ✅ | **Colour upgrade for 1080p** | <ul><li>1080p and smaller films in Kodi get their colour rebuilt to full 4:4:4 on the Cube's GPU.</li><li>Live, on every frame.</li></ul> |
+| ⬜ | **Downscaling 4K → 1080p** | Anti-aliased, with 4K's colour landing as true 4:4:4 1080p. Studied and tried: the Cube's hardware can't run it at full quality yet, so it stays out until it can. |
+| ✅ | **Contrast and shadow detail** | **Local contrast** and **Shadow separation** options for the curve, both off by default. |
+| ⬜ | **Sharpening and detail** | Studied and tried: the Cube's hardware can't run it at full quality yet, so it stays out until it can. |
+| ⬜ | **Debanding** | Smoothing gradient banding without softening edges. Studied and tried: the Cube's hardware can't run it at full quality yet, so it stays out until it can. |
 
 ## Phase 3: Every picture fitted to the screen
 
@@ -60,28 +64,28 @@ This roadmap takes Tesseract VP from a tone-mapping box to a full video processo
 | ✅ | **Aspect menu** | <ul><li>Fill, and picture to the top or bottom.</li><li>Anamorphic lenses (1.25, 1.33 and 1.5x).</li><li>Masking for each edge.</li></ul>It applies to every source and changes on the exact frame the film's shape does. |
 | ✅ | **Scope screens** | <ul><li>Scope zoom for 2.35, 2.37 and 2.40 screens.</li><li>Non-linear stretch for 16:9 through an anamorphic lens.</li><li>"Only for pictures wider than…" rules and a manual aspect override.</li></ul> |
 | ✅ | **Subtitles kept in view** | Burned-in subtitles in a bar are recognised, and Fill keeps just enough of the bar for them. |
-| 🔶 | **Geometry correction** | <ul><li>Warp the picture onto the screen: keystone, curved screens, and pincushion or barrel from a lens.</li><li>Uses a 12-point or finer grid, in the Cube's own warp hardware.</li><li>In development and testing.</li></ul> |
-| ⬜ | **Lens memory automation** | Recall the projector's lens memory when the aspect ratio changes. |
-| ⬜ | **Convergence correction** | Red, green and blue each shifted by fractions of a pixel, zone by zone across the screen. |
+| ✅ | **Lens memory automation** | The projector's own lens memories are recalled when the film's shape changes, on projectors Tesseract VP can control over the network. Recall by hand from the remote too. |
 
 ## Phase 4: Control and devices
 
 | | Feature | Details |
 |---|---|---|
-| ✅ | **Control page** | <ul><li>Tone Mapping, Aspect, Input & Output, Calibration and Profiles.</li><li>The live picture, waveform and tone curve stay in view, so every change shows live.</li></ul> |
+| ✅ | **Control page** | <ul><li>Tone Mapping, Aspect, Input & Output, Calibration and Profiles.</li><li>The live picture, waveform and tone curve stay in view, so every change shows live.</li><li>The page's picture shows the menus and subtitles on screen too.</li></ul> |
 | ✅ | **On-screen menu and settings page** | Everything on the control page is on the remote too, and a full-screen settings page runs on the Cube itself. |
 | ✅ | **Phone app** | <ul><li>Finds every Tesseract VP on the Wi-Fi and opens its control page or on-screen display.</li><li>**One-tap scenes:** Movie night wakes the projector and amp, picks the input and dims the lights; Off puts it all to sleep. From the app, a home-screen widget or a quick-settings tile.</li></ul> |
-| ✅ | **HDMI-CEC for every device** | Each device's power, name and input, plus the amp's volume. One press of the remote's power button wakes or sleeps the display and amp with the Cube. |
+| ✅ | **HDMI-CEC for every device** | <ul><li>The HDMI chain in signal order, with each device's power, name and input, plus the amp's volume.</li><li>One press of the remote's power button wakes or sleeps the display and amp with the Cube.</li><li>Nothing wakes by itself: the display and amp turn on for a remote press or a scene, never because the Cube woke on its own.</li></ul> |
 | ✅ | **Launcher** | A new home screen: the glowing cube with the Cube's name, a clock with your HDMI devices, your own apps on the home row, a Last played strip and one Settings tile for everything. |
 | ✅ | **API and webhooks** | Events for Home Assistant or any webhook: source, playing, HDR type, output mode, picture shape. The whole network API is documented. |
 | ✅ | **Several Cubes** | Every Tesseract VP on the network, one click away from the control page. |
-| 🔶 | **IR devices and room automation** | <ul><li>Learn any IR remote's buttons, and send them through the Cube's IR blaster.</li><li>Tie them to what plays: lights off when a film starts.</li><li>Built. Testing.</li></ul> |
+| ✅ | **IR devices and room automation** | <ul><li>Learn any IR remote's buttons, and send them through the Cube's IR blaster.</li><li>Tie them to what plays: lights off when a film starts.</li></ul> |
+| ✅ | **Problem alerts** | Optional, off by default: the phone app tells you quietly, once, when an update didn't install, a version was rolled back, the Cube restarted unexpectedly or stopped answering. |
 
 ## Phase 5: Installing and updating
 
 | | Feature | Details |
 |---|---|---|
 | ✅ | **Tesseract VP Setup** | <ul><li>A Windows app that prepares, backs up, unlocks and installs a Cube, with a button for every step.</li><li>Display setup: peak, colour space and receiver.</li><li>Restore, roll back and uninstall.</li></ul> |
+| ✅ | **Windows installer** | <ul><li>One download, `Tesseract-VP-Setup.exe`: installs for your account with no administrator prompt, with a Start-menu shortcut and an uninstaller.</li><li>Google's platform-tools are downloaded on first use and checked, so there is nothing else to fetch.</li><li>Backups kept in Documents.</li></ul> |
 | ✅ | **Signed self-updates** | <ul><li>Cubes update themselves from this repository's Stable or Nightly releases.</li><li>Every release is signed and checked before it installs.</li></ul> |
 | ✅ | **Safe updates** | <ul><li>One-step roll back.</li><li>A watchdog that puts the previous version back if a new one keeps failing.</li><li>Backup and restore of every setting.</li></ul> |
 
@@ -91,11 +95,11 @@ This roadmap takes Tesseract VP from a tone-mapping box to a full video processo
 |---|---|---|
 | ✅ | **Fine calibration controls** | <ul><li>Black level, white level and gamma.</li><li>Red, green and blue gain and offset.</li></ul>Steps are far finer than a display's own, held for every source. |
 | ✅ | **Output range** | Limited or Full, with the HDMI flag to match. |
-| 🔶 | **Gamut guardrail** | BT.709 and BT.2020 are live. P3, and a display's measured primaries, are next. |
+| ✅ | **Gamut guardrail** | Colours are held inside BT.709, DCI-P3, BT.2020 or your display's own measured primaries. |
 | ✅ | **Built-in test patterns** | Ramps, windows, average-light patches and single-pixel 4K checks, in SDR and HDR, shown tone mapped or untouched. |
 | ✅ | **Separate SDR and HDR calibration** | Each has its own calibration set, picked by what is playing. |
-| ⬜ | **LUT upload and calibration software** | Upload a 3D LUT, and drive the patterns from common calibration software. |
-| ⬜ | **Greyscale (1D) correction** | A separate greyscale and gamma table in front of the 3D LUT. |
+| ✅ | **3D LUT and greyscale correction** | Each calibration set takes its own 3D LUT and a separate greyscale and gamma table in front of it. |
+| ✅ | **Calibration software** | Calman, HCFR, DisplayCAL and ColourSpace drive the Cube's patterns directly. |
 | ⬜ | **Dynamic contrast guard** | For displays with dynamic contrast or laser and backlight dimming: leave room in dark scenes so their brightness lift never clips highlights. |
 
 ## Phase 7: Beyond
@@ -104,4 +108,4 @@ This roadmap takes Tesseract VP from a tone-mapping box to a full video processo
 |---|---|---|
 | ⬜ | **Two-projector stacking and split tone mapping** | <ul><li>Two projectors, each fed by its own Cube.</li><li>**Stacked:** both show the whole picture, for twice the light.</li><li>**Split:** one carries the picture and the other only the highlights. They add back to the full picture with colours unchanged.</li></ul> |
 | ✅ | **Dolby Vision with full enhancement layer (FEL)** | <ul><li>Full FEL films rebuilt to their 12-bit picture, in a player that supports it (Kodi FEL, VLC FEL, Wholphin FEL).</li><li>Sent as Dolby Vision to the display, or tone mapped by us.</li></ul> |
-| 🔶 | **Lossless audio from any app** | <ul><li>TrueHD Atmos and DTS:X Master go to the receiver untouched (tested from Kodi).</li><li>Our own built-in version is in development.</li></ul> |
+| ✅ | **Lossless audio, built in** | <ul><li>Dolby TrueHD Atmos, DTS-HD Master Audio and DTS:X go to the receiver untouched, bitstreamed, and Dolby Atmos from Netflix and Disney+ arrives as Atmos.</li><li>Built into Tesseract VP: nothing else to install, and it stays up to date with it.</li><li>The signal card shows the format going out.</li></ul> |

@@ -1,0 +1,45 @@
+name: Problem report
+description: Something doesn't work or looks wrong
+labels: [problem]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for testing Tesseract VP. The more of this you fill in, the faster it gets fixed. The wiki's Troubleshooting page may already have the answer.
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: Control page › Profiles › Updates (for example 20261126-b8c0e98), and the channel (Stable or Nightly).
+    validations:
+      required: true
+  - type: input
+    id: chain
+    attributes:
+      label: Your setup
+      description: Display (TV or projector model), AV receiver or soundbar if any, and how they are connected.
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: What was playing
+      description: App or player (Netflix, Disney+, Kodi, Kodi FEL, HDMI input…), and the format if you know it (HDR10, HDR10+, Dolby Vision, SDR; 4K or 1080p; frame rate).
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened, and what you expected
+      description: Steps to make it happen again help a lot.
+    validations:
+      required: true
+  - type: textarea
+    id: health
+    attributes:
+      label: Health line and screenshots
+      description: Copy the health line from the control page's Info tab, and add a screenshot of the control page or a photo of the screen if it helps.
+  - type: dropdown
+    id: often
+    attributes:
+      label: How often
+      options: [Every time, Sometimes, Once]
