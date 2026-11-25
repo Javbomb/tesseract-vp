@@ -33,11 +33,11 @@ This roadmap takes Tesseract VP from a tone-mapping box to a full video processo
 | ✅ | **EDID builder** | <ul><li>You choose what the source is told: resolutions, refresh rates, HDR formats, peak and black, 4:2:0, bit depth and ALLM.</li><li>It is built from the receiver's EDID, so sound formats and Atmos pass untouched.</li></ul> |
 | ✅ | **Output menu** | <ul><li>Colour format, bit depth, resolution, refresh rate and colour space, applied over whatever the app picks.</li><li>A mode the display can't carry is lowered automatically to what HDMI 2.0 supports.</li></ul> |
 | ✅ | **Frame-rate matching** | <ul><li>Each film plays at its own rate, read before its first frame (23.976 and 24.000 told apart).</li><li>Streaming apps are included, with the sound kept through the switch.</li><li>At film rates the output goes to 4:4:4 12-bit in the same switch.</li></ul> |
-| 🔶 | **Frame-rate matching through an AV receiver** | Direct to the display, it works in every app. Through some receivers Netflix can still object to the switch, so it stays at the menu rate there until a fix is proven. |
+| 🔶 | **Frame-rate matching for protected apps, through any receiver** | <ul><li>A switch now waits until the app's DRM sees the HDMI link protected again, and the picture holds for under 3 s.</li><li>Disney+ switches on every chain, with Atmos kept.</li><li>Netflix switches where the HDMI handshake is quick (straight into a display, or a fast receiver: 23.976, 24 and 25 tested in 4K with Atmos). Through slower receivers it stays at the usual rate by itself, or you can choose **Always try**.</li><li>Next: the right rate set before the film starts, for every receiver.</li></ul> |
 | ✅ | **Colour space and gamut** | <ul><li>**BT.2020 out:** menus, SDR and console pictures are converted in without oversaturation.</li><li>**BT.709 out:** films' wider colours are mapped in along constant hue, never clipped.</li><li>**Auto:** each signal is flagged as what it is.</li></ul> |
 | ✅ | **Profiles with automatic rules** | Game, HDMI, Film, Video and SDR each load their own preset when the source changes. |
-| 🔶 | **LLDV** | <ul><li>The EDID builder offers low-latency Dolby Vision at your chosen peak, so Dolby Vision sources send a picture our tone mapping finishes.</li><li>Built. Testing with a Dolby Vision source.</li></ul> |
-| 🔶 | **Dolby Vision, three modes for every source** | <ul><li>**Off (HDR10):** our tone mapping.</li><li>**LLDV:** the source maps, we finish.</li><li>**Dolby Vision:** Dolby's processing end to end.</li></ul>Live for the streaming apps. Kodi and the HDMI input are in progress. |
+| ✅ | **LLDV** | Dolby Vision from apps and Kodi arrives as low-latency Dolby Vision, and our tone mapping finishes it at 24 fps, zoom included. |
+| ✅ | **Dolby Vision, three modes** | <ul><li>**Off (HDR10):** our tone mapping.</li><li>**LLDV:** Dolby's processing, finished by our tone mapping.</li><li>**Dolby Vision:** Dolby's processing end to end, to a Dolby Vision display.</li></ul>Live for streaming apps and Kodi, through an AV receiver too. The HDMI input takes HDR10. |
 | ⬜ | **VRR pass-through and glass-to-glass lag measurement** | |
 
 ## Phase 2: Picture quality
@@ -56,7 +56,7 @@ This roadmap takes Tesseract VP from a tone-mapping box to a full video processo
 
 | | Feature | Details |
 |---|---|---|
-| ✅ | **Black bar detection** | <ul><li>Every source: apps, Kodi, the HDMI input and protected streams.</li><li>Films are measured before they are shown, so a change of shape (an IMAX scene) is met on the frame it happens.</li><li>Subtitles in a bar don't fool it. Fast and Precise modes.</li></ul> |
+| ✅ | **Black bar detection** | <ul><li>Every source: apps, Kodi, the HDMI input, protected streams and Dolby Vision, FEL included.</li><li>Films are measured before they are shown, so a change of shape (an IMAX scene) is met on the frame it happens.</li><li>Subtitles in a bar don't fool it. Fast and Precise modes.</li></ul> |
 | ✅ | **Aspect menu** | <ul><li>Fill, and picture to the top or bottom.</li><li>Anamorphic lenses (1.25, 1.33 and 1.5x).</li><li>Masking for each edge.</li></ul>It applies to every source and changes on the exact frame the film's shape does. |
 | ✅ | **Scope screens** | <ul><li>Scope zoom for 2.35, 2.37 and 2.40 screens.</li><li>Non-linear stretch for 16:9 through an anamorphic lens.</li><li>"Only for pictures wider than…" rules and a manual aspect override.</li></ul> |
 | ✅ | **Subtitles kept in view** | Burned-in subtitles in a bar are recognised, and Fill keeps just enough of the bar for them. |
@@ -70,9 +70,9 @@ This roadmap takes Tesseract VP from a tone-mapping box to a full video processo
 |---|---|---|
 | ✅ | **Control page** | <ul><li>Tone Mapping, Aspect, Input & Output, Calibration and Profiles.</li><li>The live picture, waveform and tone curve stay in view, so every change shows live.</li></ul> |
 | ✅ | **On-screen menu and settings page** | Everything on the control page is on the remote too, and a full-screen settings page runs on the Cube itself. |
-| ✅ | **Phone app** | Finds every Tesseract VP on the Wi-Fi and opens its control page or on-screen display. |
+| ✅ | **Phone app** | <ul><li>Finds every Tesseract VP on the Wi-Fi and opens its control page or on-screen display.</li><li>**One-tap scenes:** Movie night wakes the projector and amp, picks the input and dims the lights; Off puts it all to sleep. From the app, a home-screen widget or a quick-settings tile.</li></ul> |
 | ✅ | **HDMI-CEC for every device** | Each device's power, name and input, plus the amp's volume. One press of the remote's power button wakes or sleeps the display and amp with the Cube. |
-| ✅ | **Launcher** | Your own apps on the home row, and one Settings tile for everything. |
+| ✅ | **Launcher** | A new home screen: the glowing cube with the Cube's name, a clock with your HDMI devices, your own apps on the home row, a Last played strip and one Settings tile for everything. |
 | ✅ | **API and webhooks** | Events for Home Assistant or any webhook: source, playing, HDR type, output mode, picture shape. The whole network API is documented. |
 | ✅ | **Several Cubes** | Every Tesseract VP on the network, one click away from the control page. |
 | 🔶 | **IR devices and room automation** | <ul><li>Learn any IR remote's buttons, and send them through the Cube's IR blaster.</li><li>Tie them to what plays: lights off when a film starts.</li><li>Built. Testing.</li></ul> |
@@ -92,13 +92,16 @@ This roadmap takes Tesseract VP from a tone-mapping box to a full video processo
 | ✅ | **Fine calibration controls** | <ul><li>Black level, white level and gamma.</li><li>Red, green and blue gain and offset.</li></ul>Steps are far finer than a display's own, held for every source. |
 | ✅ | **Output range** | Limited or Full, with the HDMI flag to match. |
 | 🔶 | **Gamut guardrail** | BT.709 and BT.2020 are live. P3, and a display's measured primaries, are next. |
-| ⬜ | **LUT upload, discovery and patterns** | Upload a 3D LUT and drive built-in 10-bit patterns, with support for common calibration software. |
+| ✅ | **Built-in test patterns** | Ramps, windows, average-light patches and single-pixel 4K checks, in SDR and HDR, shown tone mapped or untouched. |
+| ✅ | **Separate SDR and HDR calibration** | Each has its own calibration set, picked by what is playing. |
+| ⬜ | **LUT upload and calibration software** | Upload a 3D LUT, and drive the patterns from common calibration software. |
 | ⬜ | **Greyscale (1D) correction** | A separate greyscale and gamma table in front of the 3D LUT. |
-| ⬜ | **Dynamic-black headroom** | For projectors with dynamic black: leave room in dark scenes so their lift never clips highlights. |
+| ⬜ | **Dynamic contrast guard** | For displays with dynamic contrast or laser and backlight dimming: leave room in dark scenes so their brightness lift never clips highlights. |
 
 ## Phase 7: Beyond
 
 | | Feature | Details |
 |---|---|---|
 | ⬜ | **Two-projector stacking and split tone mapping** | <ul><li>Two projectors, each fed by its own Cube.</li><li>**Stacked:** both show the whole picture, for twice the light.</li><li>**Split:** one carries the picture and the other only the highlights. They add back to the full picture with colours unchanged.</li></ul> |
-| ⬜ | **Dolby Vision with full enhancement layer** | |
+| ✅ | **Dolby Vision with full enhancement layer (FEL)** | <ul><li>Full FEL films rebuilt to their 12-bit picture, in a player that supports it (Kodi FEL, VLC FEL, Wholphin FEL).</li><li>Sent as Dolby Vision to the display, or tone mapped by us.</li></ul> |
+| 🔶 | **Lossless audio from any app** | <ul><li>TrueHD Atmos and DTS:X Master go to the receiver untouched (tested from Kodi).</li><li>Our own built-in version is in development.</li></ul> |
