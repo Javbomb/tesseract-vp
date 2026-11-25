@@ -4,7 +4,7 @@
 
 Tesseract VP turns a Fire TV Cube into a video processor that sits between your sources and your screen. It tone maps every HDR picture to your display's real brightness, frame by frame. That covers the streaming apps (Netflix and Disney+ included), Kodi and the Cube's HDMI input. It is built for projectors and other displays that can't reach HDR brightness. It also gives you full control of the signal and sound that leave the box: output format, frame rate, aspect and masking, calibration and lossless audio.
 
-![The Tesseract VP control page during a film: the signal in and out, the measured peak, colour and clipping, the picture on screen, a live waveform, the tone curve and the Picture settings](docs/control-page.jpg)
+![The Tesseract VP control page during a 4K HDR10+ film, tone mapped to a 500-nit TV: the signal in and out, the measured peak, colour and clipping, the picture on screen, a live waveform, the tone curve and the Picture settings](docs/control-page.jpg)
 
 *The control page, open in any browser on your network.*
 
@@ -106,6 +106,11 @@ This repository holds Tesseract VP's **signed releases**, its [roadmap](ROADMAP.
 - **API and webhooks.** Events for Home Assistant or anything else as the source, HDR type, output mode or picture shape changes.
 - **Its own launcher**: a home screen with the glowing cube, your HDMI devices, your own apps, a Last played strip and one place for all the settings.
 - **Several Cubes.** Switch between every Tesseract VP on your network from the control page.
+
+<p><img src="docs/launcher.jpg" alt="The Tesseract VP launcher: the glowing cube, the Cube's name, the display and receiver state, and the app row" width="60%"> <img src="docs/phone.jpg" alt="The control page on a phone" width="22%"></p>
+<p><img src="docs/tv-settings.jpg" alt="The full-screen settings page on the Cube itself" width="60%"></p>
+
+*The launcher, the control page on a phone, and the settings page on the Cube itself.*
 
 ### Safe to run
 - **Signed releases.** A Cube refuses any update whose signature or checksums don't match.
