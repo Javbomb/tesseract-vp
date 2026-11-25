@@ -20,7 +20,7 @@ This repository holds Tesseract VP's **signed releases**, its [roadmap](ROADMAP.
 
 ### Dynamic tone mapping
 - **Every frame is measured and gets its own curve.** Each picture is fitted to your screen's real peak brightness.
-- **Faithful to the grade.** Shadows and mid-tones stay as the film was mastered. Only light your screen can't show is brought into range. The picture never clips, never pumps, and colours keep their hue.
+- **Close to the grade.** Shadows and mid-tones are kept close to how the film was mastered, and the work goes mostly into the light your screen can't show. Highlights roll off smoothly toward your screen's peak instead of hard clipping, the curve moves gently between scenes, and colours are held to their hue as they are brought in.
 - **Highlights and shadows with room to breathe.** Bright highlights keep their shape right up to your screen's peak. Deep shadows stay deep, and in bright scenes the shadow detail is kept.
 - **Look-ahead.** Films are measured several frames before they are shown, so a scene cut gets the right curve on the frame it happens. Small, bright highlights are caught too.
 - **Protected streams included.** Netflix, Disney+ and other DRM video can't be read by software. Tesseract VP measures them in the video hardware instead, ahead of the screen. On a Disney+ 4K film, 99.5 % of frames reached the screen with their own curve, with 4K kept and no protection errors.
@@ -31,9 +31,8 @@ This repository holds Tesseract VP's **signed releases**, its [roadmap](ROADMAP.
 - **Dolby Vision FEL.** Full-enhancement-layer films are rebuilt to their full 12-bit picture in a player that supports it (Kodi FEL, VLC FEL or Wholphin FEL), then sent as Dolby Vision or tone mapped. Tesseract VP Setup installs Kodi FEL in one step and can copy your Kodi library into it.
 - **SDR or HDR10 out.** Send the tone-mapped picture as SDR, or as HDR10 aimed at your display's peak, with the menus and subtitles converted in at the right brightness.
 - **Controls you can tune live:**
-  - Brightness, Highlights, Shadows and Punch, with the tuned setting in the middle of each;
-  - Local contrast and Shadow separation, off by default;
-  - highlight colour and adaptation speed;
+  - Brightness, Punch, Highlights, Highlight colour, Shadows, Depth, White-hot and Clip guard, with the tuned setting in the middle of each;
+  - Scene brightness and adaptation speed;
   - an auto black floor for films mastered with raised blacks.
 
   Every change ramps in smoothly, with no flicker.
@@ -43,7 +42,7 @@ This repository holds Tesseract VP's **signed releases**, its [roadmap](ROADMAP.
 - **Low latency.**
   - About **7 ms** from a frame's arrival to the screen in game mode, against 41 ms without it.
   - **Auto low latency (ALLM)** switches to game mode when the console asks.
-- **Genlock.** The output follows the source's timing, so no frame is dropped or shown twice.
+- **Genlock.** The output follows the source's timing, so frames aren't dropped or repeated once it has locked.
 - **EDID builder.** You choose what the source is told about your screen: resolutions, refresh rates, HDR formats, peak and black, and bit depth. Your receiver's sound formats and Atmos pass through untouched.
 
 ### Output
@@ -58,12 +57,12 @@ This repository holds Tesseract VP's **signed releases**, its [roadmap](ROADMAP.
   - Limited or Full range.
 
   Anything a mode can't carry is lowered automatically to what HDMI 2.0 and your display support.
-- **Colour.** Keep your display in BT.2020, and menus, SDR and console pictures are converted in without oversaturation. Or use a BT.709 display, and films' wider colours are mapped in along constant hue instead of being clipped.
+- **Colour.** Keep your display in BT.2020, and menus, SDR and console pictures are converted in so they don't look oversaturated. Or use a BT.709 display, and films' wider colours are mapped in along constant hue instead of being clipped.
 - **Upscaling and chroma.**
   - A choice of upscalers for 1080p and smaller pictures, Lanczos 4 by default.
   - Smooth chroma upsampling for 4K films.
 
-  Both run in the video hardware, at no CPU cost.
+  Both run in the video hardware, with almost no CPU cost.
 - **Colour upgrade.** 1080p and smaller films in Kodi get full 4:4:4 colour, rebuilt on the Cube's GPU on every frame.
 
 ### Aspect, masking and subtitles
@@ -86,7 +85,7 @@ This repository holds Tesseract VP's **signed releases**, its [roadmap](ROADMAP.
   - black level, white level and gamma;
   - red, green and blue gain and offset.
 
-  Their steps are far finer than a display's own controls.
+  Their steps are finer than most displays' own controls.
 - **3D LUT and greyscale.** Upload a 3D LUT and a greyscale and gamma table for each calibration set.
 - **Gamut guardrail.** Colours held inside BT.709, DCI-P3, BT.2020 or your display's measured primaries.
 - **Calibration software.** Calman, HCFR, DisplayCAL and ColourSpace drive the Cube's patterns directly.
@@ -113,7 +112,7 @@ This repository holds Tesseract VP's **signed releases**, its [roadmap](ROADMAP.
 - **Roll back** any update in one step.
 - **Watchdog.** If a new version keeps failing, the watchdog puts the previous one back.
 - **Backup and restore** of every setting, preset and profile.
-- **Light on the CPU.** Most of the processing runs in the Cube's video hardware, so it uses next to no CPU while a film plays.
+- **Light on the CPU.** Most of the processing runs in the Cube's video hardware, so the CPU stays mostly free while a film plays.
 
 ---
 
@@ -145,7 +144,7 @@ Backups are kept in **Documents › Tesseract VP › backups**. To remove Tesser
 
 ## Releases
 
-- **stable**: tested releases. The current one is **20261126** ([release notes](https://github.com/Javbomb/tesseract-vp/releases/tag/stable)). A Cube checks for these once a day and tells you when one is ready. It never installs one by itself.
+- **stable**: tested releases. The current one is **20261126** (updated the same day with new picture defaults) ([release notes](https://github.com/Javbomb/tesseract-vp/releases/tag/stable)). A Cube checks for these once a day and tells you when one is ready. It never installs one by itself.
 - **nightly**: the newest builds, checked only when you ask.
 
 ## Updating a Cube
@@ -162,7 +161,7 @@ Updates keep the parts you installed up to date too, such as Dolby Vision FEL an
 **Live now:** everything above.
 
 **Next:**
-- Netflix at its own frame rate through any receiver, set before the film starts.
+- Netflix at its own frame rate through more receivers, set before the film starts.
 - A dynamic contrast guard for displays that dim in dark scenes.
 
 **Then:**

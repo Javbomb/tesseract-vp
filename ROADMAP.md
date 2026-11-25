@@ -16,14 +16,14 @@ This roadmap takes Tesseract VP from a tone-mapping box to a full video processo
 
 | | Feature | Details |
 |---|---|---|
-| ✅ | **Dynamic tone mapping with look-ahead** | <ul><li>Every frame is measured and gets its own curve.</li><li>Films are measured several frames before they are shown, so scene cuts never flash or pump.</li><li>The full-resolution peak of the frame on screen is checked too, so small highlights are never missed.</li></ul> |
-| ✅ | **Faithful to the grade** | <ul><li>Shadows and mid-tones stay 1:1. Only light the screen can't show is brought into range.</li><li>No clipping, no flicker. Highlights whiten gently, without shrinking the gamut.</li></ul> |
+| ✅ | **Dynamic tone mapping with look-ahead** | <ul><li>Every frame is measured and gets its own curve.</li><li>Films are measured several frames before they are shown, so scene cuts don't flash or pump.</li><li>The full-resolution peak of the frame on screen is checked too, so small highlights aren't missed.</li></ul> |
+| ✅ | **Close to the grade** | <ul><li>Shadows and mid-tones are kept close to the master; the work goes mostly into the light the screen can't show.</li><li>Highlights roll off smoothly instead of hard clipping, the curve moves gently between scenes, and highlights whiten gently without shrinking the gamut.</li></ul> |
 | ✅ | **Netflix, Disney+ and YouTube in 4K HDR** | Tone mapped like any other source, with a choice for Dolby Vision titles: our tone mapping, Dolby's own mapping, or Dolby Vision out to the display. |
 | ✅ | **Look-ahead for protected video** | <ul><li>DRM frames can't be read by software, so they are measured in the video hardware, ahead of the screen.</li><li>Disney+ 4K: 99.5 % of frames reached the screen with their own curve. Netflix: 95–97 %.</li><li>4K kept and no protection errors on either.</li></ul> |
 | ✅ | **HDR10+ films** | Tone mapped from their HDR10 base, like any HDR10 film. |
 | ✅ | **SDR or HDR10 out** | The tone-mapped picture goes out as SDR, or as HDR10 aimed at the display's peak. In HDR10, menus and subtitles are converted in at graphics white. |
-| ✅ | **Highlights and shadows refined** | <ul><li>Highlights keep their shape right up to the screen's peak.</li><li>Deep shadows stay deep, and bright scenes keep their shadow detail.</li><li>Highlight colour is fitted to the gamut exactly, so saturated skin never bands.</li></ul> |
-| ✅ | **Picture controls** | <ul><li>Brightness, Highlights, Shadows and Punch, with the tuned setting in the middle of each.</li><li>Every change ramps in smoothly, with no flicker.</li><li>Highlight colour and adaptation speed.</li><li>Scene brightness, a clip guard and more under Advanced.</li></ul> |
+| ✅ | **Highlights and shadows refined** | <ul><li>Highlights keep their shape right up to the screen's peak.</li><li>Deep shadows stay deep, and bright scenes keep their shadow detail.</li><li>Highlight colour is fitted to the gamut, so saturated skin doesn't band.</li></ul> |
+| ✅ | **Picture controls** | <ul><li>Brightness, Punch, Highlights, Highlight colour, Shadows, Depth, White-hot and Clip guard, with the tuned setting in the middle of each.</li><li>Every change ramps in smoothly, with no flicker.</li><li>Scene brightness and adaptation speed.</li><li>Further fine controls in the Detail view.</li></ul> |
 | ✅ | **Auto black floor** | Films mastered with a raised black are corrected gently. The floor is learned over the whole title, never shot by shot, so foggy or night scenes stay as graded. |
 
 ## Phase 1: Games and output
@@ -32,12 +32,12 @@ This roadmap takes Tesseract VP from a tone-mapping box to a full video processo
 |---|---|---|
 | ✅ | **HDMI input, HDR10** | A console on the HDMI input is tone mapped live, each frame from itself. |
 | ✅ | **Low latency** | <ul><li>About 7 ms from a frame's arrival to the screen in game mode, against 41 ms with look-ahead.</li><li>**Auto low latency (ALLM)** follows the console's flag.</li></ul> |
-| ✅ | **Genlock** | <ul><li>The output follows the HDMI input's timing exactly, so no frame is ever dropped or shown twice.</li><li>It locks within about 40 s.</li></ul> |
+| ✅ | **Genlock** | <ul><li>The output follows the HDMI input's timing exactly, so frames aren't dropped or repeated once it has locked.</li><li>It locks within about 40 s.</li></ul> |
 | ✅ | **EDID builder** | <ul><li>You choose what the source is told: resolutions, refresh rates, HDR formats, peak and black, 4:2:0, bit depth and ALLM.</li><li>It is built from the receiver's EDID, so sound formats and Atmos pass untouched.</li></ul> |
 | ✅ | **Output menu** | <ul><li>Colour format, bit depth, resolution, refresh rate and colour space, applied over whatever the app picks.</li><li>A mode the display can't carry is lowered automatically to what HDMI 2.0 supports.</li></ul> |
 | ✅ | **Frame-rate matching** | <ul><li>Each film plays at its own rate, read before its first frame (23.976 and 24.000 told apart).</li><li>Streaming apps are included, with the sound kept through the switch.</li><li>At film rates the output goes to 4:4:4 12-bit in the same switch.</li></ul> |
-| 🔶 | **Frame-rate matching for protected apps, through any receiver** | <ul><li>A switch now waits until the app's DRM sees the HDMI link protected again, and the picture holds for under 3 s.</li><li>Disney+ switches on every chain, with Atmos kept.</li><li>Netflix switches where the HDMI handshake is quick (straight into a display, or a fast receiver: 23.976, 24 and 25 tested in 4K with Atmos). Through slower receivers it stays at the usual rate by itself, or you can choose **Always try**.</li><li>Next: the right rate set before the film starts, for every receiver.</li></ul> |
-| ✅ | **Colour space and gamut** | <ul><li>**BT.2020 out:** menus, SDR and console pictures are converted in without oversaturation.</li><li>**BT.709 out:** films' wider colours are mapped in along constant hue, never clipped.</li><li>**Auto:** each signal is flagged as what it is.</li></ul> |
+| 🔶 | **Frame-rate matching for protected apps, through more receivers** | <ul><li>A switch now waits until the app's DRM sees the HDMI link protected again, and the picture holds for under 3 s.</li><li>Disney+ switched on every chain we tested, with Atmos kept.</li><li>Netflix switches where the HDMI handshake is quick (straight into a display, or a fast receiver: 23.976, 24 and 25 tested in 4K with Atmos). Through slower receivers it stays at the usual rate by itself, or you can choose **Always try**.</li><li>Next: the right rate set before the film starts, through more receivers.</li></ul> |
+| ✅ | **Colour space and gamut** | <ul><li>**BT.2020 out:** menus, SDR and console pictures are converted in so they don't look oversaturated.</li><li>**BT.709 out:** films' wider colours are mapped in along constant hue rather than clipped.</li><li>**Auto:** each signal is flagged as what it is.</li></ul> |
 | ✅ | **Profiles with automatic rules** | Game, HDMI, Film, Video and SDR each load their own preset when the source changes. |
 | ✅ | **LLDV** | Dolby Vision from apps and Kodi arrives as low-latency Dolby Vision, and our tone mapping finishes it at 24 fps, zoom included. |
 | ✅ | **Dolby Vision, three modes** | <ul><li>**Off (HDR10):** our tone mapping.</li><li>**LLDV:** Dolby's processing, finished by our tone mapping.</li><li>**Dolby Vision:** Dolby's processing end to end, to a Dolby Vision display.</li></ul>Live for streaming apps and Kodi, through an AV receiver too. The HDMI input takes HDR10. |
@@ -48,11 +48,11 @@ This roadmap takes Tesseract VP from a tone-mapping box to a full video processo
 
 | | Feature | Details |
 |---|---|---|
-| ✅ | **Upscaling 1080p → 4K** | <ul><li>A choice of upscalers: Lanczos 4, Lanczos 3, Bicubic, Soft and the super-scaler.</li><li>Lanczos 4 by default, picked from the scaler hardware's own response: the flattest detail and the least ringing.</li><li>Switched live in the hardware, at no CPU cost.</li></ul> |
+| ✅ | **Upscaling 1080p → 4K** | <ul><li>A choice of upscalers: Lanczos 4, Lanczos 3, Bicubic, Soft and the super-scaler.</li><li>Lanczos 4 by default, picked from the scaler hardware's own response: the flattest detail and the least ringing.</li><li>Switched live in the hardware, with almost no CPU cost.</li></ul> |
 | ✅ | **Chroma upsampling** | 4K films' colour is interpolated up to full resolution instead of repeated, and goes out at 4:4:4 12-bit. |
 | ✅ | **Colour upgrade for 1080p** | <ul><li>1080p and smaller films in Kodi get their colour rebuilt to full 4:4:4 on the Cube's GPU.</li><li>Live, on every frame.</li></ul> |
 | ⬜ | **Downscaling 4K → 1080p** | Anti-aliased, with 4K's colour landing as true 4:4:4 1080p. Studied and tried: the Cube's hardware can't run it at full quality yet, so it stays out until it can. |
-| ✅ | **Contrast and shadow detail** | **Local contrast** and **Shadow separation** options for the curve, both off by default. |
+| ✅ | **Contrast and shadow detail** | **Depth** adds local contrast and shadow separation to the curve. |
 | ⬜ | **Sharpening and detail** | Studied and tried: the Cube's hardware can't run it at full quality yet, so it stays out until it can. |
 | ⬜ | **Debanding** | Smoothing gradient banding without softening edges. Studied and tried: the Cube's hardware can't run it at full quality yet, so it stays out until it can. |
 
@@ -93,14 +93,14 @@ This roadmap takes Tesseract VP from a tone-mapping box to a full video processo
 
 | | Feature | Details |
 |---|---|---|
-| ✅ | **Fine calibration controls** | <ul><li>Black level, white level and gamma.</li><li>Red, green and blue gain and offset.</li></ul>Steps are far finer than a display's own, held for every source. |
+| ✅ | **Fine calibration controls** | <ul><li>Black level, white level and gamma.</li><li>Red, green and blue gain and offset.</li></ul>Steps are finer than most displays' own, held for every source. |
 | ✅ | **Output range** | Limited or Full, with the HDMI flag to match. |
 | ✅ | **Gamut guardrail** | Colours are held inside BT.709, DCI-P3, BT.2020 or your display's own measured primaries. |
 | ✅ | **Built-in test patterns** | Ramps, windows, average-light patches and single-pixel 4K checks, in SDR and HDR, shown tone mapped or untouched. |
 | ✅ | **Separate SDR and HDR calibration** | Each has its own calibration set, picked by what is playing. |
 | ✅ | **3D LUT and greyscale correction** | Each calibration set takes its own 3D LUT and a separate greyscale and gamma table in front of it. |
 | ✅ | **Calibration software** | Calman, HCFR, DisplayCAL and ColourSpace drive the Cube's patterns directly. |
-| ⬜ | **Dynamic contrast guard** | For displays with dynamic contrast or laser and backlight dimming: leave room in dark scenes so their brightness lift never clips highlights. |
+| ⬜ | **Dynamic contrast guard** | For displays with dynamic contrast or laser and backlight dimming: leave room in dark scenes so their brightness lift doesn't clip highlights. |
 
 ## Phase 7: Beyond
 
