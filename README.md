@@ -180,6 +180,11 @@ The full plan, item by item, is in **[ROADMAP.md](ROADMAP.md)**.
 - **[Wiki](https://github.com/Javbomb/tesseract-vp/wiki)**: installing, your first film, every page of the control page, troubleshooting and known issues.
 - **[Issues](https://github.com/Javbomb/tesseract-vp/issues/new/choose)**: report a problem or suggest something. Please include the version, your display and receiver, and what was playing.
 
+
+## Source
+
+The kernel modules Tesseract VP installs on the Cube are open source under the GPL. Their complete source, with build instructions, is attached to each release as **tesseract-vp-module-source.zip** ([Stable](https://github.com/Javbomb/tesseract-vp/releases/tag/stable)). The rest of Tesseract VP is separate software and isn't covered by that licence.
+
 ---
 
 Tesseract VP is an independent project. It is not affiliated with or endorsed by Amazon or Dolby. Fire TV is a trademark of Amazon; Dolby, Dolby Vision and Dolby Atmos are trademarks of Dolby Laboratories; DTS and DTS:X are trademarks of DTS, Inc. Calman, ColourSpace, DisplayCAL and HCFR belong to their owners. Unlocking a Fire TV Cube is at your own risk and may void its warranty.
