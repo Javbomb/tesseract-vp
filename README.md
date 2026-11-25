@@ -58,7 +58,11 @@ This repository holds Tesseract VP's **signed releases**, its [roadmap](ROADMAP.
 
   Anything a mode can't carry is lowered automatically to what HDMI 2.0 and your display support.
 - **Colour.** Keep your display in BT.2020, and menus, SDR and console pictures are converted in so they don't look oversaturated. Or use a BT.709 display, and films' wider colours are mapped in along constant hue instead of being clipped.
-- **Chroma upsampling.** Smooth chroma upsampling for 4K films, in the video hardware, with almost no CPU cost.
+- **Upscaling and chroma.**
+  - A choice of upscalers for 1080p and smaller pictures, Lanczos 4 by default.
+  - Smooth chroma upsampling for 4K films.
+
+  Both run in the video hardware, with almost no CPU cost.
 - **Colour upgrade.** 1080p and smaller films in Kodi get full 4:4:4 colour, rebuilt on the Cube's GPU on every frame.
 
 ### Aspect, masking and subtitles
