@@ -19,7 +19,11 @@ This repository holds Tesseract VP's **signed releases** and its [roadmap](ROADM
 - **Faithful to the grade.** Shadows and mid-tones stay as the film was mastered. Only light your screen can't show is brought into range. The picture never clips, never pumps, and colours keep their hue.
 - **Look-ahead.** Films are measured several frames before they are shown, so a scene cut gets the right curve on the frame it happens. Small, bright highlights are caught too.
 - **Protected streams included.** Netflix, Disney+ and other DRM video can't be read by software. Tesseract VP measures them in the video hardware instead, ahead of the screen. On a Disney+ 4K film, 99.5 % of frames reached the screen with their own curve, with 4K kept and no protection errors.
-- **HDR10, HDR10+ and Dolby Vision titles.** HDR10+ films get the same tone mapping as HDR10. For Dolby Vision titles you choose: Tesseract VP's tone mapping, Dolby's own mapping, or Dolby Vision out to the display.
+- **HDR10, HDR10+ and Dolby Vision titles.** HDR10+ films get the same tone mapping as HDR10. For Dolby Vision titles, from the streaming apps and Kodi, you choose:
+  - Tesseract VP's tone mapping of the HDR10 base;
+  - **LLDV:** Dolby's own processing, finished by Tesseract VP's tone mapping;
+  - Dolby Vision out to a Dolby Vision display.
+- **Dolby Vision FEL.** Full-enhancement-layer films are rebuilt to their full 12-bit picture in a player that supports it (Kodi FEL, VLC FEL or Wholphin FEL), then sent as Dolby Vision or tone mapped.
 - **Controls you can tune live:**
   - brightness, highlights and shadows;
   - highlight colour and adaptation speed;
@@ -34,7 +38,9 @@ This repository holds Tesseract VP's **signed releases** and its [roadmap](ROADM
 - **EDID builder.** You choose what the source is told about your screen: resolutions, refresh rates, HDR formats, peak and black, and bit depth. Your receiver's sound formats and Atmos pass through untouched.
 
 ### Output
-- **Frame-rate matching.** Each film plays at its own rate, and 23.976 and 24.000 are told apart. Streaming apps are included, with one quick switch as the film starts and the sound kept.
+- **Frame-rate matching.** Each film plays at its own rate, and 23.976 and 24.000 are told apart. Streaming apps are included, with the sound kept, Atmos too.
+  - The switch waits until the app's protection sees the HDMI link secure again, so Disney+ and the others switch even through an AV receiver.
+  - Netflix switches where the HDMI handshake is quick. Through slower receivers it stays at the usual rate by itself, or you can choose **Always try** or **24p at launch**.
 - **Full control of the signal:**
   - colour format (4:4:4, 4:2:2, 4:2:0 or RGB);
   - bit depth and resolution;
@@ -51,7 +57,7 @@ This repository holds Tesseract VP's **signed releases** and its [roadmap](ROADM
   Both run in the hardware, at no CPU cost.
 
 ### Aspect, masking and subtitles
-- **Black bar detection in every source:** apps, Kodi, the HDMI input and protected streams. A film that changes shape (an IMAX scene) is followed on the frame it changes.
+- **Black bar detection in every source:** apps, Kodi, the HDMI input, protected streams and Dolby Vision, FEL included. A film that changes shape (an IMAX scene) is followed on the frame it changes.
 - **Fit the picture to your screen:**
   - fill;
   - picture to the top or bottom;
@@ -60,24 +66,29 @@ This repository holds Tesseract VP's **signed releases** and its [roadmap](ROADM
   - masking for each edge.
 - **Subtitles kept in view.** Burned-in subtitles in a bar are recognised, and Fill keeps just enough of that bar to show them.
 
+### Sound
+- **Atmos and DTS:X kept.** Dolby Atmos from Netflix and Disney+ reaches your receiver as Atmos. TrueHD Atmos and DTS:X Master from Kodi go to the receiver untouched. A built-in version for every player is in development.
+
 ### Calibration
 - **Fine controls in the output**, held for every source and the menus:
   - black level, white level and gamma;
   - red, green and blue gain and offset.
 
   Their steps are far finer than a display's own controls.
+- **Separate SDR and HDR calibration**, each picked by what is playing.
+- **Built-in test patterns:** ramps, windows, average-light patches and single-pixel 4K checks, in SDR and HDR, shown tone mapped or untouched.
 
 ### Control
 - **Control page.** Every setting is one line, with the live picture, waveform and tone curve kept in view, so you see each change as you make it.
 - **Other ways in:**
   - an on-screen menu on the Fire TV remote;
   - a full-screen settings page on the Cube itself;
-  - a phone app that finds every Tesseract VP on your Wi-Fi.
+  - a phone app that finds every Tesseract VP on your Wi-Fi, with **one-tap scenes**: Movie night wakes the projector and amp, picks the input and dims the lights; Off puts it all to sleep. From the app, a home-screen widget or a quick-settings tile.
 - **Profiles with automatic rules.** Game, HDMI, Film, Video and SDR each load their own preset when the source changes.
 - **HDMI-CEC for every device.** Power, input and the amp's volume. One press of the remote's power button wakes or sleeps the projector or TV and the amp with the Cube.
 - **IR** (in testing). Learn any IR remote's buttons and tie them to what plays: lights off when a film starts, back on when it stops.
 - **API and webhooks.** Events for Home Assistant or anything else as the source, HDR type, output mode or picture shape changes.
-- **Its own launcher**, with your own apps and one place for all the settings.
+- **Its own launcher**: a home screen with the glowing cube, your HDMI devices, your own apps, a Last played strip and one place for all the settings.
 - **Several Cubes.** Switch between every Tesseract VP on your network from the control page.
 
 ### Safe to run
@@ -124,7 +135,9 @@ On the control page, open **Profiles › Updates**, choose Stable or Nightly, th
 **Next:**
 - Picture quality: sharpening, downscaling, contrast and shadow detail.
 - A colour upgrade to full 4:4:4 for 1080p films.
-- LLDV and Dolby Vision on the HDMI input.
+- Lossless audio (TrueHD Atmos, DTS:X) from every player, built in.
+- Netflix at 24.000 through any receiver, by fine-tuning the HDMI clock instead of a mode change.
+- A dynamic contrast guard for displays that dim in dark scenes.
 - Geometry correction (keystone, curved screens, lens distortion) in the Cube's own hardware.
 - Lens memory with the projector.
 
