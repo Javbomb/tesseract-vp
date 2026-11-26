@@ -97,10 +97,10 @@ nav.chap { background: var(--bg); }
   <div class="kicker">HDR video processor · Fire TV Cube (3rd generation) · Stable 20261126</div>
   <h1>Tesseract <span>VP</span></h1>
   <p class="lede">Tesseract VP turns a Fire TV Cube into an HDR video processor. At its heart is its own tone-mapping engine, written from the ground up for the Cube, that fits every HDR frame to your screen's real brightness: in the streaming apps, Kodi and the HDMI input. Below is everything it does today, with each feature's status, what was measured, and what it costs the Cube.</p>
-  <div class="cta"><a class="btn pri" href="https://github.com/Javbomb/tesseract-vp/releases/download/stable/Tesseract-VP-Setup.exe">Download for Windows</a><a class="btn" href="https://github.com/Javbomb/tesseract-vp#installing">Install guide</a><a class="btn" href="https://github.com/Javbomb/tesseract-vp/wiki">Wiki</a><a class="btn" href="https://github.com/Javbomb/tesseract-vp/blob/main/ROADMAP.md">Roadmap</a><a class="btn" href="https://github.com/Javbomb/tesseract-vp">GitHub</a></div>
+  <div class="cta"><a class="btn pri" href="https://github.com/Javbomb/tesseract-vp/releases/download/stable/Tesseract-VP-Setup.exe">Download for Windows</a><a class="btn" href="https://github.com/Javbomb/tesseract-vp#installing">Install guide</a><a class="btn" href="compare/">DTM compare</a><a class="btn" href="https://github.com/Javbomb/tesseract-vp/wiki">Wiki</a><a class="btn" href="https://github.com/Javbomb/tesseract-vp/blob/main/ROADMAP.md">Roadmap</a><a class="btn" href="https://github.com/Javbomb/tesseract-vp">GitHub</a></div>
   <p class="need">Needs a Fire TV Cube (3rd generation) that is unlocked and rooted. The unlock is a third-party tool, used at your own risk. Testers wanted: <a href="https://github.com/Javbomb/tesseract-vp/wiki/Testing-guide">the testing guide</a> says what to try.</p>
   <div class="counts" aria-label="Status count">
-    <span><b>66</b>live</span><span><b>2</b>partly live</span><span><b>2</b>in testing</span><span><b>6</b>planned</span><span><b>2</b>not possible</span>
+    <span><b>66</b>live</span><span><b>2</b>partly live</span><span><b>3</b>in testing or Nightly</span><span><b>6</b>planned</span><span><b>2</b>not possible</span>
   </div>
   <figure class="hero">
     <img src="control-page.jpg" width="1920" height="1080" alt="The control page during a 4K HDR10 film (Dunkirk) tone mapped to a 100-nit projector: the signal in and out, the measured peak, the picture on screen, a live waveform, the tone curve and the Picture controls">
@@ -110,10 +110,21 @@ nav.chap { background: var(--bg); }
 </div>
 
 <nav class="chap" aria-label="Chapters"><div class="wrap">
-  <a href="#tone">Tone mapping</a><a href="#streaming">Protected streaming</a><a href="#games">Games &amp; HDMI in</a><a href="#output">Output &amp; frame rate</a><a href="#picture">Picture quality</a><a href="#aspect">Aspect &amp; geometry</a><a href="#dv">Dolby Vision</a><a href="#audio">Audio</a><a href="#cal">Calibration</a><a href="#control">Control &amp; screens</a><a href="#install">Install &amp; updates</a><a href="#cost">CPU cost</a>
+  <a href="#results">Results</a><a href="#tone">Tone mapping</a><a href="#streaming">Protected streaming</a><a href="#games">Games &amp; HDMI in</a><a href="#output">Output &amp; frame rate</a><a href="#picture">Picture quality</a><a href="#aspect">Aspect &amp; geometry</a><a href="#dv">Dolby Vision</a><a href="#audio">Audio</a><a href="#cal">Calibration</a><a href="#control">Control &amp; screens</a><a href="#install">Install &amp; updates</a><a href="#cost">CPU cost</a>
 </div></nav>
 
 <div class="wrap">
+
+<section class="ch" id="results">
+  <div class="chead"><span class="num">Results</span><h2>Tone mapping on real films</h2><p>HDR10 film frames tone mapped for a 100-nit projector at the default settings. Each picture shows the HDR source as encoded beside Tesseract VP, with a waveform under each: these masters reach from about 600 to over 9,000 nits, and Tesseract VP fits each one under the screen's 100-nit peak.</p><div class="cta"><a class="btn pri" href="compare/">Compare frame by frame with another popular DTM solution</a></div></div>
+  <div class="pics">
+      <figure><img src="showcase-01-batman-v-superman.jpg" width="1920" height="1080" loading="lazy" alt="Batman v Superman: the HDR source as encoded beside Tesseract VP for a 100-nit projector, each with its waveform"><figcaption>Batman v Superman: the HDR source as encoded (left) and Tesseract VP for a 100-nit projector (right), with their waveforms.</figcaption></figure>
+      <figure><img src="showcase-02-pacific-rim.jpg" width="1920" height="1080" loading="lazy" alt="Pacific Rim: the HDR source as encoded beside Tesseract VP for a 100-nit projector, each with its waveform"><figcaption>Pacific Rim: the HDR source as encoded (left) and Tesseract VP for a 100-nit projector (right), with their waveforms.</figcaption></figure>
+      <figure><img src="showcase-03-interstellar.jpg" width="1920" height="1080" loading="lazy" alt="Interstellar: the HDR source as encoded beside Tesseract VP for a 100-nit projector, each with its waveform"><figcaption>Interstellar: the HDR source as encoded (left) and Tesseract VP for a 100-nit projector (right), with their waveforms.</figcaption></figure>
+      <figure><img src="showcase-04-mad-max-fury-road.jpg" width="1920" height="1080" loading="lazy" alt="Mad Max: Fury Road: the HDR source as encoded beside Tesseract VP for a 100-nit projector, each with its waveform"><figcaption>Mad Max: Fury Road: the HDR source as encoded (left) and Tesseract VP for a 100-nit projector (right), with their waveforms.</figcaption></figure>
+      <figure><img src="showcase-05-mission-impossible-fallout.jpg" width="1920" height="1080" loading="lazy" alt="Mission: Impossible – Fallout: the HDR source as encoded beside Tesseract VP for a 100-nit projector, each with its waveform"><figcaption>Mission: Impossible – Fallout: the HDR source as encoded (left) and Tesseract VP for a 100-nit projector (right), with their waveforms.</figcaption></figure>
+  </div>
+</section>
 
 <section class="ch" id="tone">
   <div class="chead"><span class="num">Chapter 1</span><h2>Tone mapping</h2><p>Every HDR picture fitted to the screen's real brightness, frame by frame, with a curve shaped to each scene. The tone mapping is Tesseract VP's own engine, written from the ground up for the Cube and its video hardware. It is the heart of the VP.</p></div>
@@ -190,6 +201,7 @@ nav.chap { background: var(--bg); }
   <div class="chead"><span class="num">Chapter 5</span><h2>Picture quality</h2><p>Scaling and colour detail, mostly in the video hardware at almost no CPU cost.</p></div>
   <div class="feats">
     <div class="f"><h3>Upscaling 1080p → 4K <span class="st live">Live</span></h3><p>A choice of upscalers: Lanczos 4, Lanczos 3, Bicubic, Soft and the super-scaler, switched live in the hardware. Lanczos 4 is the default.</p><p class="c">Cost: almost none.</p></div>
+    <div class="f"><h3>Custom 4K upscaler for Kodi <span class="st test">In Nightly</span></h3><p>Tesseract VP's own GPU upscaler for Kodi's 1080p SDR films, up to 30 fps: Lanczos 4 with anti-ringing, then steps that smooth jagged edges and rebuild colour along the edges, out at 4K 10-bit 4:4:4. It fits as many steps as each frame rate allows, and everything else (HDR, 50/60p, the streaming apps, protected video, the HDMI input) keeps the hardware Lanczos 4. In Nightly, with Kodi's colour upgrade switched on.</p><p class="m">Measured on a 1080p24 film: about 36 ms a frame on the GPU, and every frame shown in 4K over a 90-second run.</p><p class="c">Cost: about 36 ms of GPU time a frame at 24p, and about a quarter of one CPU core while it runs.</p></div>
     <div class="f"><h3>Chroma upsampling for 4K <span class="st live">Live</span></h3><p>4K films' colour is interpolated up to full resolution instead of repeated, then goes out at 4:4:4 12-bit.</p><p class="c">Cost: almost none.</p></div>
     <div class="f"><h3>Colour upgrade for 1080p <span class="st live">Live</span></h3><p>1080p and smaller films in Kodi get their colour rebuilt to full 4:4:4 on the Cube's GPU, live on every frame.</p><p class="m">Measured: 17 ms per 1080p frame.</p></div>
     <div class="f"><h3>Downscaling 4K → 1080p <span class="st plan">Planned</span></h3><p>Anti-aliased, with 4K's colour landing as true 4:4:4 1080p. Studied and tried: the Cube's hardware can't run it at full quality yet, so it stays out until it can.</p></div>
@@ -312,6 +324,7 @@ nav.chap { background: var(--bg); }
       <tr><td>Upscaler, chroma upsampling, calibration, range</td><td>~0</td><td>Hardware settings and the output table.</td></tr>
       <tr><td>Colour space table</td><td>~3 ms</td><td>Only when the content type changes.</td></tr>
       <tr><td>1080p colour upgrade</td><td>17 ms / frame</td><td>GPU; 1080p and smaller films in Kodi.</td></tr>
+      <tr><td>Kodi 4K upscaler (Nightly)</td><td>~36 ms GPU / frame</td><td>1080p films up to 30 fps; about a quarter of one core. The GPU runs at full clock while it works.</td></tr>
       <tr><td>Scopes on screen</td><td>a tenth of a core</td><td>Only while open; was a whole core.</td></tr>
       <tr><td>CEC device list</td><td>small</td><td>Only while the Devices card is open.</td></tr>
       <tr><td>Whole box, 4K60 game tone mapped, scopes open</td><td>29 % of 8 cores</td><td>Over two thirds of the CPU left idle.</td></tr>

@@ -14,7 +14,7 @@ Tesseract VP turns a Fire TV Cube into a video processor that sits between your 
 
 This repository holds Tesseract VP's **signed releases**, its [roadmap](ROADMAP.md) and the [wiki](https://github.com/Javbomb/tesseract-vp/wiki). Installed Cubes update themselves from here.
 
-**[Download Tesseract VP Setup for Windows](https://github.com/Javbomb/tesseract-vp/releases/download/stable/Tesseract-VP-Setup.exe)** · [Website](https://javbomb.github.io/tesseract-vp/) · [All releases](https://github.com/Javbomb/tesseract-vp/releases) · [Install](#installing) · [Wiki](https://github.com/Javbomb/tesseract-vp/wiki)
+**[Download Tesseract VP Setup for Windows](https://github.com/Javbomb/tesseract-vp/releases/download/stable/Tesseract-VP-Setup.exe)** · [Website](https://javbomb.github.io/tesseract-vp/) · [DTM compare](https://javbomb.github.io/tesseract-vp/compare/) · [All releases](https://github.com/Javbomb/tesseract-vp/releases) · [Install](#installing) · [Wiki](https://github.com/Javbomb/tesseract-vp/wiki)
 
 > **Testers wanted.** The first Stable release, **20261126**, is out. If you have an unlocked Fire TV Cube (3rd generation), please try it and tell us how it goes: the wiki's [Testing guide](https://github.com/Javbomb/tesseract-vp/wiki/Testing-guide) lists what to try, and problems go in [Issues](https://github.com/Javbomb/tesseract-vp/issues/new/choose).
 
@@ -41,6 +41,10 @@ This repository holds Tesseract VP's **signed releases**, its [roadmap](ROADMAP.
   - an auto black floor for films mastered with raised blacks.
 
   Every change ramps in smoothly, with no flicker.
+
+![Batman v Superman: the HDR source as encoded beside Tesseract VP for a 100-nit projector, each with its waveform](docs/showcase-01-batman-v-superman.jpg)
+
+*The HDR source as encoded (left) and Tesseract VP for a 100-nit projector (right). More frames, and a frame-by-frame comparison with another popular DTM solution: **[DTM compare](https://javbomb.github.io/tesseract-vp/compare/)**.*
 
 ![Tone Mapping › Advanced during a film: what the measurement ignores, the auto black floor and what this frame's curve is fitted to, beside the tone curve, histogram and peak over time](docs/tone-advanced.jpg)
 
@@ -70,6 +74,7 @@ This repository holds Tesseract VP's **signed releases**, its [roadmap](ROADMAP.
   - Smooth chroma upsampling for 4K films.
 
   Both run in the video hardware, with almost no CPU cost.
+- **Custom 4K upscaler for Kodi (in Nightly).** Tesseract VP's own GPU upscaler for Kodi's 1080p SDR films, up to 30 fps: Lanczos 4 with anti-ringing, then steps that smooth jagged edges and rebuild colour along the edges, out at 4K 10-bit 4:4:4. It fits as many steps as each frame rate allows, and everything else (HDR, 50/60p, the streaming apps, protected video, the HDMI input) keeps the hardware Lanczos 4. In Nightly, with Kodi's colour upgrade switched on.
 - **Colour upgrade.** 1080p and smaller films in Kodi get full 4:4:4 colour, rebuilt on the Cube's GPU on every frame.
 
 ![Input & Output › Output during a film: HDR out, resolution, colour space, gamut, range, colour detail and scaling, with the HDMI link beside them](docs/output.jpg)
