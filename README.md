@@ -219,7 +219,7 @@ The full plan, item by item, is in **[ROADMAP.md](ROADMAP.md)**.
 
 ## Source
 
-The kernel modules Tesseract VP installs on the Cube are open source under the GPL. Their complete source, with build instructions, is attached to each release as **tesseract-vp-module-source.zip** ([Stable](https://github.com/Javbomb/tesseract-vp/releases/tag/stable)). The rest of Tesseract VP is separate software and isn't covered by that licence.
+The kernel modules Tesseract VP installs on the Cube are open source under the GPL. Their complete source, with build instructions, is attached to each release as **tesseract-vp-module-source.zip** ([Stable](https://github.com/Javbomb/tesseract-vp/releases/tag/stable)). The rest of Tesseract VP is separate software and isn't covered by that licence. It is free to use but not open source. See [LICENSE.md](LICENSE.md).
 
 ---
 
