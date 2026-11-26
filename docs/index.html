@@ -100,7 +100,7 @@ nav.chap { background: var(--bg); }
   <div class="cta"><a class="btn pri" href="https://github.com/Javbomb/tesseract-vp/releases/download/stable/Tesseract-VP-Setup.exe">Download for Windows</a><a class="btn" href="https://github.com/Javbomb/tesseract-vp#installing">Install guide</a><a class="btn" href="compare/">DTM compare</a><a class="btn" href="https://github.com/Javbomb/tesseract-vp/wiki">Wiki</a><a class="btn" href="https://github.com/Javbomb/tesseract-vp/blob/main/ROADMAP.md">Roadmap</a><a class="btn" href="https://github.com/Javbomb/tesseract-vp">GitHub</a></div>
   <p class="need">Needs a Fire TV Cube (3rd generation) that is unlocked and rooted. The unlock is a third-party tool, used at your own risk. Testers wanted: <a href="https://github.com/Javbomb/tesseract-vp/wiki/Testing-guide">the testing guide</a> says what to try.</p>
   <div class="counts" aria-label="Status count">
-    <span><b>66</b>live</span><span><b>2</b>partly live</span><span><b>3</b>in testing or Nightly</span><span><b>6</b>planned</span><span><b>2</b>not possible</span>
+    <span><b>68</b>live</span><span><b>2</b>partly live</span><span><b>3</b>in testing or Nightly</span><span><b>4</b>planned</span><span><b>2</b>not possible</span>
   </div>
   <figure class="hero">
     <img src="control-page.jpg" width="1920" height="1080" alt="The control page during a 4K HDR10 film (Dunkirk) tone mapped to a 100-nit projector: the signal in and out, the measured peak, the picture on screen, a live waveform, the tone curve and the Picture controls">
@@ -200,13 +200,13 @@ nav.chap { background: var(--bg); }
 <section class="ch" id="picture">
   <div class="chead"><span class="num">Chapter 5</span><h2>Picture quality</h2><p>Scaling and colour detail, mostly in the video hardware at almost no CPU cost.</p></div>
   <div class="feats">
-    <div class="f"><h3>Upscaling 1080p → 4K <span class="st live">Live</span></h3><p>A choice of upscalers: Lanczos 4, Lanczos 3, Bicubic, Soft and the super-scaler, switched live in the hardware. Lanczos 4 is the default.</p><p class="c">Cost: almost none.</p></div>
-    <div class="f"><h3>Custom 4K upscaler for Kodi <span class="st test">In Nightly</span></h3><p>Tesseract VP's own GPU upscaler for Kodi's 1080p SDR films, up to 30 fps: Lanczos 4 with anti-ringing, then steps that smooth jagged edges and rebuild colour along the edges, out at 4K 10-bit 4:4:4. It fits as many steps as each frame rate allows, and everything else (HDR, 50/60p, the streaming apps, protected video, the HDMI input) keeps the hardware Lanczos 4. In Nightly, with Kodi's colour upgrade switched on.</p><p class="m">Measured on a 1080p24 film: about 36 ms a frame on the GPU, and every frame shown in 4K over a 90-second run.</p><p class="c">Cost: about 36 ms of GPU time a frame at 24p, and about a quarter of one CPU core while it runs.</p></div>
-    <div class="f"><h3>Chroma upsampling for 4K <span class="st live">Live</span></h3><p>4K films' colour is interpolated up to full resolution instead of repeated, then goes out at 4:4:4 12-bit.</p><p class="c">Cost: almost none.</p></div>
-    <div class="f"><h3>Colour upgrade for 1080p <span class="st live">Live</span></h3><p>1080p and smaller films in Kodi get their colour rebuilt to full 4:4:4 on the Cube's GPU, live on every frame.</p><p class="m">Measured: 17 ms per 1080p frame.</p></div>
-    <div class="f"><h3>Downscaling 4K → 1080p <span class="st plan">Planned</span></h3><p>Anti-aliased, with 4K's colour landing as true 4:4:4 1080p. Studied and tried: the Cube's hardware can't run it at full quality yet, so it stays out until it can.</p></div>
-    <div class="f"><h3>Sharpening and detail <span class="st plan">Planned</span></h3><p>Studied and tried: the Cube's hardware can't run it at full quality yet, so it stays out until it can.</p></div>
-    <div class="f"><h3>Debanding <span class="st plan">Planned</span></h3><p>Smoothing gradient banding without softening edges. Studied and tried: the Cube's hardware can't run it at full quality yet, so it stays out until it can.</p></div>
+    <div class="f"><h3>Upscaling 1080p → 4K <span class="st live">Live</span></h3><p>The Cube's scaler takes 1080p and smaller pictures to 4K. Lanczos 4 is the default; Bicubic, Lanczos 3, Soft and Fire OS's own scaler are the other choices.</p><p class="c">Cost: none.</p></div>
+    <div class="f"><h3>Custom 4K upscaler for Kodi <span class="st test">In Nightly</span></h3><p>Tesseract VP's own GPU upscaler takes Kodi's 1080p SDR films to 4K. Each new pixel stays within the range of the source pixels around it, so it adds no ringing. Edge steps add a light cleanup, edge anti-aliasing and steepening, and the colour goes from 4:2:0 straight to 4K. It fits as many steps as each frame rate allows; everything else keeps the hardware scaler. In Nightly builds, off by default until it has been seen on a projector.</p><p class="m">Measured on a 1080p24 film: about 36 ms of GPU time a frame with every step on, and every frame shown in 4K over a 90-second run.</p><p class="c">Cost: about 36 ms of GPU time a frame at 24p, about a quarter of one CPU core and about 200 MB of video memory while it runs.</p></div>
+    <div class="f"><h3>Chroma upsampling for 4K <span class="st live">Live</span></h3><p>For 4K, HDR and Dolby Vision films the hardware brings 4:2:0 colour to full resolution: Smooth interpolates between colour samples (the default), or Fire OS's own.</p><p class="c">Cost: none.</p></div>
+    <div class="f"><h3>Colour upgrade for 1080p <span class="st live">Live</span></h3><p>Kodi's 8-bit SDR films up to 1080p: the GPU rebuilds the colour to full 4:4:4 at the film's own size before the 4K scaler. Off by default; about a quarter of one CPU core while a film plays.</p><p class="m">Measured: 17 ms per 1080p frame.</p></div>
+    <div class="f"><h3>Downscaling <span class="st live">Live</span></h3><p>Sharp, Balanced (Fire OS's own) or Soft. It acts on uncompressed sources such as the HDMI input; 4K HEVC films come down to 1080p through the decoder's own half-size copy.</p></div>
+    <div class="f"><h3>Sharpening and debanding for Kodi <span class="st live">Live</span></h3><p>With the Kodi colour upgrade: light, medium or strong sharpening and low or high debanding, off by default.</p></div>
+    <div class="f"><h3>Sharpening and debanding for other sources <span class="st plan">Planned</span></h3><p>Beyond Kodi, once the hardware can run them at full quality.</p></div>
   </div>
 </section>
 
@@ -324,7 +324,7 @@ nav.chap { background: var(--bg); }
       <tr><td>Upscaler, chroma upsampling, calibration, range</td><td>~0</td><td>Hardware settings and the output table.</td></tr>
       <tr><td>Colour space table</td><td>~3 ms</td><td>Only when the content type changes.</td></tr>
       <tr><td>1080p colour upgrade</td><td>17 ms / frame</td><td>GPU; 1080p and smaller films in Kodi.</td></tr>
-      <tr><td>Kodi 4K upscaler (Nightly)</td><td>~36 ms GPU / frame</td><td>1080p films up to 30 fps; about a quarter of one core. The GPU runs at full clock while it works.</td></tr>
+      <tr><td>Kodi 4K upscaler (Nightly, off by default)</td><td>~36 ms GPU / frame</td><td>All steps at 24p, of 41.7 ms; steps come off by themselves at higher frame rates. About a quarter of one core and about 200 MB of video memory; the GPU runs at full clock while it works.</td></tr>
       <tr><td>Scopes on screen</td><td>a tenth of a core</td><td>Only while open; was a whole core.</td></tr>
       <tr><td>CEC device list</td><td>small</td><td>Only while the Devices card is open.</td></tr>
       <tr><td>Whole box, 4K60 game tone mapped, scopes open</td><td>29 % of 8 cores</td><td>Over two thirds of the CPU left idle.</td></tr>

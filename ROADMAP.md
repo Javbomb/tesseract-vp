@@ -49,14 +49,14 @@ This roadmap takes Tesseract VP from a tone-mapping box to a full video processo
 
 | | Feature | Details |
 |---|---|---|
-| ✅ | **Upscaling 1080p → 4K** | <ul><li>A choice of upscalers: Lanczos 4, Lanczos 3, Bicubic, Soft and the super-scaler.</li><li>Lanczos 4 by default.</li><li>Switched live in the hardware, with almost no CPU cost.</li></ul> |
-| ✅ | **Chroma upsampling** | 4K films' colour is interpolated up to full resolution instead of repeated, and goes out at 4:4:4 12-bit. |
-| 🔶 | **Custom 4K upscaler for Kodi** | <ul><li>Tesseract VP's own GPU upscaler for Kodi's 1080p SDR films, up to 30 fps: Lanczos 4 with anti-ringing, then steps that smooth jagged edges and rebuild colour along the edges, out at 4K 10-bit 4:4:4. It fits as many steps as each frame rate allows, and everything else (HDR, 50/60p, the streaming apps, protected video, the HDMI input) keeps the hardware Lanczos 4. In Nightly, with Kodi's colour upgrade switched on.</li><li>Measured on a 1080p24 film: about 36 ms a frame on the GPU, and every frame shown in 4K over a 90-second run.</li><li>Next: the HDMI input, and 1440-wide anamorphic films.</li></ul> |
-| ✅ | **Colour upgrade for 1080p** | <ul><li>1080p and smaller films in Kodi get their colour rebuilt to full 4:4:4 on the Cube's GPU.</li><li>Live, on every frame.</li></ul> |
-| ⬜ | **Downscaling 4K → 1080p** | Anti-aliased, with 4K's colour landing as true 4:4:4 1080p. Studied and tried: the Cube's hardware can't run it at full quality yet, so it stays out until it can. |
+| ✅ | **Upscaling 1080p → 4K** | The Cube's scaler takes 1080p and smaller pictures to 4K. Lanczos 4 is the default; Bicubic, Lanczos 3, Soft and Fire OS's own scaler are the other choices. No CPU cost. |
+| ✅ | **Chroma upsampling** | For 4K, HDR and Dolby Vision films the hardware brings 4:2:0 colour to full resolution: Smooth interpolates between colour samples (the default), or Fire OS's own. No CPU cost. |
+| 🔶 | **Custom 4K upscaler for Kodi** | <ul><li>Tesseract VP's own GPU upscaler takes Kodi's 1080p SDR films to 4K. Each new pixel stays within the range of the source pixels around it, so it adds no ringing. Edge steps add a light cleanup, edge anti-aliasing and steepening, and the colour goes from 4:2:0 straight to 4K. It fits as many steps as each frame rate allows; everything else keeps the hardware scaler.</li><li>Measured on a 1080p24 film: about 36 ms of GPU time a frame with every step on, and every frame shown in 4K over a 90-second run.</li><li>In Nightly builds, off by default until it has been seen on a projector.</li><li>Next: the HDMI input, and 1440-wide anamorphic films.</li></ul> |
+| ✅ | **Kodi colour upgrade** | Kodi's 8-bit SDR films up to 1080p: the GPU rebuilds the colour to full 4:4:4 at the film's own size before the 4K scaler. Off by default; about a quarter of one CPU core while a film plays. |
+| ✅ | **Downscaling** | Sharp, Balanced (Fire OS's own) or Soft. It acts on uncompressed sources such as the HDMI input; 4K HEVC films come down to 1080p through the decoder's own half-size copy. |
 | ✅ | **Contrast and shadow detail** | **Depth** adds local contrast and shadow separation to the curve. |
-| ⬜ | **Sharpening and detail** | Studied and tried: the Cube's hardware can't run it at full quality yet, so it stays out until it can. |
-| ⬜ | **Debanding** | Smoothing gradient banding without softening edges. Studied and tried: the Cube's hardware can't run it at full quality yet, so it stays out until it can. |
+| ✅ | **Sharpening and debanding for Kodi** | With the Kodi colour upgrade: light, medium or strong sharpening and low or high debanding, off by default. |
+| ⬜ | **Sharpening and debanding for other sources** | Beyond Kodi, once the hardware can run them at full quality. |
 
 ## Phase 3: Every picture fitted to the screen
 

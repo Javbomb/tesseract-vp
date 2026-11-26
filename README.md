@@ -70,12 +70,13 @@ This repository holds Tesseract VP's **signed releases**, its [roadmap](ROADMAP.
   Anything a mode can't carry is lowered automatically to what HDMI 2.0 and your display support.
 - **Colour.** Keep your display in BT.2020, and menus, SDR and console pictures are converted in so they don't look oversaturated. Or use a BT.709 display, and films' wider colours are mapped in along constant hue instead of being clipped.
 - **Upscaling and chroma.**
-  - A choice of upscalers for 1080p and smaller pictures, Lanczos 4 by default.
+  - A choice of hardware upscalers for 1080p and smaller pictures, Lanczos 4 by default.
   - Smooth chroma upsampling for 4K films.
 
   Both run in the video hardware, with almost no CPU cost.
-- **Custom 4K upscaler for Kodi (in Nightly).** Tesseract VP's own GPU upscaler for Kodi's 1080p SDR films, up to 30 fps: Lanczos 4 with anti-ringing, then steps that smooth jagged edges and rebuild colour along the edges, out at 4K 10-bit 4:4:4. It fits as many steps as each frame rate allows, and everything else (HDR, 50/60p, the streaming apps, protected video, the HDMI input) keeps the hardware Lanczos 4. In Nightly, with Kodi's colour upgrade switched on.
-- **Colour upgrade.** 1080p and smaller films in Kodi get full 4:4:4 colour, rebuilt on the Cube's GPU on every frame.
+- **Custom 4K upscaler for Kodi (in Nightly, off by default).** Tesseract VP's own GPU upscaler takes Kodi's 1080p SDR films to 4K. Each new pixel stays within the range of the source pixels around it, so it adds no ringing. Edge steps add a light cleanup, edge anti-aliasing and steepening, and the colour goes from 4:2:0 straight to 4K. It fits as many steps as each frame rate allows; everything else keeps the hardware scaler.
+- **Colour upgrade, sharpening and debanding for Kodi.** Kodi's 8-bit SDR films up to 1080p get full 4:4:4 colour, rebuilt on the Cube's GPU, with optional sharpening and debanding.
+- **Downscaling:** Sharp, Balanced or Soft, for sources such as the HDMI input.
 
 ![Input & Output › Output during a film: HDR out, resolution, colour space, gamut, range, colour detail and scaling, with the HDMI link beside them](docs/output.jpg)
 
@@ -190,7 +191,8 @@ Updates keep the parts you installed up to date too, such as Dolby Vision FEL an
 - A dynamic contrast guard for displays that dim in dark scenes.
 
 **Then:**
-- Sharpening, debanding and downscaling, once the hardware can run them at full quality.
+- The custom 4K upscaler for Kodi out of testing, then for the HDMI input.
+- Sharpening and debanding beyond Kodi, once the hardware can run them at full quality.
 - Two-projector stacking.
 
 The full plan, item by item, is in **[ROADMAP.md](ROADMAP.md)**.
