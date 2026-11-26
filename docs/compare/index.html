@@ -109,6 +109,7 @@ section { padding-block: 22px 56px; }
   const f1 = (n) => (n < 10 ? n.toFixed(1) : Math.round(n).toLocaleString('en-GB'));
   const lostTxt = (v) => (v < 0.3 ? 'none' : v.toFixed(1) + '%');
   let F = [], cur = 0, showB = true;
+  const V = 109;   // bump when the pictures change, so browsers don't show an old picture kept under the same name
   const pref = (k, d) => { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch { return d; } };
   const save = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} };
   // waveform: each column's red, green and blue levels, added up; lines at 100, 50, 10 and 1 nit
@@ -153,14 +154,14 @@ section { padding-block: 22px 56px; }
     const s = F[cur];
     $('shot').value = String(cur);
     $('stage').style.aspectRatio = `960 / ${s.h}`;
-    $('iA').src = `cmp/${s.s}_a.webp`; $('iB').src = `cmp/${s.s}_b.webp`;
+    $('iA').src = `cmp/${s.s}_a.webp?v=${V}`; $('iB').src = `cmp/${s.s}_b.webp?v=${V}`;
     $('iA').alt = `${nice(s.t)}, another popular DTM solution`; $('iB').alt = `${nice(s.t)}, Tesseract VP`;
     $('master').textContent = `Master: brightest ${Math.round(s.peak).toLocaleString('en-GB')} nits, ${Math.round(s.over)}% of the picture above 100 nits. Both pictures are for a 100-nit projector.`;
     $('rows').innerHTML = [['a', 'Another popular DTM solution', ''], ['b', 'Tesseract VP', 'vp']].map(([k, n, cls]) => `<tr class="${cls}"><td>${n}</td><td>${f1(s[k].apl)} nits</td><td>${s[k].top} nits</td><td>${lostTxt(s[k].lost)}</td></tr>`).join('');
     WV.a = WV.b = null;
     const at = cur;
     for (const [k, el] of [['a', $('iA')], ['b', $('iB')]]) el.decode().then(() => { if (at === cur) { WV[k] = waveOf(el); drawWave(); } }).catch(() => {});
-    const nx = F[(cur + 1) % F.length]; new Image().src = `cmp/${nx.s}_a.webp`; new Image().src = `cmp/${nx.s}_b.webp`;
+    const nx = F[(cur + 1) % F.length]; new Image().src = `cmp/${nx.s}_a.webp?v=${V}`; new Image().src = `cmp/${nx.s}_b.webp?v=${V}`;
     paint();
   }
   const flip = () => { showB = !showB; paint(); };
@@ -176,7 +177,7 @@ section { padding-block: 22px 56px; }
     else if (e.key === 'ArrowRight') load(cur + 1);
     else if (e.key === 'ArrowLeft') load(cur - 1);
   });
-  fetch('frames.json').then((r) => r.json()).then((d) => {
+  fetch('frames.json?v=' + V).then((r) => r.json()).then((d) => {
     F = d; $('shot').innerHTML = F.map((s, i) => `<option value="${i}">${nice(s.t)}</option>`).join('');
     load(Math.min(+pref('dtmres_shot', 0) || 0, F.length - 1));
   }).catch(() => { $('master').textContent = 'The frames did not load. Reload the page to try again.'; });
