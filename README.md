@@ -41,6 +41,8 @@ This repository holds Tesseract VP's **signed releases**, its [roadmap](ROADMAP.
 
   Every change ramps in smoothly, with no flicker.
 
+![Tone Mapping › Advanced during a film: what the measurement ignores, the auto black floor and what this frame's curve is fitted to, beside the tone curve, histogram and peak over time](docs/tone-advanced.jpg)
+
 ### Games and the HDMI input
 - **HDR10 consoles, tone mapped live.** An Xbox on the HDMI input gets a curve made from each of its own frames.
 - **Low latency.**
@@ -69,6 +71,8 @@ This repository holds Tesseract VP's **signed releases**, its [roadmap](ROADMAP.
   Both run in the video hardware, with almost no CPU cost.
 - **Colour upgrade.** 1080p and smaller films in Kodi get full 4:4:4 colour, rebuilt on the Cube's GPU on every frame.
 
+![Input & Output › Output during a film: HDR out, resolution, colour space, gamut, range, colour detail and scaling, with the HDMI link beside them](docs/output.jpg)
+
 ### Aspect, masking and subtitles
 - **Black bar detection in every source:** apps, Kodi, the HDMI input, protected streams and Dolby Vision, FEL included. A film that changes shape (an IMAX scene) is followed on the frame it changes.
 - **Fit the picture to your screen:**
@@ -96,6 +100,8 @@ This repository holds Tesseract VP's **signed releases**, its [roadmap](ROADMAP.
 - **Separate SDR and HDR calibration**, each picked by what is playing.
 - **Built-in test patterns:** ramps, windows, average-light patches and single-pixel 4K checks, in SDR and HDR, shown tone mapped or untouched.
 
+![Calibration during a film: levels and white balance, test patterns, the greyscale as sent and each colour's response](docs/calibration.jpg)
+
 ### Control
 - **Control page.** Every setting is one line, with the live picture (menus and subtitles included), waveform and tone curve kept in view, so you see each change as you make it.
 - **Other ways in:**
@@ -115,6 +121,8 @@ This repository holds Tesseract VP's **signed releases**, its [roadmap](ROADMAP.
 <p><img src="docs/tv-settings.jpg" alt="The full-screen settings page on the Cube itself" width="60%"></p>
 
 *The launcher, the control page on a phone, and the settings page on the Cube itself.*
+
+![Input & Output › Devices: the HDMI chain in signal order, what each device answers, and what the remote's power and volume buttons do](docs/devices.jpg)
 
 ### Safe to run
 - **Signed releases.** A Cube refuses any update whose signature or checksums don't match.
