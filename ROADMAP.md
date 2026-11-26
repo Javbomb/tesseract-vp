@@ -49,7 +49,7 @@ This roadmap takes Tesseract VP from a tone-mapping box to a full video processo
 
 | | Feature | Details |
 |---|---|---|
-| ✅ | **Upscaling 1080p → 4K** | <ul><li>A choice of upscalers: Lanczos 4, Lanczos 3, Bicubic, Soft and the super-scaler.</li><li>Lanczos 4 by default, picked from the scaler hardware's own response: the flattest detail and the least ringing.</li><li>Switched live in the hardware, with almost no CPU cost.</li></ul> |
+| ✅ | **Upscaling 1080p → 4K** | <ul><li>A choice of upscalers: Lanczos 4, Lanczos 3, Bicubic, Soft and the super-scaler.</li><li>Lanczos 4 by default.</li><li>Switched live in the hardware, with almost no CPU cost.</li></ul> |
 | ✅ | **Chroma upsampling** | 4K films' colour is interpolated up to full resolution instead of repeated, and goes out at 4:4:4 12-bit. |
 | ✅ | **Colour upgrade for 1080p** | <ul><li>1080p and smaller films in Kodi get their colour rebuilt to full 4:4:4 on the Cube's GPU.</li><li>Live, on every frame.</li></ul> |
 | ⬜ | **Downscaling 4K → 1080p** | Anti-aliased, with 4K's colour landing as true 4:4:4 1080p. Studied and tried: the Cube's hardware can't run it at full quality yet, so it stays out until it can. |
