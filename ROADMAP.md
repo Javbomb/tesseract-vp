@@ -100,7 +100,7 @@ This roadmap takes Tesseract VP from a tone-mapping box to a full video processo
 | ✅ | **Built-in test patterns** | Ramps, windows, average-light patches and single-pixel 4K checks, in SDR and HDR, shown tone mapped or untouched. |
 | ✅ | **Separate SDR and HDR calibration** | Each has its own calibration set, picked by what is playing. |
 | ✅ | **3D LUT and greyscale correction** | Each calibration set takes its own 3D LUT and a separate greyscale and gamma table in front of it. |
-| ✅ | **Calibration software** | Calman, HCFR, DisplayCAL and ColourSpace drive the Cube's patterns directly. |
+| 🔶 | **Calibration software (in testing)** | The Cube speaks the network pattern protocols that calibration software uses (Resolve, PGenerator and UPGCI), for Calman, HCFR, DisplayCAL and ColourSpace. Checked with protocol test tools; not yet confirmed with each program. |
 | ⬜ | **Dynamic contrast guard** | For displays with dynamic contrast or laser and backlight dimming: leave room in dark scenes so their brightness lift doesn't clip highlights. |
 
 ## Phase 7: Beyond

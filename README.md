@@ -97,7 +97,7 @@ This repository holds Tesseract VP's **signed releases**, its [roadmap](ROADMAP.
   Their steps are finer than most displays' own controls.
 - **3D LUT and greyscale.** Upload a 3D LUT and a greyscale and gamma table for each calibration set.
 - **Gamut guardrail.** Colours held inside BT.709, DCI-P3, BT.2020 or your display's measured primaries.
-- **Calibration software.** Calman, HCFR, DisplayCAL and ColourSpace drive the Cube's patterns directly.
+- **Calibration software (in testing).** The Cube speaks the network pattern protocols that calibration software uses (Resolve, PGenerator and UPGCI), for Calman, HCFR, DisplayCAL and ColourSpace. Checked with protocol test tools; not yet confirmed with each program.
 - **Separate SDR and HDR calibration**, each picked by what is playing.
 - **Built-in test patterns:** ramps, windows, average-light patches and single-pixel 4K checks, in SDR and HDR, shown tone mapped or untouched.
 
