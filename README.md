@@ -145,6 +145,8 @@ irm https://github.com/Javbomb/tesseract-vp/releases/download/stable/go.ps1 | ie
 
 Backups are kept in **Documents › Tesseract VP › backups**. To remove Tesseract VP Setup from the PC, use **Settings › Apps** like any other program; your Cubes keep running.
 
+**Phone app (Android):** on the phone, open **[Tesseract-VP-Remote.apk](https://github.com/Javbomb/tesseract-vp/releases/download/stable/Tesseract-VP-Remote.apk)**, allow your browser to install apps when Android asks, and install it. On the same Wi-Fi it finds every Tesseract VP by itself.
+
 **Mac or Linux, or by hand:** download `tesseract-vp.zip` from the [latest release](https://github.com/Javbomb/tesseract-vp/releases), unzip it and run `install.sh <cube-address>`. The package's own `README.md` describes every step.
 
 ## Releases
