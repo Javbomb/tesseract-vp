@@ -1,4 +1,4 @@
-/* Wraps the stock Amlogic primary audio HAL; see audio/README.md. */
+/* Wraps the stock Amlogic primary audio HAL; see README.md. */
 #define LOG_TAG "TesseractAudio"
 #include "hal_types.h"
 #include "iec_dtshd.h"

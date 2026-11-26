@@ -1,5 +1,5 @@
 #!/system/bin/sh
-# Lossless audio module (audio/README.md). Root. install <zip> | remove | live | refresh | status | ftvav-on | ftvav-off | ftvav-remove
+# Lossless audio module (README.md). Root. install <zip> | remove | live | refresh | status | ftvav-on | ftvav-off | ftvav-remove
 M=/data/adb/modules/tesseract_audio
 FTV=/data/adb/modules/firetv_passthrough
 FTVB=/data/adb/cubevp/firetv_av_backup.tar

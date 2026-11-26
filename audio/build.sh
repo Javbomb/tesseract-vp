@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Builds audio.primary.tesseract.so (ARM32, API 28) and the Magisk module zip.
-# Git Bash on Windows or Linux with the Android NDK. Output: audio/out/
+# Git Bash on Windows or Linux with the Android NDK. Output: out/
 set -euo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"
 NDK="${ANDROID_NDK_HOME:-}"
