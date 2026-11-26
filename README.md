@@ -4,7 +4,7 @@
 
 Tesseract VP turns a Fire TV Cube into a video processor that sits between your sources and your screen. It tone maps every HDR picture to your display's real brightness, frame by frame. That covers the streaming apps (Netflix and Disney+ included), Kodi and the Cube's HDMI input. It is built for projectors and other displays that can't reach HDR brightness. It also gives you full control of the signal and sound that leave the box: output format, frame rate, aspect and masking, calibration and lossless audio.
 
-![The Tesseract VP control page during a 4K HDR10+ film, tone mapped to a 500-nit TV: the signal in and out, the measured peak, colour and clipping, the picture on screen, a live waveform, the tone curve and the Picture settings](docs/control-page.jpg)
+![The Tesseract VP control page during a 4K HDR10 film, tone mapped to a 100-nit projector: the signal in and out, the measured peak, the picture on screen, a live waveform, the tone curve and the Picture controls](docs/control-page.jpg)
 
 *The control page, open in any browser on your network.*
 
