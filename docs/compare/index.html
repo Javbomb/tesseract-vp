@@ -113,19 +113,19 @@ section { padding-block: 22px 56px; }
   const save = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} };
   // waveform: each column's red, green and blue levels, added up; lines at 100, 50, 10 and 1 nit
   const WV = {};
-  // one waveform column per picture column; each sample split between its two nearest rows, then a light blur
+  // one waveform column per picture column, headroom above the 100-nit line; each sample split between its two nearest rows, then a light blur
   function waveOf(img) {
-    const w = img.naturalWidth, h = img.naturalHeight, Wd = w, H = Math.round(w / 2.35);
+    const w = img.naturalWidth, h = img.naturalHeight, Wd = w, H = Math.round(w / 2.35); const TOP = Math.round(H * 0.07);
     const o = new OffscreenCanvas(w, h), og = o.getContext('2d'); og.drawImage(img, 0, 0);
     const d = og.getImageData(0, 0, w, h).data, acc = new Float32Array(Wd * H * 3);
     for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
       const p = (y * w + x) * 4;
-      for (let k = 0; k < 3; k++) { const f = d[p + k] / 255 * (H - 1), r = f | 0, t = f - r, row = H - 1 - r; acc[(row * Wd + x) * 3 + k] += 1 - t; if (t > 0) acc[((row - 1) * Wd + x) * 3 + k] += t; }
+      for (let k = 0; k < 3; k++) { const f = d[p + k] / 255 * (H - 1 - TOP), r = f | 0, t = f - r, row = H - 1 - r; acc[(row * Wd + x) * 3 + k] += 1 - t; if (t > 0) acc[((row - 1) * Wd + x) * 3 + k] += t; }
     }
     const tmp = new Float32Array(acc.length);
     for (let y = 0; y < H; y++) for (let x = 0; x < Wd; x++) for (let k = 0; k < 3; k++) { const i = (y * Wd + x) * 3 + k, l = x > 0 ? i - 3 : i, r = x < Wd - 1 ? i + 3 : i; tmp[i] = (acc[l] + 2 * acc[i] + acc[r]) / 4; }
     for (let y = 0; y < H; y++) for (let x = 0; x < Wd; x++) for (let k = 0; k < 3; k++) { const i = (y * Wd + x) * 3 + k, u = y > 0 ? i - Wd * 3 : i, dn = y < H - 1 ? i + Wd * 3 : i; acc[i] = (tmp[u] + 2 * tmp[i] + tmp[dn]) / 4; }
-    const im = new ImageData(Wd, H), q = im.data, sc = 70 * Math.sqrt(H / h);
+    const im = new ImageData(Wd, H), q = im.data, sc = 55 * Math.sqrt(H / h / 2);
     for (let i = 0; i < Wd * H; i++) { for (let k = 0; k < 3; k++) q[i * 4 + k] = Math.min(255, Math.sqrt(acc[i * 3 + k]) * sc); q[i * 4 + 3] = 255; }
     return im;
   }
@@ -136,9 +136,9 @@ section { padding-block: 22px 56px; }
     if (im) g.putImageData(im, 0, 0);
     g.font = `${Math.round(c.width / 70)}px Sora, "Segoe UI", sans-serif`; g.textAlign = 'right';
     for (const f of [1, 0.5, 0.1, 0.01]) {
-      const y = Math.round((c.height - 1) * (1 - Math.pow(f, 1 / 2.2))) + 0.5;
+      const top = Math.round(c.height * 0.07), y = Math.round(c.height - 1 - (c.height - 1 - top) * Math.pow(f, 1 / 2.2)) + 0.5;
       g.strokeStyle = 'rgba(255,255,255,0.2)'; g.beginPath(); g.moveTo(0, y); g.lineTo(c.width, y); g.stroke();
-      g.fillStyle = 'rgba(255,255,255,0.72)'; g.fillText(`${f * 100} nit${f === 0.01 ? '' : 's'}`, c.width - 8, Math.max(15, y - 5));
+      g.fillStyle = 'rgba(255,255,255,0.72)'; g.fillText(`${f * 100} nit${f === 0.01 ? '' : 's'}`, c.width - 8, y - 5);
     }
   }
   function paint() {
