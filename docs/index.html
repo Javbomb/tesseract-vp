@@ -308,7 +308,7 @@ nav.chap { background: var(--bg); }
       <tr><td>Film look-ahead</td><td>~3 ms / frame</td><td>One core, no added delay.</td></tr>
       <tr><td>Protected look-ahead, protected bar detection</td><td>0</td><td>Video hardware only.</td></tr>
       <tr><td>Aspect, masking, scope zoom</td><td>~0</td><td>Applied once per frame where the picture is placed.</td></tr>
-      <tr><td>Genlock</td><td>~0</td><td>A few register reads per frame, one clock change a second.</td></tr>
+      <tr><td>Genlock</td><td>~0</td><td>Almost nothing while it holds the lock.</td></tr>
       <tr><td>Upscaler, chroma upsampling, calibration, range</td><td>~0</td><td>Hardware settings and the output table.</td></tr>
       <tr><td>Colour space table</td><td>~3 ms</td><td>Only when the content type changes.</td></tr>
       <tr><td>1080p colour upgrade</td><td>17 ms / frame</td><td>GPU; 1080p and smaller films in Kodi.</td></tr>
