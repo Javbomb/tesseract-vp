@@ -24,8 +24,9 @@ This repository holds Tesseract VP's **signed releases**, its [roadmap](ROADMAP.
 
 ### Dynamic tone mapping
 - **Every frame is measured and gets its own curve.** Each picture is fitted to your screen's real peak brightness.
-- **Close to the grade.** Shadows and mid-tones are kept close to how the film was mastered, and the work goes mostly into the light your screen can't show. Highlights roll off smoothly toward your screen's peak instead of hard clipping, the curve moves gently between scenes, and colours are held to their hue as they are brought in.
+- **1:1 wherever it can be.** A scene that fits your screen is shown 1:1, as mastered. One that doesn't is compressed to fit, as gently as possible: as much of the picture as it can stays 1:1, and the rest, mid-tones included when the scene is far brighter than your screen, is brought down smoothly. Highlights roll off smoothly toward your screen's peak instead of hard clipping, the curve moves gently between scenes, and colours are held to their hue as they are brought in.
 - **Highlights and shadows with room to breathe.** Bright highlights keep their shape right up to your screen's peak. Deep shadows stay deep, and in bright scenes the shadow detail is kept.
+- **Subtitles left out.** Burned-in white or yellow subtitles at the bottom of the picture, and in the bars, don't count towards the scene's brightness, so they don't dim the film.
 - **Look-ahead.** Films are measured several frames before they are shown, so a scene cut gets the right curve on the frame it happens. Small, bright highlights are caught too.
 - **Protected streams included.** Netflix, Disney+ and other DRM video can't be read by software. Tesseract VP measures them in the video hardware instead, ahead of the screen. On a Disney+ 4K film, 99.5 % of frames reached the screen with their own curve, with 4K kept and no protection errors.
 - **HDR10, HDR10+ and Dolby Vision titles.** HDR10+ films get the same tone mapping as HDR10. For Dolby Vision titles, from the streaming apps and Kodi, you choose:
@@ -163,7 +164,7 @@ Backups are kept in **Documents › Tesseract VP › backups**. To remove Tesser
 
 ## Releases
 
-- **stable**: tested releases. The current one is **20261126** (updated the same day with new picture defaults) ([release notes](https://github.com/Javbomb/tesseract-vp/releases/tag/stable)). A Cube checks for these once a day and tells you when one is ready. It never installs one by itself.
+- **stable**: tested releases. The current one is **20261126** (updated the same day with subtitle-aware measurement and new picture defaults) ([release notes](https://github.com/Javbomb/tesseract-vp/releases/tag/stable)). A Cube checks for these once a day and tells you when one is ready. It doesn't install one by itself.
 - **nightly**: the newest builds, checked only when you ask.
 
 ## Updating a Cube

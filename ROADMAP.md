@@ -1,6 +1,6 @@
 # Tesseract VP roadmap
 
-*Updated 26 November 2026: the first Stable release (20261126) is out.*
+*Updated 26 November 2026: the first Stable release (20261126) is out, with subtitle-aware measurement added the same evening.*
 
 This roadmap takes Tesseract VP from a tone-mapping box to a full video processor. Phases are listed in the order we work on them. Most of the processing runs in the Cube's video hardware, so features are built to cost little or no CPU while a film plays.
 
@@ -17,9 +17,10 @@ This roadmap takes Tesseract VP from a tone-mapping box to a full video processo
 | | Feature | Details |
 |---|---|---|
 | ✅ | **Dynamic tone mapping with look-ahead** | <ul><li>Every frame is measured and gets its own curve.</li><li>Films are measured several frames before they are shown, so scene cuts don't flash or pump.</li><li>The full-resolution peak of the frame on screen is checked too, so small highlights aren't missed.</li></ul> |
-| ✅ | **Close to the grade** | <ul><li>Shadows and mid-tones are kept close to the master; the work goes mostly into the light the screen can't show.</li><li>Highlights roll off smoothly instead of hard clipping, the curve moves gently between scenes, and highlights whiten gently without shrinking the gamut.</li></ul> |
+| ✅ | **1:1 wherever it can be** | <ul><li>A scene that fits the screen is shown 1:1, as mastered. One that doesn't is compressed to fit, as gently as possible: as much of the picture as it can stays 1:1, and the rest, mid-tones included when the scene is far brighter than the screen, is brought down smoothly.</li><li>Highlights roll off smoothly instead of hard clipping, the curve moves gently between scenes, and highlights whiten gently without shrinking the gamut.</li></ul> |
 | ✅ | **Netflix, Disney+ and YouTube in 4K HDR** | Tone mapped like any other source, with a choice for Dolby Vision titles: our tone mapping, Dolby's own mapping, or Dolby Vision out to the display. |
 | ✅ | **Look-ahead for protected video** | <ul><li>DRM frames can't be read by software, so they are measured in the video hardware, ahead of the screen.</li><li>Disney+ 4K: 99.5 % of frames reached the screen with their own curve. Netflix: 95–97 %.</li><li>4K kept and no protection errors on either.</li></ul> |
+| ✅ | **Subtitles left out of the measurement** | Burned-in white or yellow subtitles at the bottom of the picture, and in the bars, don't count towards the scene's brightness, so they don't dim the film. On by default. |
 | ✅ | **HDR10+ films** | Tone mapped from their HDR10 base, like any HDR10 film. |
 | ✅ | **SDR or HDR10 out** | The tone-mapped picture goes out as SDR, or as HDR10 aimed at the display's peak. In HDR10, menus and subtitles are converted in at graphics white. |
 | ✅ | **Highlights and shadows refined** | <ul><li>Highlights keep their shape right up to the screen's peak.</li><li>Deep shadows stay deep, and bright scenes keep their shadow detail.</li><li>Highlight colour is fitted to the gamut, so saturated skin doesn't band.</li></ul> |
