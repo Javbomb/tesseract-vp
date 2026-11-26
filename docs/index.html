@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Tesseract VP: HDR video processor for the Fire TV Cube</title>
+<meta name="description" content="Tesseract VP turns a Fire TV Cube (3rd generation) into an HDR video processor, with its own dynamic tone mapping for projectors and dimmer displays.">
+<meta property="og:title" content="Tesseract VP">
+<meta property="og:description" content="An HDR video processor for the Fire TV Cube, with its own dynamic tone mapping.">
+<meta property="og:image" content="https://javbomb.github.io/tesseract-vp/control-page.jpg">
+<meta name="theme-color" content="#0e1013">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: an equipment manual. One calm dark look (the control page's own world):
+   a short header with the status count, a sticky chapter strip, then one chapter per
+   area: features as ruled entries (status, what it does, measured, cost) beside the
+   pictures. Amber = live / yours, blue = measured data, grey = planned. */
+:root {
+  color-scheme: dark;
+  --bg: #0e1013; --panel: #15181d; --rule: #262b33; --rule2: #1d2128;
+  --ink: #e8e5de; --ink2: #aab0b8; --ink3: #767d87;
+  --amber: #e9a53f; --blue: #7fb0dc; --grey: #8a919b; --test: #c9a7e8;
+  --sans: "Sora", "Segoe UI", Arial, sans-serif;
+  --cond: "Sora", "Segoe UI", Arial, sans-serif;
+  --mono: "Sora", "Segoe UI", Arial, sans-serif;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 400 14.5px/1.7 var(--sans); font-variant-numeric: tabular-nums; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+.wrap { max-width: 1180px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+header.top { padding-block: 40px 28px; display: grid; gap: 18px; }
+.kicker { font: 500 12px var(--mono); color: var(--ink3); letter-spacing: .08em; }
+h1 { font: 600 clamp(36px, 6.4vw, 68px)/1.02 var(--cond); margin: 0; letter-spacing: -.025em; }
+h1 span { color: var(--amber); }
+.lede { max-width: 68ch; color: var(--ink2); margin: 0; font-size: 17px; }
+.counts { display: flex; flex-wrap: wrap; gap: 8px 22px; font: 500 13px var(--mono); color: var(--ink2); }
+.counts b { font: 600 15px var(--mono); color: var(--ink); margin-right: 5px; }
+.hero { margin: 0; display: grid; gap: 8px; }
+.hero img { width: 100%; border: 1px solid var(--rule); border-radius: 6px; display: block; }
+nav.chap { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: color-mix(in srgb, var(--bg) 94%, transparent); border-block: 1px solid var(--rule); }
+nav.chap .wrap { display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; padding-block: 8px; }
+nav.chap a { flex: none; font: 500 13px var(--sans); color: var(--ink2); text-decoration: none; padding: 5px 10px; border-radius: 4px; white-space: nowrap; }
+nav.chap a:hover, nav.chap a:focus-visible { color: var(--ink); background: var(--panel); outline: none; }
+section.ch { padding-block: 44px 8px; scroll-margin-top: 56px; }
+.chead { display: grid; gap: 6px; margin-bottom: 22px; }
+.chead .num { font: 500 12px var(--mono); color: var(--ink3); }
+h2 { font: 600 clamp(26px, 3.6vw, 36px)/1.12 var(--cond); letter-spacing: -.015em; margin: 0; text-wrap: balance; }
+.chead p { margin: 0; max-width: 70ch; color: var(--ink2); }
+.grid { display: grid; gap: 28px 40px; }
+@media (min-width: 980px) { .grid.two { grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); } }
+.grid > * { min-width: 0; }
+.feats { border-top: 1px solid var(--rule); }
+.f { padding-block: 14px 15px; border-bottom: 1px solid var(--rule2); display: grid; gap: 4px; }
+.f h3 { margin: 0; font: 600 16px/1.35 var(--sans); display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; }
+.f p { margin: 0; color: var(--ink2); font-size: 15px; }
+.f .m, .f .c { font: 400 13px/1.5 var(--mono); }
+.f .m { color: var(--blue); }
+.f .c { color: var(--ink3); }
+.st { font: 500 10.5px/1.75 var(--mono); letter-spacing: .08em; text-transform: uppercase; padding: 0 6px; border: 1px solid currentColor; border-radius: 3px; flex: none; }
+.st.live { color: var(--amber); }
+.st.part { color: var(--blue); }
+.st.test { color: var(--test); }
+.st.plan { color: var(--grey); border-style: dashed; }
+.pics { display: grid; gap: 22px; align-content: start; }
+figure { margin: 0; display: grid; gap: 7px; }
+figure img { width: 100%; height: auto; display: block; border: 1px solid var(--rule); border-radius: 5px; background: var(--panel); }
+figure.narrow img { max-width: 420px; justify-self: start; }
+figcaption { font-size: 13px; color: var(--ink3); max-width: 75ch; }
+.duo { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); align-items: start; }
+table.cost { width: 100%; border-collapse: collapse; font-size: 14.5px; }
+.tbl { overflow-x: auto; border: 1px solid var(--rule); border-radius: 5px; }
+table.cost th, table.cost td { text-align: left; padding: 9px 14px; border-bottom: 1px solid var(--rule2); vertical-align: top; }
+table.cost th { font: 500 12px var(--mono); color: var(--ink3); letter-spacing: .04em; background: var(--panel); }
+table.cost td:nth-child(2) { font: 500 13.5px var(--mono); color: var(--blue); white-space: nowrap; }
+table.cost td:nth-child(3) { color: var(--ink2); }
+footer { border-top: 1px solid var(--rule); margin-top: 48px; padding-block: 24px 56px; color: var(--ink3); font-size: 13.5px; }
+a { color: var(--blue); }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+</style>
+<style>
+.cta { display: flex; flex-wrap: wrap; gap: 8px; }
+.btn { font: 500 14px var(--sans); color: var(--ink); text-decoration: none; padding: 9px 16px; border: 1px solid var(--rule); border-radius: 6px; background: var(--panel); }
+.btn:hover, .btn:focus-visible { border-color: var(--ink3); outline: none; }
+.btn.pri { background: var(--amber); border-color: var(--amber); color: #15110a; font-weight: 600; }
+nav.chap { background: var(--bg); }
+.need { margin: 0; color: var(--ink3); font-size: 14px; max-width: 70ch; }
+.need a, footer a { color: var(--blue); }
+</style>
+</head>
+<body>
+
+
+<div class="wrap">
+<header class="top">
+  <div class="kicker">HDR video processor · Fire TV Cube (3rd generation) · Stable 20261126</div>
+  <h1>Tesseract <span>VP</span></h1>
+  <p class="lede">Tesseract VP turns a Fire TV Cube into an HDR video processor. At its heart is its own tone-mapping engine, written from the ground up for the Cube, that fits every HDR frame to your screen's real brightness: in the streaming apps, Kodi and the HDMI input. Below is everything it does today, with each feature's status, what was measured, and what it costs the Cube.</p>
+  <div class="cta"><a class="btn pri" href="https://github.com/Javbomb/tesseract-vp/releases/download/stable/Tesseract-VP-Setup.exe">Download for Windows</a><a class="btn" href="https://github.com/Javbomb/tesseract-vp#installing">Install guide</a><a class="btn" href="https://github.com/Javbomb/tesseract-vp/wiki">Wiki</a><a class="btn" href="https://github.com/Javbomb/tesseract-vp/blob/main/ROADMAP.md">Roadmap</a><a class="btn" href="https://github.com/Javbomb/tesseract-vp">GitHub</a></div>
+  <p class="need">Needs a Fire TV Cube (3rd generation) that is unlocked and rooted. The unlock is a third-party tool, used at your own risk. Testers wanted: <a href="https://github.com/Javbomb/tesseract-vp/wiki/Testing-guide">the testing guide</a> says what to try.</p>
+  <div class="counts" aria-label="Status count">
+    <span><b>67</b>live</span><span><b>2</b>partly live</span><span><b>1</b>in testing</span><span><b>6</b>planned</span><span><b>2</b>not possible</span>
+  </div>
+  <figure class="hero">
+    <img src="control-page.jpg" width="1920" height="1080" alt="The control page during a 4K HDR10 film (Dunkirk) tone mapped to a 100-nit projector: the signal in and out, the measured peak, the picture on screen, a live waveform, the tone curve and the Picture controls">
+    <figcaption>The control page during a 4K HDR10 film: what comes in, what goes out, the measured peak, the live picture and every scope, with the settings beside them.</figcaption>
+  </figure>
+</header>
+</div>
+
+<nav class="chap" aria-label="Chapters"><div class="wrap">
+  <a href="#tone">Tone mapping</a><a href="#streaming">Protected streaming</a><a href="#games">Games &amp; HDMI in</a><a href="#output">Output &amp; frame rate</a><a href="#picture">Picture quality</a><a href="#aspect">Aspect &amp; geometry</a><a href="#dv">Dolby Vision</a><a href="#audio">Audio</a><a href="#cal">Calibration</a><a href="#control">Control &amp; screens</a><a href="#install">Install &amp; updates</a><a href="#cost">CPU cost</a>
+</div></nav>
+
+<div class="wrap">
+
+<section class="ch" id="tone">
+  <div class="chead"><span class="num">Chapter 1</span><h2>Tone mapping</h2><p>Every HDR picture fitted to the screen's real brightness, frame by frame, with a curve shaped to each scene. The tone mapping is Tesseract VP's own engine, written from the ground up for the Cube and its video hardware. It is the heart of the VP.</p></div>
+  <div class="grid two">
+    <div class="feats">
+      <div class="f"><h3>Dynamic tone mapping, every frame <span class="st live">Live</span></h3><p>Tesseract VP's own tone-mapping engine, written from the ground up for the Cube. Each 4K frame is measured in full and gets its own curve, applied by the video hardware to that frame. A scene that fits the screen is shown 1:1, as mastered. One that doesn't is compressed to fit, as gently as possible: as much of the picture as it can stays 1:1, the rest (mid-tones included when the scene is far brighter than the screen) is brought down smoothly, and highlights roll off instead of hard clipping.</p><p class="m">Measured: on a 26-bar test ramp every bar landed within one code of the prediction.</p><p class="c">Cost: about 1 % of the CPU for the curve itself.</p></div>
+      <div class="f"><h3>Look-ahead for films <span class="st live">Live</span></h3><p>Films are measured several frames before they are shown, so a scene cut gets its own curve on its first frame and a lightning flash doesn't dim the shot around it.</p><p class="c">Cost: about 3 ms of one core per frame; no added delay.</p></div>
+      <div class="f"><h3>Small-highlight safety net <span class="st live">Live</span></h3><p>The full-resolution peak of the frame on screen is checked as well, so a highlight smaller than the look-ahead's copy can see isn't missed.</p></div>
+      <div class="f"><h3>Subtitles left out of the measurement <span class="st live">Live</span></h3><p>Burned-in white or yellow subtitle text at the bottom of the picture, and in the bars, is ignored when the frame is measured, so subtitles don't dim the film. The Ignore subtitles setting is on by default.</p></div>
+      <div class="f"><h3>Highlights: hot, not clipped <span class="st live">Live</span></h3><p>The very brightest cores ease towards white the way real light does, late and hard at the top, so fire and lightning read hot while the glow keeps its colour. Highlights whiten gently without shrinking the gamut. A clip guard keeps every channel just below full on bright scenes, so a saturated colour keeps its texture.</p></div>
+      <div class="f"><h3>Highlights and shadows refined <span class="st live">Live</span></h3><p>Highlights keep their shape right up to the screen's peak. Deep shadows stay deep, and bright scenes keep their shadow detail. Highlight colour is fitted to the gamut, so saturated skin doesn't band.</p></div>
+      <div class="f"><h3>Calm action and adaptation speed <span class="st live">Live</span></h3><p>A new scene must differ from the last half second, not just the last frame, so strobes and explosions don't reset the picture ("Ignore busy action"). The peak rises in about 0.35 s and relaxes over about 2.5 s within a scene; a real cut resets at once.</p></div>
+      <div class="f"><h3>Films clipped at 4,000 nits <span class="st live">Live</span></h3><p>At film frame rates anything graded brighter is treated as 4,000 nits, so the hottest cores go white together and the rest of the frame gets more room. Games keep the full range.</p></div>
+      <div class="f"><h3>HDR10+ films through our curve <span class="st live">Live</span></h3><p>Films carrying HDR10+ metadata get our curve from their HDR10 base, like any HDR10 film, instead of taking the chip's own route.</p><p class="m">Checked on 1917: tone mapping live, peaks measured, plain HDR10 unchanged.</p></div>
+      <div class="f"><h3>SDR or HDR10 out <span class="st live">Live</span></h3><p>The tone-mapped picture goes out as SDR, or as HDR10 aimed at the display's peak. In HDR10, menus and subtitles are converted in at graphics white.</p></div>
+      <div class="f"><h3>Auto black floor <span class="st live">Live</span></h3><p>For films mastered with a raised black. The film's darkest level is learned over the whole title (its bars, if it has them), not shot by shot, and only the lowest seen counts. It is taken off the darkest levels only, at most 0.1 nits, fading in over about 20 s. Foggy and night scenes stay as graded.</p><p class="m">Checked: The Dark Knight's true-black bars, nothing taken off.</p></div>
+      <div class="f"><h3>Picture controls <span class="st live">Live</span></h3><p>Eight controls: Brightness, Punch, Highlights, Highlight colour, White-hot, Clip guard (default 65 %), Shadows and Depth, each with the tuned setting in the middle. Scene brightness and adaptation speed sit beside them, with further fine controls in the Detail view. Every change ramps in smoothly, with no flicker.</p></div>
+      <div class="f"><h3>Contrast and shadow detail <span class="st live">Live</span></h3><p>Depth adds local contrast and shadow separation to the curve.</p></div>
+      <div class="f"><h3>Two-projector stacking and split tone mapping <span class="st plan">Planned</span></h3><p>Two projectors, each fed by its own Cube. Stacked: both show the whole picture, for twice the light. Split: one carries the picture and the other only the highlights, and they add back to the full picture with colours unchanged.</p></div>
+    </div>
+    <div class="pics">
+      <figure><img src="tone-advanced.jpg" width="1920" height="1080" loading="lazy" alt="Tone Mapping, Advanced on the control page during Dunkirk: ignore tiny highlights, ignore subtitles, auto black floor, and what the curve is fitted to"><figcaption>Tone Mapping › Advanced, live during a film: what the measurement ignores (tiny highlights, subtitles), the auto black floor, and what this frame's curve is fitted to, beside the tone curve, histogram and peak over time.</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section class="ch" id="streaming">
+  <div class="chead"><span class="num">Chapter 2</span><h2>Protected streaming</h2><p>Netflix, Disney+ and YouTube in 4K HDR, tone mapped like any other source, without upsetting their copy protection.</p></div>
+  <div class="feats">
+    <div class="f"><h3>Netflix, Disney+ and YouTube in 4K HDR <span class="st live">Live</span></h3><p>Netflix 4K HDR10 and Disney+ 4K HDR10 through our tone mapping; YouTube 4K HDR10 too. Dolby Vision titles get a choice: our tone mapping, Dolby's own mapping, or Dolby Vision out to the display.</p></div>
+    <div class="f"><h3>Look-ahead for protected video <span class="st live">Live</span></h3><p>DRM frames can't be read by software, so they are measured in the video hardware a few frames before they reach the screen. It switches itself on whenever protected video plays.</p><p class="m">Measured: Disney+ 4K 99.5 % of frames with their own curve; Netflix 95–97 %; Mad Max on Kodi 99 %, matching software measurement frame for frame, ~3 frames ahead, no flicker. 4K kept, no protection errors.</p><p class="c">Cost: no CPU; one more 4K read by the video hardware.</p></div>
+    <div class="f"><h3>Protected video handled cleanly <span class="st live">Live</span></h3><p>The control page and overlay say "protected" instead of showing green; tone mapping, histogram and curve stay live. Fire OS's 4:2:0 resets are corrected back to 4:2:2 12-bit. A frame-rate switch waits until the app's DRM sees the HDMI link protected again, because an HDCP drop while Netflix decrypts can cap the Cube to HD for about an hour.</p></div>
+    <div class="f"><h3>Bar detection on protected streams <span class="st live">Live</span></h3><p>Protected films have their black bars found in hardware too, so Auto aspect works on Netflix and Disney+.</p><p class="m">Measured: The Dark Knight reads 2.40:1, the same as software measurement.</p></div>
+  </div>
+</section>
+
+<section class="ch" id="games">
+  <div class="chead"><span class="num">Chapter 3</span><h2>Games and the HDMI input</h2><p>A console on the Cube's HDMI input, tone mapped live with very little lag.</p></div>
+  <div class="grid two">
+    <div class="feats">
+      <div class="f"><h3>HDR10 consoles, tone mapped live <span class="st live">Live</span></h3><p>The Xbox's 4K60 HDR10 gets a curve made from each of its own frames. The Cube offers the console HDR10, which Fire OS hid.</p></div>
+      <div class="f"><h3>Low latency and ALLM <span class="st live">Live</span></h3><p>Game mode runs the input in the hardware's fast path with frame lock. Low latency Off / On / Auto: Auto follows the console's ALLM flag.</p><p class="m">Measured: about 7 ms from a frame's arrival to the screen, against 41 ms with look-ahead; about 12 ms inside the Cube on the ALLM fast path.</p></div>
+      <div class="f"><h3>HDMI look-ahead <span class="st live">Live</span></h3><p>With low latency off, each frame is measured as it arrives and sees up to two coming frames, at no added delay.</p><p class="m">Measured: 603 of 603 frames.</p></div>
+      <div class="f"><h3>Genlock <span class="st live">Live</span></h3><p>The output follows the input's timing, so every frame reaches the screen once. Free-running, the clocks drifted enough to drop or repeat a frame about every 25 minutes.</p><p class="m">Measured: locks within about 40 s and holds; 26 ms input to screen instead of 41.</p><p class="c">Cost: almost none.</p></div>
+      <div class="f"><h3>Lip sync <span class="st live">Live</span></h3><p>Match sound (the picture waits for the HDMI audio path, 52–66 ms) or Lowest lag.</p></div>
+      <div class="f"><h3>EDID builder <span class="st live">Live</span></h3><p>What the source is told, built from the receiver's EDID so its sound formats and Atmos pass untouched: resolutions, refresh rates, HDR10 / HLG / SDR only, peak and black, 4:2:0, bit depth and ALLM.</p><p class="m">Tested: the Xbox told 100 nits / 0.05 nits came back at 4K60 HDR10.</p></div>
+      <div class="f"><h3>Input follows the app in front <span class="st live">Live</span></h3><p>The HDMI input runs only while the HDMI player is in front; four seconds of another app turns it off, so a restart doesn't reopen the input over a film.</p></div>
+      <div class="f"><h3>Lag measurement <span class="st part">Partly</span></h3><p>The delay Tesseract VP adds is measured live and shown while the HDMI input runs. The display's own share needs a light sensor on the screen.</p></div>
+      <div class="f"><h3>VRR pass-through <span class="st plan">Not possible</span></h3><p>The Cube's HDMI output can't carry variable refresh rate.</p></div>
+    </div>
+    <div class="pics">
+      <figure><img src="output.jpg" width="1920" height="1080" loading="lazy" alt="Input and Output, Output on the control page: HDR out, resolution, colour space, gamut, range, colour detail, scaling and Dolby Vision"><figcaption>Input &amp; Output › Output: HDR out, resolution, colour space, display gamut, range, colour detail and scaling, with the HDMI link's bandwidth beside them.</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section class="ch" id="output">
+  <div class="chead"><span class="num">Chapter 4</span><h2>Output and frame rate</h2><p>Full control of the signal that leaves the box.</p></div>
+  <div class="grid two">
+    <div class="feats">
+      <div class="f"><h3>Frame-rate matching <span class="st live">Live</span></h3><p>"Match the film": each film plays at its own rate, read from the decoder before its first frame. Streaming apps are included: the switch waits until the app's DRM sees the HDMI link protected again, the picture holds for under 3 s, and the sound carries on. At film rates the output goes to 4:4:4 12-bit in the same switch.</p><p class="m">Measured: 23.976 and 24.000 told apart; four Netflix films in one session at 24.000, 23.976 and 25, all in 4K, no protection errors; back to 59.94 at Home within 2 s.</p></div>
+      <div class="f"><h3>Protected apps through more receivers <span class="st part">Partly</span></h3><p>Disney+ switched on every chain we tested, with Atmos kept. Netflix switches where the HDMI handshake is quick: straight into a display, or through a fast receiver (23.976, 24 and 25 tested in 4K with Atmos). Through slower receivers it stays at the usual rate by itself, or you can choose Always try. Next: the right rate set before the film starts, through more receivers.</p></div>
+      <div class="f"><h3>Output menu <span class="st live">Live</span></h3><p>Colour format (Best, 4:4:4, 4:2:2, 4:2:0, RGB), bit depth (Best, 12, 10, 8), resolution (as source, 2160p, 1080p), refresh (Match the film, as source, 60, 50 Hz) and colour space, applied over whatever the app picks and lowered automatically to what HDMI 2.0 and the display carry.</p></div>
+      <div class="f"><h3>Colour space and gamut <span class="st live">Live</span></h3><p>BT.2020 out: menus, SDR and the HDMI input converted in, so they don't look oversaturated (the red Netflix logo). BT.709 out: films' wider colours mapped in along constant hue rather than clipped. Auto: each signal flagged as what it is.</p><p class="c">Cost: one table, rebuilt in about 3 ms when the content changes.</p></div>
+      <div class="f"><h3>HDMI 2.1 <span class="st plan">Not possible</span></h3><p>Fire OS's HDMI driver has no FRL training, so the Cube runs HDMI 2.0: 4K60 at 4:2:2 12-bit or 4:4:4 8-bit; 4K120 is out.</p></div>
+    </div>
+    <div class="pics">
+      <figure><img src="tv-output.jpg" width="1920" height="1080" loading="lazy" alt="Input and Output on the Cube's own settings page, with the HDMI link and each setting explained"><figcaption>The same settings on the Cube's own full-screen page, worked with the remote, each with a line saying what it does.</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section class="ch" id="picture">
+  <div class="chead"><span class="num">Chapter 5</span><h2>Picture quality</h2><p>Scaling and colour detail, mostly in the video hardware at almost no CPU cost.</p></div>
+  <div class="feats">
+    <div class="f"><h3>Upscaling 1080p → 4K <span class="st live">Live</span></h3><p>A choice of upscalers: Lanczos 4, Lanczos 3, Bicubic, Soft and the super-scaler, switched live in the hardware. Lanczos 4 is the default.</p><p class="c">Cost: almost none.</p></div>
+    <div class="f"><h3>Chroma upsampling for 4K <span class="st live">Live</span></h3><p>4K films' colour is interpolated up to full resolution instead of repeated, then goes out at 4:4:4 12-bit.</p><p class="c">Cost: almost none.</p></div>
+    <div class="f"><h3>Colour upgrade for 1080p <span class="st live">Live</span></h3><p>1080p and smaller films in Kodi get their colour rebuilt to full 4:4:4 on the Cube's GPU, live on every frame.</p><p class="m">Measured: 17 ms per 1080p frame.</p></div>
+    <div class="f"><h3>Downscaling 4K → 1080p <span class="st plan">Planned</span></h3><p>Anti-aliased, with 4K's colour landing as true 4:4:4 1080p. Studied and tried: the Cube's hardware can't run it at full quality yet, so it stays out until it can.</p></div>
+    <div class="f"><h3>Sharpening and detail <span class="st plan">Planned</span></h3><p>Studied and tried: the Cube's hardware can't run it at full quality yet, so it stays out until it can.</p></div>
+    <div class="f"><h3>Debanding <span class="st plan">Planned</span></h3><p>Smoothing gradient banding without softening edges. Studied and tried: the Cube's hardware can't run it at full quality yet, so it stays out until it can.</p></div>
+  </div>
+</section>
+
+<section class="ch" id="aspect">
+  <div class="chead"><span class="num">Chapter 6</span><h2>Aspect, masking and geometry</h2><p>Every picture fitted to the screen, for every source, on the frame its shape changes.</p></div>
+  <div class="grid two">
+    <div class="feats">
+      <div class="f"><h3>Black bar detection <span class="st live">Live</span></h3><p>Every source is checked for bars as it is measured: apps, Kodi, the HDMI input, protected streams and Dolby Vision, FEL included. The ratio follows within 2 frames when the picture opens up and 6 when it narrows; films are measured about 10 frames ahead, so a change of shape (an IMAX scene) is known before it reaches the screen. Subtitles in a bar don't fool it, and frames darker than 8 nits don't count as bars. Fast and Precise modes.</p><p class="m">Measured: 1917 reads 2.38:1.</p></div>
+      <div class="f"><h3>Aspect menu <span class="st live">Live</span></h3><p>Fill, picture to the top or bottom, anamorphic lenses (1.25, 1.33, 1.5x) and masking of each edge, applied below every app so apps, Kodi and the HDMI input all get it.</p></div>
+      <div class="f"><h3>Scope screens and non-linear stretch <span class="st live">Live</span></h3><p>Scope zoom for 2.35, 2.37 and 2.40 screens, with 1.85 and 16:9 fitted in with side bars or a non-linear stretch (the middle keeps its shape). "Only for pictures wider than…" rules and a manual override.</p></div>
+      <div class="f"><h3>Subtitles kept in view <span class="st live">Live</span></h3><p>Burned-in subtitles in a bar are recognised; the bar is measured past them, and Fill keeps just enough of it for the text until the film ends. A strip that never goes away, like a console menu header, isn't mistaken for subtitles.</p></div>
+      <div class="f"><h3>Geometry correction <span class="st test">In testing</span></h3><p>Warps the picture onto the screen in the Cube's own warp hardware: drag the corners and edge points of a 12-point or finer grid to fix keystone, curved screens, or pincushion and barrel from a lens.</p></div>
+      <div class="f"><h3>Lens memory automation <span class="st live">Live</span></h3><p>The projector's own lens memories are recalled when the film's shape changes, on projectors Tesseract VP can control over the network. Recall by hand from the remote too.</p></div>
+      <div class="f"><h3>Convergence correction <span class="st plan">Planned</span></h3><p>Red, green and blue each shifted by fractions of a pixel, zone by zone, for three-laser projectors.</p></div>
+    </div>
+    <div class="pics">
+      <figure><img src="tv-aspect.jpg" width="1920" height="1080" loading="lazy" alt="Aspect on the Cube's own settings page: what the screen shows, the tone curve, and geometry correction settings"><figcaption>Aspect on the Cube's own page: what the screen shows stays in view beside the settings, here geometry correction.</figcaption></figure>
+      <figure><img src="warp.jpg" width="1600" height="450" loading="lazy" alt="Warp test on a grid: four-corner keystone on the left, twelve-point bow on the right"><figcaption>The warp engine's first test: four-corner keystone (left) and a 12-point bow (right) on a grid.</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section class="ch" id="dv">
+  <div class="chead"><span class="num">Chapter 7</span><h2>Dolby Vision</h2><p>One choice for Dolby Vision titles, and full-enhancement-layer films at their full quality.</p></div>
+  <div class="feats">
+    <div class="f"><h3>Three modes for Dolby Vision titles <span class="st live">Live</span></h3><p>Off (HDR10): our tone mapping. LLDV: Dolby's processing, finished by our tone mapping. Dolby Vision: Dolby's processing end to end, to a Dolby Vision display. Live for the streaming apps and Kodi, through an AV receiver too. The HDMI input takes HDR10.</p></div>
+    <div class="f"><h3>LLDV <span class="st live">Live</span></h3><p>Dolby Vision from the apps and Kodi arrives as low-latency Dolby Vision, and our tone mapping finishes it at 24 fps, zoom included.</p></div>
+    <div class="f"><h3>Dolby Vision with full enhancement layer (FEL) <span class="st live">Live</span></h3><p>Full FEL films are rebuilt to their 12-bit picture in a player that supports it (Kodi FEL, VLC FEL or Wholphin FEL), then sent as Dolby Vision to the display or tone mapped by us. Tesseract VP Setup installs Kodi FEL in one step and can copy your Kodi library into it.</p></div>
+  </div>
+</section>
+
+<section class="ch" id="audio">
+  <div class="chead"><span class="num">Chapter 8</span><h2>Audio</h2><p>Sound kept intact through every switch, and bitstreamed as it was mastered.</p></div>
+  <div class="feats">
+    <div class="f"><h3>Sound kept through output changes <span class="st live">Live</span></h3><p>When the output switches rate, the brief HDMI "unplugged" notice is held back so apps don't stop; the "plugged" notice always goes through, so Kodi's passthrough isn't lost.</p></div>
+    <div class="f"><h3>Lossless audio, built in <span class="st live">Live</span></h3><p>Dolby TrueHD Atmos, DTS-HD Master Audio and DTS:X go to the receiver untouched, bitstreamed. It is built into Tesseract VP: nothing else to install, and it stays up to date with it. The signal card shows the format going out: codec, channels, Atmos or DTS:X.</p><p class="m">Measured: TrueHD 8-channel (1917) and DTS-HD MA 8-channel (Alien), both at 192 kHz, through the 24 Hz switch.</p></div>
+    <div class="f"><h3>Atmos from the streaming apps <span class="st live">Live</span></h3><p>Fire OS converts DD+ Atmos to a fixed 5.1.2; Tesseract VP sends the original stream instead, so Dolby Atmos from Netflix and Disney+ arrives at the receiver as Atmos.</p></div>
+  </div>
+</section>
+
+<section class="ch" id="cal">
+  <div class="chead"><span class="num">Chapter 9</span><h2>Calibration</h2><p>Corrections in the Cube's output, finer than the display's own controls, held for every source.</p></div>
+  <div class="grid two">
+    <div class="feats">
+    <div class="f"><h3>Fine calibration controls <span class="st live">Live</span></h3><p>Black level, white level and gamma; red, green and blue gain and offset; in tenths of a level and tenths of a percent, per preset.</p><p class="m">Measured on the output: black +5 lifts black by 5.8 levels; white 95 % lowers the picture 4 %.</p><p class="c">Cost: none; part of the output table.</p></div>
+    <div class="f"><h3>Output range <span class="st live">Live</span></h3><p>Limited or Full, with the HDMI flag to match.</p><p class="m">Checked: black at code 16 in Limited, 0 in Full.</p></div>
+    <div class="f"><h3>Gamut guardrail <span class="st live">Live</span></h3><p>Colours are held inside BT.709, DCI-P3, BT.2020 or the display's own measured primaries.</p></div>
+    <div class="f"><h3>Built-in test patterns <span class="st live">Live</span></h3><p>Ramps, windows, average-light patches and single-pixel 4K checks, in SDR and HDR, shown tone mapped or untouched.</p></div>
+    <div class="f"><h3>Separate SDR and HDR calibration <span class="st live">Live</span></h3><p>Each has its own calibration set, picked by what is playing.</p></div>
+    <div class="f"><h3>3D LUT and greyscale correction <span class="st live">Live</span></h3><p>Each calibration set takes its own 3D LUT and a separate greyscale and gamma table in front of it.</p></div>
+    <div class="f"><h3>Calibration software <span class="st live">Live</span></h3><p>Calman, HCFR, DisplayCAL and ColourSpace drive the Cube's patterns directly.</p></div>
+    <div class="f"><h3>Dynamic contrast guard <span class="st plan">Planned</span></h3><p>For displays with dynamic contrast or laser and backlight dimming: leave room in dark scenes so their brightness lift doesn't clip highlights.</p></div>
+  </div>
+    <div class="pics">
+      <figure><img src="calibration.jpg" width="1920" height="1080" loading="lazy" alt="Calibration on the control page: levels, white balance, test patterns, greyscale and each colour's response"><figcaption>Calibration: levels and white balance in the output, test patterns, the greyscale as sent, and each colour's response.</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section class="ch" id="control">
+  <div class="chead"><span class="num">Chapter 10</span><h2>Control and screens</h2><p>Every setting reachable from a browser, the remote, a phone or a home-automation system.</p></div>
+  <div class="grid two">
+    <div class="feats">
+      <div class="f"><h3>Control page <span class="st live">Live</span></h3><p>Tone Mapping, Aspect, Input &amp; Output, Calibration and Profiles; the live picture, waveform and tone curve stay in view while settings change, and the page's picture shows the menus and subtitles on screen too. Every setting is one line with help on hover.</p></div>
+      <div class="f"><h3>Calm look and phone layout <span class="st live">Live</span></h3><p>A quieter control page: colour lives in the signal chips and the measured data, no glows or busy boxes, and the tesseract lights blue only while it converts something. Colour standards are written in full (BT.709, BT.2020). On a phone labels and values aren't cut, the settings come straight after In and Out, and the sections sit in a tab bar at the bottom.</p></div>
+      <div class="f"><h3>On-screen menu <span class="st live">Live</span></h3><p>Everything on the control page is on the remote too, drawn over the film with the signal in and out, a live waveform, the tone curve, the measured peak and the Picture controls.</p></div>
+      <div class="f"><h3>Full-screen settings page on the Cube <span class="st live">Live</span></h3><p>The control page's settings at TV size, worked with the remote, from the launcher's Settings tile.</p></div>
+      <div class="f"><h3>Profiles with automatic rules <span class="st live">Live</span></h3><p>Game, HDMI, Film, Video and SDR each load a preset when the source changes; a change by hand stays until the next source change.</p></div>
+      <div class="f"><h3>HDMI-CEC for every device <span class="st live">Live</span></h3><p>The HDMI chain in signal order, with each device's power, name and input, On/Off, Show, the amp's volume and mute, All off. One press of the remote's power button wakes or sleeps the display and amp with the Cube; remote volume can go straight to the amp.</p><p class="c">Cost: a scan every 10 s, only while the Devices card is open.</p></div>
+      <div class="f"><h3>Nothing wakes by itself <span class="st live">Live</span></h3><p>The display and amp turn on for a remote press or a scene, not because the Cube woke up on its own.</p></div>
+      <div class="f"><h3>Launcher <span class="st live">Live</span></h3><p>Boots to Tesseract VP's own home: the glowing cube with the Cube's name, a clock with your HDMI devices, your own apps on the home row, a Last played strip and one Settings tile for everything. Home from Amazon's screen comes back to ours.</p><p class="m">Memory: 24 MB, against 113 MB for Amazon's home.</p></div>
+      <div class="f"><h3>Phone app <span class="st live">Live</span></h3><p>Finds every Tesseract VP on the Wi-Fi; tap for the control page, long-press for the on-screen display.</p></div>
+      <div class="f"><h3>One-tap scenes <span class="st live">Live</span></h3><p>Movie night wakes the projector and amp, picks the input and dims the lights; Off puts it all to sleep. From the phone app, a home-screen widget or a quick-settings tile.</p></div>
+      <div class="f"><h3>Problem alerts <span class="st live">Live</span></h3><p>Optional, off by default: the phone app tells you quietly, once, when an update didn't install, a version was rolled back, or the Cube restarted unexpectedly or stopped answering.</p></div>
+      <div class="f"><h3>API and webhooks <span class="st live">Live</span></h3><p>Source, playing, HDR type, output mode, picture shape and tone-mapping state, pushed to Home Assistant or any webhook as they change, or polled. The API is documented with a Home Assistant example.</p></div>
+      <div class="f"><h3>Several Cubes <span class="st live">Live</span></h3><p>Every Tesseract VP on the network, one click away from the control page's name menu.</p></div>
+      <div class="f"><h3>IR devices and room automation <span class="st live">Live</span></h3><p>Learn any IR remote's buttons, send them through the Cube's IR blaster, and tie them to what plays: lights off when a film starts, back on when it stops. Codes can be copied from another Cube.</p></div>
+    </div>
+    <div class="pics">
+      <figure><img src="overlay-projector.jpg" width="1920" height="1080" loading="lazy" alt="The on-screen menu over Dunkirk on a projector: the signal in and out, a live waveform, the tone curve, the measured peak and the Picture controls"><figcaption>The on-screen menu over a 4K HDR10 film (Dunkirk), captured from the projector's input.</figcaption></figure>
+      <figure class="narrow"><img src="phone.jpg" width="390" height="844" loading="lazy" alt="The control page on a phone during a film: signal in and out, then the Picture settings, with the sections in a tab bar at the bottom"><figcaption>The control page on a phone: the signal first, then the settings, with the sections in a tab bar at the bottom.</figcaption></figure>
+      <figure><img src="devices.jpg" width="1920" height="1080" loading="lazy" alt="Input and Output, Devices: the HDMI chain in signal order, the projector's CEC answers, and the power, input and volume rules"><figcaption>Input &amp; Output › Devices: the HDMI chain in signal order with what each device answers, and what the remote's power and volume buttons do.</figcaption></figure>
+      <figure><img src="launcher.jpg" width="1920" height="1080" loading="lazy" alt="The Tesseract VP launcher: the glowing cube, the Cube's name, the display and receiver state, and the app row"><figcaption>The launcher: the glowing cube, your HDMI devices and your own apps.</figcaption></figure>
+      <figure><img src="tv-settings.jpg" width="1920" height="1080" loading="lazy" alt="The launcher's Settings: tiles for Tone Mapping, Aspect, Input and Output, Calibration, Profiles, HDMI devices, Overlay, Updates and Info"><figcaption>Settings on the Cube itself: one tile per section, each opening its full-screen page, worked with the remote.</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section class="ch" id="install">
+  <div class="chead"><span class="num">Chapter 11</span><h2>Install, updates and safety</h2><p>From a new Cube to a running VP with one app, and updates that roll themselves back if they fail.</p></div>
+  <div class="grid two">
+    <div class="feats">
+      <div class="f"><h3>Tesseract VP Setup <span class="st live">Live</span></h3><p>A Windows app with a button for every step: check and prepare, back up with app logins, unlock, install with tick boxes, restore, restart, roll back, uninstall. Display setup is part of it: peak, colour space, receiver, ADB kept on, or a copy of another Cube's settings. Every Cube tweak is in the installer: Fire OS updates and rescue party off, the remote's key filter, Equipment Control backup.</p></div>
+      <div class="f"><h3>Signed self-updates <span class="st live">Live</span></h3><p>Cubes update themselves from the public GitHub releases, Stable or Nightly. Every release is signed and its files checksummed; a Cube refuses anything that doesn't match. Stable is checked daily and isn't installed by itself. Updates keep the parts you installed up to date too, such as Dolby Vision FEL and lossless audio. Releases ship without debug information.</p><p class="m">Tested: the projector Cube follows Nightly from GitHub.</p></div>
+      <div class="f"><h3>Windows installer <span class="st live">Live</span></h3><p>One download, Tesseract-VP-Setup.exe: it installs for your account with no administrator prompt, with a Start-menu shortcut and an uninstaller. Google's platform-tools are downloaded on first use and checked, so there is nothing else to fetch. Backups are kept in Documents.</p></div>
+      <div class="f"><h3>Roll back, watchdog and module fallback <span class="st live">Live</span></h3><p>The version in use is kept for a one-step roll back; a watchdog restarts the VP if it stops and puts the previous version back if a new one keeps failing; a module that won't load at boot falls back to the last good one.</p></div>
+      <div class="f"><h3>Backup and restore <span class="st live">Live</span></h3><p>Every setting, preset and profile as one file, restorable on this or another Cube.</p></div>
+    </div>
+    <div class="pics">
+      <figure><img src="tv-updates.jpg" width="1920" height="1080" loading="lazy" alt="Updates on the Cube's own settings page: the version installed, Stable or Nightly, and Check now"><figcaption>Updates on the Cube itself: the version installed, Stable or Nightly, and Check now.</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section class="ch" id="cost">
+  <div class="chead"><span class="num">Chapter 12</span><h2>What it costs the Cube</h2><p>The video hardware does the pixel work, so most features cost little or nothing while a film plays. Figures measured on the Cubes; the Cube has 8 cores.</p></div>
+  <div class="tbl"><table class="cost">
+    <thead><tr><th>Feature</th><th>Cost</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>Tone curve, every frame</td><td>~1 % CPU</td><td>The engine itself, 10 MB of memory.</td></tr>
+      <tr><td>Film look-ahead</td><td>~3 ms / frame</td><td>One core, no added delay.</td></tr>
+      <tr><td>Protected look-ahead, protected bar detection</td><td>0</td><td>Video hardware only.</td></tr>
+      <tr><td>Aspect, masking, scope zoom</td><td>~0</td><td>Applied once per frame where the picture is placed.</td></tr>
+      <tr><td>Genlock</td><td>~0</td><td>A few register reads per frame, one clock change a second.</td></tr>
+      <tr><td>Upscaler, chroma upsampling, calibration, range</td><td>~0</td><td>Hardware settings and the output table.</td></tr>
+      <tr><td>Colour space table</td><td>~3 ms</td><td>Only when the content type changes.</td></tr>
+      <tr><td>1080p colour upgrade</td><td>17 ms / frame</td><td>GPU; 1080p and smaller films in Kodi.</td></tr>
+      <tr><td>Scopes on screen</td><td>a tenth of a core</td><td>Only while open; was a whole core.</td></tr>
+      <tr><td>CEC device list</td><td>small</td><td>Only while the Devices card is open.</td></tr>
+      <tr><td>Whole box, 4K60 game tone mapped, scopes open</td><td>29 % of 8 cores</td><td>Over two thirds of the CPU left idle.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<footer>Tesseract VP is an independent project. It is not affiliated with or endorsed by Amazon, Dolby, Netflix or Disney. Fire TV is a trademark of Amazon; Dolby, Dolby Vision and Dolby Atmos are trademarks of Dolby Laboratories; DTS and DTS:X are trademarks of DTS, Inc.; Calman, ColourSpace, DisplayCAL and HCFR belong to their owners. Film frames are shown for illustration. Unlocking a Fire TV Cube is at your own risk and may void its warranty. Statuses follow the <a href="https://github.com/Javbomb/tesseract-vp/blob/main/ROADMAP.md">public roadmap</a>; planned items are designed but not built yet.</footer>
+</div>
+
+<style>
+figure img { cursor: zoom-in; }
+dialog.zoom { border: 0; padding: 0; margin: 0; max-width: none; max-height: none; width: 100vw; height: 100dvh; background: rgba(8,9,11,.97); color: var(--ink); }
+dialog.zoom::backdrop { background: transparent; }
+dialog.zoom .zin { position: absolute; inset: 0; overflow: auto; display: grid; place-items: center; padding: max(16px, env(safe-area-inset-top, 0px)) 16px 16px; cursor: zoom-out; }
+dialog.zoom img { display: block; max-width: 100%; max-height: calc(100dvh - 72px); width: auto; height: auto; border-radius: 4px; }
+dialog.zoom.full .zin { place-items: start; }
+dialog.zoom.full img { max-width: none; max-height: none; cursor: zoom-out; }
+dialog.zoom p { margin: 10px 0 0; font-size: 13px; color: var(--ink2); text-align: center; max-width: 90ch; }
+dialog.zoom button { position: fixed; top: max(12px, env(safe-area-inset-top, 0px)); right: 12px; z-index: 2; font: 500 13px var(--sans); color: var(--ink); background: var(--panel); border: 1px solid var(--rule); border-radius: 4px; padding: 6px 12px; cursor: pointer; }
+</style>
+<dialog class="zoom" aria-label="Enlarged picture"><button type="button">Close</button><div class="zin"><div><img alt=""><p></p></div></div></dialog>
+<script>
+(() => {
+  const d = document.querySelector('dialog.zoom'), big = d.querySelector('img'), cap = d.querySelector('p');
+  document.querySelectorAll('figure img').forEach(im => {
+    im.tabIndex = 0; im.setAttribute('role', 'button'); im.title = 'Click to enlarge';
+    const open = () => {
+      big.src = im.currentSrc || im.src; big.alt = im.alt;
+      const fc = im.closest('figure').querySelector('figcaption');
+      cap.textContent = fc ? fc.textContent : '';
+      d.classList.remove('full'); d.showModal();
+    };
+    im.addEventListener('click', open);
+    im.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } });
+  });
+  // Click the picture to see it at full size (scroll around); click outside it or Close to go back.
+  big.addEventListener('click', e => { e.stopPropagation(); if (big.naturalWidth > big.clientWidth + 8 || d.classList.contains('full')) d.classList.toggle('full'); else d.close(); });
+  d.addEventListener('click', () => d.close());
+  d.querySelector('button').addEventListener('click', e => { e.stopPropagation(); d.close(); });
+})();
+</script>
+
+</body>
+</html>
