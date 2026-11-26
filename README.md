@@ -74,7 +74,7 @@ This repository holds Tesseract VP's **signed releases**, its [roadmap](ROADMAP.
   - Smooth chroma upsampling for 4K films.
 
   Both run in the video hardware, with almost no CPU cost.
-- **Custom 4K upscaler for Kodi (in Nightly, off by default).** Tesseract VP's own GPU upscaler takes Kodi's 1080p SDR films to 4K. Each new pixel stays within the range of the source pixels around it, so it adds no ringing. Edge steps add a light cleanup, edge anti-aliasing and steepening, and the colour goes from 4:2:0 straight to 4K. It fits as many steps as each frame rate allows; everything else keeps the hardware scaler.
+- **Custom 4K upscaler for Kodi (in Nightly, off by default).** Tesseract VP's own GPU upscaler takes Kodi's 1080p SDR films to 4K. Each new pixel stays within the range of the source pixels around it, so it adds no ringing. Edge steps add edge anti-aliasing and steepening, and the colour goes from 4:2:0 straight to 4K. It fits as many steps as each frame rate allows; everything else keeps the hardware scaler.
 - **Colour upgrade, sharpening and debanding for Kodi.** Kodi's 8-bit SDR films up to 1080p get full 4:4:4 colour, rebuilt on the Cube's GPU, with optional sharpening and debanding.
 - **Downscaling:** Sharp, Balanced or Soft, for sources such as the HDMI input.
 
