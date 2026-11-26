@@ -23,6 +23,9 @@ This repository holds Tesseract VP's **signed releases**, its [roadmap](ROADMAP.
 ## What it does
 
 ### Dynamic tone mapping
+
+> **[▶ DTM compare: flip Tesseract VP frame by frame against another popular DTM solution](https://javbomb.github.io/tesseract-vp/compare/)**: real 4K HDR film frames, both rendered for a 100-nit projector, with waveforms. Click or press Space to switch.
+
 - **Every frame is measured and gets its own curve.** Each picture is fitted to your screen's real peak brightness.
 - **1:1 wherever it can be.** A scene that fits your screen is shown 1:1, as mastered. One that doesn't is compressed to fit, as gently as possible: as much of the picture as it can stays 1:1, and the rest, mid-tones included when the scene is far brighter than your screen, is brought down smoothly. Highlights roll off smoothly toward your screen's peak instead of hard clipping, the curve moves gently between scenes, and colours are held to their hue as they are brought in.
 - **Highlights and shadows with room to breathe.** Bright highlights keep their shape right up to your screen's peak. Deep shadows stay deep, and in bright scenes the shadow detail is kept.
@@ -44,7 +47,7 @@ This repository holds Tesseract VP's **signed releases**, its [roadmap](ROADMAP.
 
 ![Batman v Superman: the HDR source as encoded beside Tesseract VP for a 100-nit projector, each with its waveform](docs/showcase-01-batman-v-superman.jpg)
 
-*The HDR source as encoded (left) and Tesseract VP for a 100-nit projector (right). More frames, and a frame-by-frame comparison with another popular DTM solution: **[DTM compare](https://javbomb.github.io/tesseract-vp/compare/)**.*
+*The HDR source as encoded (left) and Tesseract VP for a 100-nit projector (right).*
 
 ![Tone Mapping › Advanced during a film: what the measurement ignores, the auto black floor and what this frame's curve is fitted to, beside the tone curve, histogram and peak over time](docs/tone-advanced.jpg)
 
