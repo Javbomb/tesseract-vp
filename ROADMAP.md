@@ -1,6 +1,6 @@
 # Tesseract VP roadmap
 
-*Updated 26 November 2026: the first Stable release (20261126) is out, with subtitle-aware measurement added the same evening.*
+*Updated 27 November 2026: 3D Blu-ray is in development; two-Cube 3D and stacking, profiles per display and 4096x2160 output are planned.*
 
 This roadmap takes Tesseract VP from a tone-mapping box to a full video processor. Phases are listed in the order we work on them. Most of the processing runs in the Cube's video hardware, so features are built to cost little or no CPU while a film plays.
 
@@ -41,7 +41,7 @@ This roadmap takes Tesseract VP from a tone-mapping box to a full video processo
 | ✅ | **Colour space and gamut** | <ul><li>**BT.2020 out:** menus, SDR and console pictures are converted in so they don't look oversaturated.</li><li>**BT.709 out:** films' wider colours are mapped in along constant hue rather than clipped.</li><li>**Auto:** each signal is flagged as what it is.</li></ul> |
 | ✅ | **Profiles with automatic rules** | Game, HDMI, Film, Video and SDR each load their own preset when the source changes. |
 | ✅ | **LLDV** | Dolby Vision from apps and Kodi arrives as low-latency Dolby Vision, and our tone mapping finishes it at 24 fps, zoom included. |
-| ✅ | **Dolby Vision, three modes** | <ul><li>**Off (HDR10):** our tone mapping.</li><li>**LLDV:** Dolby's processing, finished by our tone mapping.</li><li>**Dolby Vision:** Dolby's processing end to end, to a Dolby Vision display.</li></ul>Live for streaming apps and Kodi, through an AV receiver too. The HDMI input takes HDR10. |
+| ✅ | **Dolby Vision, three modes** | <ul><li>**Off (HDR10):** our tone mapping.</li><li>**LLDV:** Dolby's processing, finished by our tone mapping.</li><li>**Dolby Vision:** Dolby's processing end to end, to a Dolby Vision display.</li></ul>Live for streaming apps and Kodi, through an AV receiver too. The HDMI input can take LLDV (built, not yet tested with a real Dolby Vision source) or pass full Dolby Vision to the display. |
 | 🔶 | **Lag measurement** | <ul><li>The delay Tesseract VP adds is measured live and shown while the HDMI input runs.</li><li>The display's own share needs a light sensor on the screen.</li></ul> |
 | ➖ | **VRR pass-through** | The Cube's HDMI output can't carry variable refresh rate. |
 
@@ -108,6 +108,10 @@ This roadmap takes Tesseract VP from a tone-mapping box to a full video processo
 
 | | Feature | Details |
 |---|---|---|
-| ⬜ | **Two-projector stacking and split tone mapping** | <ul><li>Two projectors, each fed by its own Cube.</li><li>**Stacked:** both show the whole picture, for twice the light.</li><li>**Split:** one carries the picture and the other only the highlights. They add back to the full picture with colours unchanged.</li></ul> |
-| ✅ | **Dolby Vision with full enhancement layer (FEL)** | <ul><li>Full FEL films rebuilt to their 12-bit picture, in a player that supports it (Kodi FEL, VLC FEL, Wholphin FEL).</li><li>Sent as Dolby Vision to the display, or tone mapped by us.</li></ul> |
+| 🔶 | **3D Blu-ray** | <ul><li>3D films (MVC) played from Kodi, including Blu-ray .iso files, sent as HDMI 3D frame packing at 1080p24, the full-resolution 3D format.</li><li>Side-by-side and top-and-bottom 3D too.</li><li>Supported projectors are switched into 3D automatically.</li><li>In development: the Cube's 3D decoder and the projector's 3D input are confirmed; the frame-packed output and the 3D player are being built.</li></ul> |
+| ⬜ | **Two Cubes, two projectors** | <ul><li>Two projectors, each fed by its own Cube, with the Cubes genlocked so every frame reaches both screens together.</li><li>**3D:** one projector per eye.</li><li>**Stacked:** both show the whole picture, for twice the light, with matched tone mapping.</li><li>**Split:** one carries the picture and the other only the highlights. They add back to the full picture with colours unchanged.</li><li>Alignment tools to line the two pictures up exactly.</li></ul> |
+| ⬜ | **Profiles per display** | A Cube used with more than one display recognises the connected one and loads its own profile: peak, tone mapping and calibration. |
+| ⬜ | **4096x2160 output** | For projectors with 17:9 panels. |
+| ⬜ | **Display roll-off model for HDR10 out** | <ul><li>An optional BT.2390 model of a display that rolls off HDR10 by itself, undone before the signal leaves, so the light still tracks PQ to the peak.</li><li>Off by default, checked with the PQ check pattern.</li></ul> |
+| ✅ | **Dolby Vision with full enhancement layer (FEL)** | <ul><li>Full FEL films rebuilt to their 12-bit picture by signde's Kodi FEL, built on djnice's FEL work.</li><li>Sent as Dolby Vision to the display, or tone mapped by us.</li></ul> |
 | ✅ | **Lossless audio, built in** | <ul><li>Dolby TrueHD Atmos, DTS-HD Master Audio and DTS:X go to the receiver untouched, bitstreamed, and Dolby Atmos from Netflix and Disney+ arrives as Atmos.</li><li>Built into Tesseract VP: nothing else to install, and it stays up to date with it.</li><li>The signal card shows the format going out.</li></ul> |
