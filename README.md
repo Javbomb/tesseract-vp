@@ -14,7 +14,7 @@ Tesseract VP turns a Fire TV Cube into a video processor that sits between your 
 
 This repository holds Tesseract VP's **signed releases**, its [roadmap](ROADMAP.md) and the [wiki](https://github.com/Javbomb/tesseract-vp/wiki). Installed Cubes update themselves from here.
 
-**[Download Tesseract VP Setup for Windows](https://github.com/Javbomb/tesseract-vp/releases/download/stable/Tesseract-VP-Setup.exe)** · [Website](https://javbomb.github.io/tesseract-vp/) · [DTM compare](https://javbomb.github.io/tesseract-vp/compare/) · [All releases](https://github.com/Javbomb/tesseract-vp/releases) · [Install](#installing) · [Wiki](https://github.com/Javbomb/tesseract-vp/wiki)
+**[Download Tesseract VP Setup for Windows](https://github.com/Javbomb/tesseract-vp/releases/download/stable/Tesseract-VP-Setup.exe)** · [Website](https://javbomb.github.io/tesseract-vp/) · [DTM compare](https://javbomb.github.io/tesseract-vp/compare/) · [Upscaling compare](https://javbomb.github.io/tesseract-vp/upscaling/) · [All releases](https://github.com/Javbomb/tesseract-vp/releases) · [Install](#installing) · [Wiki](https://github.com/Javbomb/tesseract-vp/wiki)
 
 > **Testers wanted.** The first Stable release, **20261126**, is out. If you have an unlocked Fire TV Cube (3rd generation), please try it and tell us how it goes: the wiki's [Testing guide](https://github.com/Javbomb/tesseract-vp/wiki/Testing-guide) lists what to try, and problems go in [Issues](https://github.com/Javbomb/tesseract-vp/issues/new/choose).
 
@@ -87,6 +87,8 @@ This repository holds Tesseract VP's **signed releases**, its [roadmap](ROADMAP.
 
   Both run in the video hardware, with almost no CPU cost.
 - **Custom 4K upscaler for Kodi (in Nightly, off by default).** Tesseract VP's own GPU upscaler takes Kodi's 1080p SDR films to 4K. Each new pixel stays within the range of the source pixels around it, so it adds no ringing. Edge steps add edge anti-aliasing and steepening, and the colour goes from 4:2:0 straight to 4K. It fits as many steps as each frame rate allows; everything else keeps the hardware scaler.
+
+  > **[▶ Upscaling compare: blink the 4K upscaler against the usual scalers and the 4K original](https://javbomb.github.io/tesseract-vp/upscaling/)** on 14 film frames.
 - **Colour upgrade, sharpening and debanding for Kodi.** Kodi's 8-bit SDR films up to 1080p get full 4:4:4 colour, rebuilt on the Cube's GPU, with optional sharpening and debanding.
 - **Downscaling:** Sharp, Balanced or Soft, for sources such as the HDMI input.
 
