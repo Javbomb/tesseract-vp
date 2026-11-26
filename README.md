@@ -14,7 +14,7 @@ Tesseract VP turns a Fire TV Cube into a video processor that sits between your 
 
 This repository holds Tesseract VP's **signed releases**, its [roadmap](ROADMAP.md) and the [wiki](https://github.com/Javbomb/tesseract-vp/wiki). Installed Cubes update themselves from here.
 
-**[Download Tesseract VP Setup for Windows](https://github.com/Javbomb/tesseract-vp/releases/download/stable/Tesseract-VP-Setup.exe)** · [Website](https://javbomb.github.io/tesseract-vp/) · [DTM compare](https://javbomb.github.io/tesseract-vp/compare/) · [All releases](https://github.com/Javbomb/tesseract-vp/releases) · [Install](#installing) · [Wiki](https://github.com/Javbomb/tesseract-vp/wiki)
+**[Download Tesseract VP Setup for Windows](https://github.com/Javbomb/tesseract-vp/releases/download/stable/Tesseract-VP-Setup.exe)** · [Website](https://javbomb.github.io/tesseract-vp/) · [All releases](https://github.com/Javbomb/tesseract-vp/releases) · [Install](#installing) · [Wiki](https://github.com/Javbomb/tesseract-vp/wiki)
 
 > **Testers wanted.** The first Stable release, **20261126**, is out. If you have an unlocked Fire TV Cube (3rd generation), please try it and tell us how it goes: the wiki's [Testing guide](https://github.com/Javbomb/tesseract-vp/wiki/Testing-guide) lists what to try, and problems go in [Issues](https://github.com/Javbomb/tesseract-vp/issues/new/choose).
 
@@ -44,7 +44,7 @@ This repository holds Tesseract VP's **signed releases**, its [roadmap](ROADMAP.
 
 ![Batman v Superman: the HDR source as encoded beside Tesseract VP for a 100-nit projector, each with its waveform](docs/showcase-01-batman-v-superman.jpg)
 
-*The HDR source as encoded (left) and Tesseract VP for a 100-nit projector (right). More frames, and a frame-by-frame comparison with another popular DTM solution: **[DTM compare](https://javbomb.github.io/tesseract-vp/compare/)**.*
+*The HDR source as encoded (left) and Tesseract VP for a 100-nit projector (right).*
 
 ![Tone Mapping › Advanced during a film: what the measurement ignores, the auto black floor and what this frame's curve is fitted to, beside the tone curve, histogram and peak over time](docs/tone-advanced.jpg)
 
