@@ -36,7 +36,7 @@ This repository holds Tesseract VP's **signed releases**, its [roadmap](ROADMAP.
   - Tesseract VP's tone mapping of the HDR10 base;
   - **LLDV:** Dolby's own processing, finished by Tesseract VP's tone mapping;
   - Dolby Vision out to a Dolby Vision display.
-- **Dolby Vision FEL.** Full-enhancement-layer films are rebuilt to their full 12-bit picture in a player that supports it (Kodi FEL, VLC FEL or Wholphin FEL), then sent as Dolby Vision or tone mapped. Tesseract VP Setup installs Kodi FEL in one step and can copy your Kodi library into it.
+- **Dolby Vision FEL.** Full-enhancement-layer films are rebuilt to their full 12-bit picture by signde's Kodi FEL, built on djnice's FEL work, then sent as Dolby Vision or tone mapped by Tesseract VP. Setup can download Kodi FEL straight from signde's GitHub and copy your Kodi library into it. signde's other FEL players (VLC FEL, a Jellyfin client) use the same helper but aren't tested with the VP yet.
 - **SDR or HDR10 out.** Send the tone-mapped picture as SDR, or as HDR10 aimed at your display's peak, with the menus and subtitles converted in at the right brightness.
 - **Controls you can tune live:**
   - Brightness, Punch, Highlights, Highlight colour, Shadows, Depth, White-hot and Clip guard, with the tuned setting in the middle of each;
@@ -106,7 +106,7 @@ This repository holds Tesseract VP's **signed releases**, its [roadmap](ROADMAP.
 - **Lens memory.** When the film's shape changes, the projector's own lens memory is recalled, on projectors Tesseract VP can control over the network.
 
 ### Sound
-- **Lossless audio, built in.** Dolby TrueHD Atmos, DTS-HD Master Audio and DTS:X go to your receiver untouched, bitstreamed, with no extra module to install. Dolby Atmos from Netflix and Disney+ reaches your receiver as Atmos.
+- **Lossless audio, built in.** Dolby TrueHD Atmos, DTS-HD Master Audio and DTS:X go to your receiver untouched, bitstreamed, with no extra module to install. Dolby Atmos from Netflix and Disney+ reaches your receiver as Atmos. Tesseract VP's own audio module, [open source under MIT](audio), with thanks to signde, whose Fire TV AV research showed how it could be done on the Cube 3.
 - **What's playing, on the page.** The signal card shows the sound format going out: codec, channels, Atmos or DTS:X.
 
 ### Calibration
