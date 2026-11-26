@@ -14,7 +14,7 @@ Tesseract VP turns a Fire TV Cube into a video processor that sits between your 
 
 This repository holds Tesseract VP's **signed releases**, its [roadmap](ROADMAP.md) and the [wiki](https://github.com/Javbomb/tesseract-vp/wiki). Installed Cubes update themselves from here.
 
-**[Download Tesseract VP Setup for Windows](https://github.com/Javbomb/tesseract-vp/releases/download/stable/Tesseract-VP-Setup.exe)** · [All releases](https://github.com/Javbomb/tesseract-vp/releases) · [Install](#installing) · [Wiki](https://github.com/Javbomb/tesseract-vp/wiki)
+**[Download Tesseract VP Setup for Windows](https://github.com/Javbomb/tesseract-vp/releases/download/stable/Tesseract-VP-Setup.exe)** · [Website](https://javbomb.github.io/tesseract-vp/) · [All releases](https://github.com/Javbomb/tesseract-vp/releases) · [Install](#installing) · [Wiki](https://github.com/Javbomb/tesseract-vp/wiki)
 
 > **Testers wanted.** The first Stable release, **20261126**, is out. If you have an unlocked Fire TV Cube (3rd generation), please try it and tell us how it goes: the wiki's [Testing guide](https://github.com/Javbomb/tesseract-vp/wiki/Testing-guide) lists what to try, and problems go in [Issues](https://github.com/Javbomb/tesseract-vp/issues/new/choose).
 
