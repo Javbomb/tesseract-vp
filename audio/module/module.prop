@@ -1,0 +1,6 @@
+id=tesseract_audio
+name=Tesseract VP lossless audio
+version=1.0
+versionCode=1
+author=Tesseract VP
+description=TrueHD Atmos, DTS-HD MA and DTS:X bitstream from any app on the Fire TV Cube 3. Wraps the stock audio HAL (no frida, nothing patched).

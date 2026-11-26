@@ -224,11 +224,11 @@ Tesseract VP stands on the work of others in the Fire TV Cube community:
 - **Pro-me3us** and the XDA community behind the Cube 3 unlock, Magisk and TWRP, which Tesseract VP needs. Setup runs their unlock from [their XDA guide](https://xdaforums.com/t/unlock-magisk-twrp-firetv-3nd-gen-cube-gazelle-ps7718.4800530/); it isn't part of this project.
 - **djnice** for the Dolby Vision FEL work (vlc-fel-android), and **signde** for porting it to the Cube 3. Tesseract VP ships their FEL kernel helper (`dvfel.ko`) built unchanged from signde's [firetv-passthrough](https://github.com/signde/firetv-passthrough) under the GPL; its source and licence are in each release's module source zip.
 - **signde** for [Kodi FEL](https://github.com/signde/xbmc/releases): Setup can download it straight from signde's release and install it. VLC FEL and Wholphin FEL are signde's FEL players too.
-- **signde** for Fire TV AV, whose research into HDMI audio passthrough on the Cube 3 pointed the way for Tesseract VP's own lossless audio module. If Fire TV AV is installed, Tesseract VP's audio module switches it off (and keeps a backup), as both steer the same thing.
+- **signde** for Fire TV AV, whose research into HDMI audio passthrough on the Cube 3 pointed the way for Tesseract VP's own lossless audio module: that Fire OS keeps dropping the HDMI format out of passthrough so it has to be held there, and how the voice DSP reference needs handling. The module's code is separate (a wrapper in front of the stock audio HAL, with IEC 61937 packing written from the standard) and [open source under MIT](audio). If Fire TV AV is installed, Tesseract VP's audio module switches it off (and keeps a backup), as both steer the same thing.
 
 ## Source
 
-The kernel modules Tesseract VP installs on the Cube are open source under the GPL. Their complete source, with build instructions, is attached to each release as **tesseract-vp-module-source.zip** ([Stable](https://github.com/Javbomb/tesseract-vp/releases/tag/stable)). The rest of Tesseract VP is separate software and isn't covered by that licence. It is free to use but not open source. See [LICENSE.md](LICENSE.md).
+The kernel modules Tesseract VP installs on the Cube are open source under the GPL. Their complete source, with build instructions, is attached to each release as **tesseract-vp-module-source.zip** ([Stable](https://github.com/Javbomb/tesseract-vp/releases/tag/stable)). The lossless audio module is open source under the MIT licence, in the [audio](audio) folder. The rest of Tesseract VP is separate software and isn't covered by those licences. It is free to use, and will stay free, but it isn't open source. See [LICENSE.md](LICENSE.md).
 
 ---
 

@@ -2,15 +2,19 @@
 
 Copyright © 2026 Broken Light. All rights reserved.
 
-Tesseract VP is made up of two kinds of software. Each has its own licence.
+Tesseract VP is free, and will stay free. It is made up of three kinds of software, each with its own licence.
 
 ## The kernel modules: GPL
 
 The Linux kernel modules Tesseract VP installs on the Fire TV Cube are licensed under the GNU General Public License, version 2. Their complete source, with build instructions, is attached to each release as `tesseract-vp-module-source.zip`. The GPL governs your rights to those modules.
 
+## The audio module: MIT
+
+Tesseract VP's lossless audio module (the `audio/` folder in this repository: the audio HAL wrapper, its Magisk module and installer script) is licensed under the MIT License; see `audio/LICENSE`.
+
 ## Everything else: free to use, not open source
 
-This covers everything apart from the kernel modules:
+This covers everything apart from the kernel modules and the audio module:
 
 - the Tesseract VP service (including its tone mapping);
 - the on-screen menu, home screen and phone apps;
