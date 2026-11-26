@@ -8,6 +8,10 @@ Tesseract VP turns a Fire TV Cube into a video processor that sits between your 
 
 *The control page, open in any browser on your network.*
 
+![The on-screen menu over Dunkirk on a projector: the signal in and out, a live waveform, the tone curve, the measured peak and the Picture controls](docs/overlay-projector.jpg)
+
+*The on-screen menu during a 4K HDR10 film, captured from the projector's input.*
+
 This repository holds Tesseract VP's **signed releases**, its [roadmap](ROADMAP.md) and the [wiki](https://github.com/Javbomb/tesseract-vp/wiki). Installed Cubes update themselves from here.
 
 **[Download Tesseract VP Setup for Windows](https://github.com/Javbomb/tesseract-vp/releases/download/stable/Tesseract-VP-Setup.exe)** · [All releases](https://github.com/Javbomb/tesseract-vp/releases) · [Install](#installing) · [Wiki](https://github.com/Javbomb/tesseract-vp/wiki)
