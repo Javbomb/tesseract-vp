@@ -1,0 +1,486 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Tesseract VP 4K Upscaling</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: a neutral viewing-room surround; controls in one bar, pictures as large as the screen allows, the explainer below. */
+:root {
+  --bg: #0c0e11; --panel: #14171c; --line: #252a32; --fg: #ebe8e1; --mute: #aab0b8;
+  --accent: #e9a53f; --mark: #ff28d2; --pic: #0c0d0f;
+  --c-src: #7d858d; --c-sr: #b8bec4; --c-bic: #5aa9e6; --c-l3: #5cc48a; --c-l4: #e8a43c; --c-soft: #b28cf0; --c-ar: #ff6b8b; --c-pc: #4fd1d9; --c-j: #c9d36a; --c-aa: #ff9f5a; --c-aas: #f06bd0; --c-aah: #ffd166; --c-aax: #8be38b; --c-full: #ffffff; --c-cube: #ff4d4d;
+  --f-body: "Sora", "Segoe UI", system-ui, sans-serif;
+  --f-head: "Sora", "Segoe UI", system-ui, sans-serif;
+  --f-mono: "Sora", "Segoe UI", system-ui, sans-serif;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) {
+  --bg: #f3f2ef; --panel: #e8e6e1; --line: #cfccc5; --fg: #16181b; --mute: #4a5058;
+  --accent: #a86a10; --pic: #202326; --c-src: #868e96; --c-sr: #4f565d; --c-bic: #1f6fb2; --c-l3: #1d8a4f; --c-l4: #b06d08; --c-soft: #7146c2; --c-ar: #c2274f; --c-pc: #0e8a92; --c-j: #7d8a12; --c-aa: #b85a12; --c-aas: #a8288c; --c-aah: #9a7400; --c-aax: #2e8b2e; --c-full: #222222; --c-cube: #c62828;
+  color-scheme: light; } }
+:root[data-theme="light"] {
+  --bg: #f3f2ef; --panel: #e8e6e1; --line: #cfccc5; --fg: #16181b; --mute: #4a5058;
+  --accent: #a86a10; --pic: #202326; --c-src: #868e96; --c-sr: #4f565d; --c-bic: #1f6fb2; --c-l3: #1d8a4f; --c-l4: #b06d08; --c-soft: #7146c2; --c-ar: #c2274f; --c-pc: #0e8a92; --c-j: #7d8a12; --c-aa: #b85a12; --c-aas: #a8288c; --c-aah: #9a7400; --c-aax: #2e8b2e; --c-full: #222222; --c-cube: #c62828;
+  color-scheme: light; }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font: 15px/1.5 var(--f-body); }
+.wrap { max-width: 1480px; margin: 0 auto; padding-block: 20px 48px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 18px; }
+h1, h2 { font-family: var(--f-head); font-weight: 600; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(28px, 4.4vw, 44px); line-height: 1.05; letter-spacing: -0.02em; }
+h1 span { color: var(--accent); }
+footer { color: var(--mute); font-size: 0.86rem; } footer a { color: var(--accent); }
+h2 { font-size: 1.3rem; }
+p { margin: 0; max-width: 70ch; }
+.lede { color: var(--mute); }
+.lede b { color: var(--fg); font-weight: 500; }
+.bar { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: end; }
+.ctl { display: grid; gap: 4px; min-width: 0; }
+.ctl > span { font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--mute); }
+select, button { font: inherit; color: var(--fg); background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 6px 10px; }
+select { max-width: 100%; }
+button { cursor: pointer; }
+button:hover, select:hover { border-color: var(--mute); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+.seg button { border: 0; border-radius: 0; background: var(--panel); padding: 6px 10px; }
+.seg button + button { border-left: 1px solid var(--line); }
+.seg button[aria-pressed="true"] { background: var(--accent); color: #15110a; font-weight: 600; }
+.go { background: transparent; border-color: var(--accent); color: var(--accent); }
+.stage { display: grid; grid-template-columns: minmax(220px, 300px) 1fr; gap: 16px; align-items: start; }
+.side { display: grid; gap: 10px; min-width: 0; }
+#ov { width: 100%; height: auto; display: block; border-radius: 4px; cursor: crosshair; touch-action: none; background: var(--pic); }
+.fnote { font-size: 0.88rem; color: var(--mute); }
+.fnote b { color: var(--fg); font-weight: 500; }
+.panes { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; min-width: 0; }
+.panes.one { grid-template-columns: 1fr; }
+.pane { display: grid; gap: 6px; min-width: 0; }
+.ph { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.dot { width: 10px; height: 10px; border-radius: 50%; flex: none; }
+.ph select { flex: 1 1 160px; }
+.pic { position: relative; background: var(--pic); border-radius: 4px; overflow: hidden; }
+.pic canvas { width: 100%; height: auto; display: block; image-rendering: pixelated; }
+.pic .tag { position: absolute; left: 8px; top: 8px; font: 500 0.78rem var(--f-mono); background: rgba(0,0,0,0.62); color: #f2f2f2; padding: 2px 7px; border-radius: 4px; }
+.pic .busy { position: absolute; right: 8px; top: 8px; font: 0.78rem var(--f-mono); color: #f2f2f2; background: rgba(0,0,0,0.62); padding: 2px 7px; border-radius: 4px; }
+.num { display: flex; flex-wrap: wrap; gap: 4px 14px; font: 0.82rem var(--f-mono); color: var(--mute); font-variant-numeric: tabular-nums; }
+.num b { color: var(--fg); font-weight: 500; }
+.hint { font-size: 0.82rem; color: var(--mute); }
+.why { font-size: 0.86rem; color: var(--mute); min-height: 2.6em; }
+section.ex { border-top: 1px solid var(--line); padding-top: 22px; display: grid; gap: 16px; }
+.excols { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 24px; align-items: start; }
+.excols > div { display: grid; gap: 12px; min-width: 0; }
+svg text { fill: var(--mute); font: 12px var(--f-mono); }
+.tw { overflow-x: auto; }
+table { border-collapse: collapse; font-size: 0.9rem; width: 100%; }
+th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+th { font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--mute); font-weight: 500; }
+td.n { font-family: var(--f-mono); font-variant-numeric: tabular-nums; text-align: right; }
+th.n { text-align: right; }
+tr.def td:first-child::after { content: "default"; margin-left: 8px; font: 500 0.7rem var(--f-mono); color: var(--accent); border: 1px solid var(--accent); border-radius: 4px; padding: 0 5px; }
+.small { font-size: 0.84rem; color: var(--mute); }
+@media (max-width: 900px) { .stage { grid-template-columns: 1fr; } .excols { grid-template-columns: 1fr; } }
+@media (max-width: 640px) { .panes { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+.bar select { max-width: min(100%, 420px); }
+.pic { cursor: pointer; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header style="display:grid;gap:10px">
+    <h1>Tesseract VP <span>4K upscaling</span></h1>
+    <p class="lede">Kodi's 1080p films on the Fire TV Cube, upscaled to 4K on the Cube's own GPU. Ten of these shots have their <b>4K original</b> to judge against: eight are from 4K HDR films, tone mapped by Tesseract VP and brought down to 1080p. The other four are straight from 1080p Blu-rays.Pick two, then click the picture or press Space to blink between them. Drag the box on the small picture to move around.</p>
+  </header>
+
+  <div class="bar">
+    <label class="ctl" for="frame"><span>Picture</span><select id="frame"></select></label>
+    <label class="ctl" for="selA"><span>Blink between</span><select id="selA"></select></label>
+    <label class="ctl" for="selB"><span>and</span><select id="selB"></select></label>
+    <div class="ctl"><span>Zoom</span><div class="seg" id="zoom"><button data-v="0.25">¼×</button><button data-v="0.5">½×</button><button data-v="1">1×</button><button data-v="2">2×</button><button data-v="4">4×</button></div></div>
+  </div>
+
+  <div class="stage">
+    <div class="side">
+      <canvas id="ov" width="300" height="169" aria-label="Whole picture; drag the box to choose the spot"></canvas>
+      <div class="fnote" id="fnote"></div>
+    </div>
+    <div class="panes one" id="panes">
+      <div class="pane" id="pA">
+        <div class="ph" hidden><span class="dot"></span></div>
+        <div class="pic"><canvas></canvas><span class="tag"></span><span class="busy" hidden>working</span></div>
+        <div class="why"></div>
+      </div>
+    </div>
+  </div>
+  <p class="hint" id="hint"></p>
+
+  <footer><a href="../">Tesseract VP</a> · pictures rendered on a Fire TV Cube 3; the other choices computed the way the Cube's video scaler does them.</footer>
+</div>
+
+<script>
+'use strict';
+const TABLES = {"h":{"bic":{"c":3,"rows":[[0,0,0,128,0,0,0,0],[0,0,-1,128,1,0,0,0],[0,0,-2,128,2,0,0,0],[0,0,-3,127,4,0,0,0],[0,0,-4,127,5,0,0,0],[0,0,-4,126,6,0,0,0],[0,0,-5,126,8,-1,0,0],[0,0,-6,125,10,-1,0,0],[0,0,-6,123,12,-1,0,0],[0,0,-7,122,14,-1,0,0],[0,0,-7,120,16,-1,0,0],[0,0,-8,120,18,-2,0,0],[0,0,-8,118,20,-2,0,0],[0,0,-8,116,22,-2,0,0],[0,0,-9,115,24,-2,0,0],[0,0,-9,113,27,-3,0,0],[0,0,-9,111,29,-3,0,0],[0,0,-9,109,31,-3,0,0],[0,0,-9,107,34,-4,0,0],[0,0,-9,104,37,-4,0,0],[0,0,-9,102,39,-4,0,0],[0,0,-9,100,42,-5,0,0],[0,0,-9,98,44,-5,0,0],[0,0,-9,95,47,-5,0,0],[0,0,-9,93,50,-6,0,0],[0,0,-9,90,53,-6,0,0],[0,0,-9,88,55,-6,0,0],[0,0,-9,86,58,-7,0,0],[0,0,-9,83,61,-7,0,0],[0,0,-9,80,64,-7,0,0],[0,0,-8,77,66,-7,0,0],[0,0,-8,75,69,-8,0,0],[0,0,-8,72,72,-8,0,0]]},"l3":{"c":3,"rows":[[0,0,0,128,0,0,0,0],[0,0,-2,128,2,0,0,0],[0,1,-3,128,3,-1,0,0],[0,1,-5,127,5,-1,1,0],[0,1,-6,127,7,-2,1,0],[0,2,-7,127,9,-2,-1,0],[0,2,-9,126,11,-3,1,0],[0,2,-10,125,13,-3,1,0],[0,3,-11,124,15,-4,1,0],[0,3,-12,123,18,-4,0,0],[0,3,-13,122,20,-5,1,0],[0,4,-14,121,22,-6,1,0],[0,3,-15,120,25,-6,1,0],[0,4,-15,119,27,-7,0,0],[0,4,-16,117,30,-7,0,0],[0,4,-16,116,32,-8,0,0],[0,4,-17,114,35,-9,1,0],[0,4,-17,112,37,-9,1,0],[0,4,-18,110,40,-10,2,0],[0,5,-18,108,42,-11,2,0],[0,4,-18,106,45,-11,2,0],[0,4,-19,104,48,-12,3,0],[0,4,-19,102,51,-12,2,0],[0,4,-19,100,53,-13,3,0],[0,4,-19,98,56,-13,2,0],[0,4,-19,95,59,-14,3,0],[0,4,-19,93,62,-15,3,0],[0,4,-19,91,64,-15,3,0],[0,4,-18,88,67,-16,3,0],[0,3,-18,86,70,-16,3,0],[0,4,-18,83,72,-17,4,0],[0,4,-18,80,75,-17,4,0],[0,3,-17,78,78,-17,3,0]]},"l4":{"c":3,"rows":[[0,0,0,128,0,0,0,0],[0,1,-2,128,2,-1,0,0],[0,1,-3,128,4,-1,0,-1],[-1,2,-5,128,6,-2,1,-1],[-1,2,-7,127,8,-3,1,1],[-1,3,-8,127,10,-3,1,-1],[-1,3,-10,126,12,-4,1,1],[-1,4,-11,125,14,-5,2,0],[-1,4,-12,125,16,-6,2,0],[-2,5,-13,124,19,-6,2,-1],[-2,5,-14,123,21,-7,2,0],[-3,6,-15,122,24,-8,3,-1],[-2,6,-16,120,26,-9,3,0],[-2,6,-17,119,29,-9,3,-1],[-2,7,-18,118,31,-10,3,-1],[-2,7,-19,116,34,-11,4,-1],[-2,7,-20,115,36,-12,4,0],[-2,7,-20,113,39,-13,4,0],[-2,8,-21,111,42,-13,5,-2],[-2,8,-21,109,44,-14,5,-1],[-2,8,-21,107,47,-15,5,-1],[-2,8,-22,105,50,-15,5,-1],[-2,8,-22,103,52,-16,6,-1],[-2,8,-22,101,55,-17,6,-1],[-2,8,-22,99,58,-17,6,-2],[-2,8,-22,97,61,-18,6,-2],[-2,8,-22,94,63,-19,7,-1],[-2,8,-22,92,66,-19,7,-2],[-2,8,-22,90,69,-20,7,-2],[-2,8,-22,87,71,-20,7,-1],[-2,8,-22,85,74,-21,7,-1],[-2,8,-22,82,77,-21,8,-2],[-2,8,-21,79,79,-21,8,-2]]},"soft":{"c":3,"rows":[[0,0,7,114,7,0,0,0],[0,0,6,114,8,0,0,0],[0,0,5,114,9,0,0,0],[0,0,4,113,11,0,0,0],[0,0,4,112,12,0,0,0],[0,0,3,112,13,0,0,0],[0,0,2,111,15,0,0,0],[0,0,1,111,16,0,0,0],[0,0,1,110,18,-1,0,0],[0,0,0,110,19,-1,0,0],[0,0,0,108,21,-1,0,0],[0,0,-1,107,23,-1,0,0],[0,0,-1,105,25,-1,0,0],[0,0,-2,104,27,-1,0,0],[0,0,-2,103,29,-2,0,0],[0,0,-3,102,31,-2,0,0],[0,0,-3,100,33,-2,0,0],[0,0,-3,98,35,-2,0,0],[0,0,-4,97,37,-2,0,0],[0,0,-4,95,39,-2,0,0],[0,0,-4,94,41,-3,0,0],[0,0,-4,91,44,-3,0,0],[0,0,-4,89,46,-3,0,0],[0,0,-4,87,48,-3,0,0],[0,0,-5,86,50,-3,0,0],[0,0,-5,84,53,-4,0,0],[0,0,-5,82,55,-4,0,0],[0,0,-5,80,57,-4,0,0],[0,0,-5,78,59,-4,0,0],[0,0,-5,75,62,-4,0,0],[0,0,-5,73,64,-4,0,0],[0,0,-5,71,66,-4,0,0],[0,0,-4,68,68,-4,0,0]]}},"step":{"bic":[[-3.0,0.0],[-2.9688,0.0],[-2.9375,0.0],[-2.9062,0.0],[-2.875,0.0],[-2.8438,0.0],[-2.8125,0.0],[-2.7812,0.0],[-2.75,0.0],[-2.7188,0.0],[-2.6875,0.0],[-2.6562,0.0],[-2.625,0.0],[-2.5938,0.0],[-2.5625,0.0],[-2.5312,0.0],[-2.5,0.0],[-2.4688,0.0],[-2.4375,0.0],[-2.4062,0.0],[-2.375,0.0],[-2.3438,0.0],[-2.3125,0.0],[-2.2812,0.0],[-2.25,0.0],[-2.2188,0.0],[-2.1875,0.0],[-2.1562,0.0],[-2.125,0.0],[-2.0938,0.0],[-2.0625,0.0],[-2.0312,0.0],[-2.0,0.0],[-1.9688,0.0],[-1.9375,0.0],[-1.9062,-0.0001],[-1.875,-0.0004],[-1.8438,-0.0006],[-1.8125,-0.0011],[-1.7812,-0.0016],[-1.75,-0.0023],[-1.7188,-0.0032],[-1.6875,-0.0042],[-1.6562,-0.0054],[-1.625,-0.0067],[-1.5938,-0.0082],[-1.5625,-0.0099],[-1.5312,-0.0116],[-1.5,-0.0135],[-1.4688,-0.0155],[-1.4375,-0.0177],[-1.4062,-0.0199],[-1.375,-0.0221],[-1.3438,-0.0243],[-1.3125,-0.0265],[-1.2812,-0.0287],[-1.25,-0.0309],[-1.2188,-0.0331],[-1.1875,-0.035],[-1.1562,-0.0369],[-1.125,-0.0385],[-1.0938,-0.0398],[-1.0625,-0.0408],[-1.0312,-0.0414],[-1.0,-0.0415],[-0.9688,-0.0411],[-0.9375,-0.04],[-0.9062,-0.0383],[-0.875,-0.0356],[-0.8438,-0.032],[-0.8125,-0.0273],[-0.7812,-0.0217],[-0.75,-0.0149],[-0.7188,-0.007],[-0.6875,0.0023],[-0.6562,0.0128],[-0.625,0.0247],[-0.5938,0.0378],[-0.5625,0.0524],[-0.5312,0.0682],[-0.5,0.0854],[-0.4688,0.104],[-0.4375,0.1239],[-0.4062,0.1451],[-0.375,0.1675],[-0.3438,0.191],[-0.3125,0.2157],[-0.2812,0.2415],[-0.25,0.2683],[-0.2188,0.2961],[-0.1875,0.3247],[-0.1562,0.354],[-0.125,0.3839],[-0.0938,0.4146],[-0.0625,0.4454],[-0.0312,0.4766],[0.0,0.5078],[0.0312,0.5391],[0.0625,0.5701],[0.0938,0.6008],[0.125,0.6311],[0.1562,0.6606],[0.1875,0.6897],[0.2188,0.7179],[0.25,0.7452],[0.2812,0.7716],[0.3125,0.7968],[0.3438,0.8209],[0.375,0.8439],[0.4062,0.8656],[0.4375,0.8862],[0.4688,0.9054],[0.5,0.9233],[0.5312,0.9398],[0.5625,0.9551],[0.5938,0.9689],[0.625,0.9814],[0.6562,0.9926],[0.6875,1.0024],[0.7188,1.0111],[0.75,1.0184],[0.7812,1.0247],[0.8125,1.0298],[0.8438,1.0339],[0.875,1.0371],[0.9062,1.0393],[0.9375,1.0406],[0.9688,1.0414],[1.0,1.0415],[1.0312,1.0411],[1.0625,1.0403],[1.0938,1.0392],[1.125,1.0377],[1.1562,1.036],[1.1875,1.0341],[1.2188,1.032],[1.25,1.0298],[1.2812,1.0276],[1.3125,1.0254],[1.3438,1.0232],[1.375,1.021],[1.4062,1.0188],[1.4375,1.0166],[1.4688,1.0145],[1.5,1.0126],[1.5312,1.0107],[1.5625,1.009],[1.5938,1.0074],[1.625,1.006],[1.6562,1.0048],[1.6875,1.0037],[1.7188,1.0027],[1.75,1.002],[1.7812,1.0013],[1.8125,1.0009],[1.8438,1.0005],[1.875,1.0002],[1.9062,1.0],[1.9375,1.0],[1.9688,1.0],[2.0,1.0],[2.0312,1.0],[2.0625,1.0],[2.0938,1.0],[2.125,1.0],[2.1562,1.0],[2.1875,1.0],[2.2188,1.0],[2.25,1.0],[2.2812,1.0],[2.3125,1.0],[2.3438,1.0],[2.375,1.0],[2.4062,1.0],[2.4375,1.0],[2.4688,1.0],[2.5,1.0],[2.5312,1.0],[2.5625,1.0],[2.5938,1.0],[2.625,1.0],[2.6562,1.0],[2.6875,1.0],[2.7188,1.0],[2.75,1.0],[2.7812,1.0],[2.8125,1.0],[2.8438,1.0],[2.875,1.0],[2.9062,1.0],[2.9375,1.0],[2.9688,1.0],[3.0,1.0]],"l3":[[-3.0,0.0],[-2.9688,0.0],[-2.9375,0.0002],[-2.9062,0.0002],[-2.875,0.0005],[-2.8438,0.0006],[-2.8125,0.0009],[-2.7812,0.0009],[-2.75,0.001],[-2.7188,0.0013],[-2.6875,0.0018],[-2.6562,0.0024],[-2.625,0.0031],[-2.5938,0.0038],[-2.5625,0.0045],[-2.5312,0.0054],[-2.5,0.0062],[-2.4688,0.0072],[-2.4375,0.0081],[-2.4062,0.009],[-2.375,0.01],[-2.3438,0.011],[-2.3125,0.012],[-2.2812,0.0131],[-2.25,0.014],[-2.2188,0.015],[-2.1875,0.0159],[-2.1562,0.0167],[-2.125,0.0175],[-2.0938,0.0179],[-2.0625,0.0183],[-2.0312,0.0186],[-2.0,0.0186],[-1.9688,0.0184],[-1.9375,0.0181],[-1.9062,0.0175],[-1.875,0.0166],[-1.8438,0.0155],[-1.8125,0.014],[-1.7812,0.0123],[-1.75,0.0103],[-1.7188,0.0079],[-1.6875,0.0052],[-1.6562,0.0023],[-1.625,-0.0009],[-1.5938,-0.0044],[-1.5625,-0.0082],[-1.5312,-0.0122],[-1.5,-0.0164],[-1.4688,-0.0208],[-1.4375,-0.0251],[-1.4062,-0.0298],[-1.375,-0.0344],[-1.3438,-0.0391],[-1.3125,-0.0436],[-1.2812,-0.048],[-1.25,-0.0521],[-1.2188,-0.056],[-1.1875,-0.0597],[-1.1562,-0.063],[-1.125,-0.0658],[-1.0938,-0.0681],[-1.0625,-0.0697],[-1.0312,-0.0707],[-1.0,-0.0709],[-0.9688,-0.0703],[-0.9375,-0.0688],[-0.9062,-0.0664],[-0.875,-0.063],[-0.8438,-0.0583],[-0.8125,-0.0526],[-0.7812,-0.0457],[-0.75,-0.0375],[-0.7188,-0.0281],[-0.6875,-0.0175],[-0.6562,-0.0054],[-0.625,0.0079],[-0.5938,0.0227],[-0.5625,0.0387],[-0.5312,0.056],[-0.5,0.0747],[-0.4688,0.0946],[-0.4375,0.1158],[-0.4062,0.1383],[-0.375,0.1619],[-0.3438,0.1865],[-0.3125,0.2122],[-0.2812,0.2388],[-0.25,0.2664],[-0.2188,0.2948],[-0.1875,0.324],[-0.1562,0.3536],[-0.125,0.3838],[-0.0938,0.4144],[-0.0625,0.4454],[-0.0312,0.4766],[0.0,0.5078],[0.0312,0.5391],[0.0625,0.5701],[0.0938,0.601],[0.125,0.6313],[0.1562,0.6613],[0.1875,0.6907],[0.2188,0.7195],[0.25,0.7476],[0.2812,0.7747],[0.3125,0.8008],[0.3438,0.8259],[0.375,0.8501],[0.4062,0.873],[0.4375,0.8949],[0.4688,0.9155],[0.5,0.9348],[0.5312,0.9528],[0.5625,0.9695],[0.5938,0.9849],[0.625,0.9989],[0.6562,1.0116],[0.6875,1.0229],[0.7188,1.033],[0.75,1.0417],[0.7812,1.0493],[0.8125,1.0557],[0.8438,1.0608],[0.875,1.0648],[0.9062,1.0677],[0.9375,1.0697],[0.9688,1.0707],[1.0,1.0709],[1.0312,1.0703],[1.0625,1.069],[1.0938,1.067],[1.125,1.0645],[1.1562,1.0614],[1.1875,1.0579],[1.2188,1.0541],[1.25,1.05],[1.2812,1.0458],[1.3125,1.0414],[1.3438,1.0367],[1.375,1.0321],[1.4062,1.0275],[1.4375,1.0229],[1.4688,1.0186],[1.5,1.0143],[1.5312,1.0101],[1.5625,1.0062],[1.5938,1.0026],[1.625,0.9993],[1.6562,0.9962],[1.6875,0.9934],[1.7188,0.9908],[1.75,0.9886],[1.7812,0.9868],[1.8125,0.9852],[1.8438,0.9839],[1.875,0.9829],[1.9062,0.9822],[1.9375,0.9817],[1.9688,0.9814],[2.0,0.9814],[2.0312,0.9816],[2.0625,0.9818],[2.0938,0.9823],[2.125,0.9829],[2.1562,0.9836],[2.1875,0.9845],[2.2188,0.9855],[2.25,0.9865],[2.2812,0.9874],[2.3125,0.9885],[2.3438,0.9895],[2.375,0.9905],[2.4062,0.9915],[2.4375,0.9924],[2.4688,0.9933],[2.5,0.9941],[2.5312,0.9951],[2.5625,0.9958],[2.5938,0.9966],[2.625,0.9972],[2.6562,0.9978],[2.6875,0.9984],[2.7188,0.9989],[2.75,0.9991],[2.7812,0.9991],[2.8125,0.9993],[2.8438,0.9995],[2.875,0.9996],[2.9062,0.9999],[2.9375,0.9999],[2.9688,1.0],[3.0,1.0]],"l4":[[-3.0,-0.0099],[-2.9688,-0.0099],[-2.9375,-0.0096],[-2.9062,-0.0094],[-2.875,-0.0089],[-2.8438,-0.0084],[-2.8125,-0.0077],[-2.7812,-0.007],[-2.75,-0.006],[-2.7188,-0.0049],[-2.6875,-0.0037],[-2.6562,-0.0023],[-2.625,-0.0009],[-2.5938,0.0007],[-2.5625,0.0024],[-2.5312,0.0042],[-2.5,0.0061],[-2.4688,0.0081],[-2.4375,0.01],[-2.4062,0.012],[-2.375,0.0139],[-2.3438,0.0159],[-2.3125,0.0178],[-2.2812,0.0198],[-2.25,0.0215],[-2.2188,0.0232],[-2.1875,0.0247],[-2.1562,0.026],[-2.125,0.0271],[-2.0938,0.028],[-2.0625,0.0286],[-2.0312,0.0289],[-2.0,0.0291],[-1.9688,0.0288],[-1.9375,0.0282],[-1.9062,0.0273],[-1.875,0.026],[-1.8438,0.0244],[-1.8125,0.0223],[-1.7812,0.02],[-1.75,0.0172],[-1.7188,0.014],[-1.6875,0.0105],[-1.6562,0.0067],[-1.625,0.0026],[-1.5938,-0.002],[-1.5625,-0.0067],[-1.5312,-0.0117],[-1.5,-0.0168],[-1.4688,-0.0222],[-1.4375,-0.0276],[-1.4062,-0.033],[-1.375,-0.0383],[-1.3438,-0.0437],[-1.3125,-0.049],[-1.2812,-0.0541],[-1.25,-0.059],[-1.2188,-0.0635],[-1.1875,-0.0675],[-1.1562,-0.071],[-1.125,-0.0741],[-1.0938,-0.0767],[-1.0625,-0.0785],[-1.0312,-0.0795],[-1.0,-0.0797],[-0.9688,-0.079],[-0.9375,-0.0773],[-0.9062,-0.0746],[-0.875,-0.0709],[-0.8438,-0.066],[-0.8125,-0.0599],[-0.7812,-0.0526],[-0.75,-0.0441],[-0.7188,-0.0342],[-0.6875,-0.0231],[-0.6562,-0.0106],[-0.625,0.0032],[-0.5938,0.0183],[-0.5625,0.0348],[-0.5312,0.0525],[-0.5,0.0715],[-0.4688,0.0919],[-0.4375,0.1135],[-0.4062,0.1362],[-0.375,0.1602],[-0.3438,0.1851],[-0.3125,0.2109],[-0.2812,0.2378],[-0.25,0.2656],[-0.2188,0.2942],[-0.1875,0.3234],[-0.1562,0.3533],[-0.125,0.3837],[-0.0938,0.4143],[-0.0625,0.4453],[-0.0312,0.4766],[0.0,0.5078],[0.0312,0.5391],[0.0625,0.5702],[0.0938,0.6011],[0.125,0.6316],[0.1562,0.6617],[0.1875,0.6913],[0.2188,0.7202],[0.25,0.7484],[0.2812,0.7758],[0.3125,0.8021],[0.3438,0.8275],[0.375,0.8519],[0.4062,0.8752],[0.4375,0.8975],[0.4688,0.9185],[0.5,0.9381],[0.5312,0.9565],[0.5625,0.9736],[0.5938,0.9894],[0.625,1.0039],[0.6562,1.017],[0.6875,1.0288],[0.7188,1.0393],[0.75,1.0485],[0.7812,1.0564],[0.8125,1.0631],[0.8438,1.0686],[0.875,1.0729],[0.9062,1.076],[0.9375,1.0782],[0.9688,1.0795],[1.0,1.0797],[1.0312,1.0791],[1.0625,1.0776],[1.0938,1.0754],[1.125,1.0726],[1.1562,1.0693],[1.1875,1.0656],[1.2188,1.0613],[1.25,1.0565],[1.2812,1.0515],[1.3125,1.0464],[1.3438,1.041],[1.375,1.0356],[1.4062,1.0303],[1.4375,1.0249],[1.4688,1.0195],[1.5,1.0143],[1.5312,1.0092],[1.5625,1.0043],[1.5938,0.9996],[1.625,0.9954],[1.6562,0.9913],[1.6875,0.9877],[1.7188,0.9844],[1.75,0.9813],[1.7812,0.9788],[1.8125,0.9766],[1.8438,0.9747],[1.875,0.9733],[1.9062,0.9722],[1.9375,0.9714],[1.9688,0.9711],[2.0,0.9709],[2.0312,0.9712],[2.0625,0.9717],[2.0938,0.9724],[2.125,0.9734],[2.1562,0.9746],[2.1875,0.9761],[2.2188,0.9777],[2.25,0.9794],[2.2812,0.9812],[2.3125,0.9832],[2.3438,0.9851],[2.375,0.9871],[2.4062,0.989],[2.4375,0.991],[2.4688,0.9929],[2.5,0.9949],[2.5312,0.9967],[2.5625,0.9984],[2.5938,1.0001],[2.625,1.0016],[2.6562,1.0031],[2.6875,1.0043],[2.7188,1.0055],[2.75,1.0065],[2.7812,1.0073],[2.8125,1.0081],[2.8438,1.0087],[2.875,1.0092],[2.9062,1.0095],[2.9375,1.0098],[2.9688,1.0099],[3.0,1.0099]],"soft":[[-3.0,0.0],[-2.9688,0.0],[-2.9375,0.0],[-2.9062,0.0],[-2.875,0.0],[-2.8438,0.0],[-2.8125,0.0],[-2.7812,0.0],[-2.75,0.0],[-2.7188,0.0],[-2.6875,0.0],[-2.6562,0.0],[-2.625,0.0],[-2.5938,0.0],[-2.5625,0.0],[-2.5312,0.0],[-2.5,0.0],[-2.4688,0.0],[-2.4375,0.0],[-2.4062,0.0],[-2.375,0.0],[-2.3438,0.0],[-2.3125,0.0],[-2.2812,0.0],[-2.25,0.0],[-2.2188,0.0],[-2.1875,0.0],[-2.1562,0.0],[-2.125,0.0],[-2.0938,0.0],[-2.0625,0.0],[-2.0312,0.0],[-2.0,0.0],[-1.9688,0.0],[-1.9375,0.0],[-1.9062,0.0],[-1.875,-0.0001],[-1.8438,-0.0004],[-1.8125,-0.0006],[-1.7812,-0.001],[-1.75,-0.0015],[-1.7188,-0.002],[-1.6875,-0.0026],[-1.6562,-0.0033],[-1.625,-0.004],[-1.5938,-0.005],[-1.5625,-0.006],[-1.5312,-0.007],[-1.5,-0.0079],[-1.4688,-0.0092],[-1.4375,-0.0104],[-1.4062,-0.0116],[-1.375,-0.0128],[-1.3438,-0.0138],[-1.3125,-0.0148],[-1.2812,-0.0157],[-1.25,-0.0165],[-1.2188,-0.0171],[-1.1875,-0.0175],[-1.1562,-0.0176],[-1.125,-0.0175],[-1.0938,-0.0171],[-1.0625,-0.0162],[-1.0312,-0.0151],[-1.0,-0.0135],[-0.9688,-0.0115],[-0.9375,-0.0087],[-0.9062,-0.0052],[-0.875,-0.0011],[-0.8438,0.0038],[-0.8125,0.0096],[-0.7812,0.0165],[-0.75,0.0243],[-0.7188,0.0331],[-0.6875,0.0428],[-0.6562,0.0538],[-0.625,0.0658],[-0.5938,0.079],[-0.5625,0.0931],[-0.5312,0.1085],[-0.5,0.1249],[-0.4688,0.1425],[-0.4375,0.1611],[-0.4062,0.1809],[-0.375,0.2017],[-0.3438,0.2231],[-0.3125,0.2457],[-0.2812,0.2692],[-0.25,0.2933],[-0.2188,0.3184],[-0.1875,0.3439],[-0.1562,0.3701],[-0.125,0.397],[-0.0938,0.4241],[-0.0625,0.4514],[-0.0312,0.4791],[0.0,0.507],[0.0312,0.5348],[0.0625,0.5623],[0.0938,0.5895],[0.125,0.6165],[0.1562,0.6431],[0.1875,0.6689],[0.2188,0.6942],[0.25,0.7189],[0.2812,0.7427],[0.3125,0.7657],[0.3438,0.7877],[0.375,0.8088],[0.4062,0.8291],[0.4375,0.8484],[0.4688,0.8665],[0.5,0.8834],[0.5312,0.8993],[0.5625,0.9141],[0.5938,0.9277],[0.625,0.9403],[0.6562,0.9518],[0.6875,0.9622],[0.7188,0.9714],[0.75,0.9797],[0.7812,0.9871],[0.8125,0.9934],[0.8438,0.9988],[0.875,1.0033],[0.9062,1.0071],[0.9375,1.0101],[0.9688,1.0126],[1.0,1.0144],[1.0312,1.0157],[1.0625,1.0167],[1.0938,1.0173],[1.125,1.0176],[1.1562,1.0176],[1.1875,1.0173],[1.2188,1.0168],[1.25,1.0161],[1.2812,1.0153],[1.3125,1.0143],[1.3438,1.0133],[1.375,1.0122],[1.4062,1.011],[1.4375,1.0098],[1.4688,1.0085],[1.5,1.0074],[1.5312,1.0065],[1.5625,1.0055],[1.5938,1.0045],[1.625,1.0037],[1.6562,1.0029],[1.6875,1.0022],[1.7188,1.0017],[1.75,1.0012],[1.7812,1.0007],[1.8125,1.0005],[1.8438,1.0002],[1.875,1.0],[1.9062,1.0],[1.9375,1.0],[1.9688,1.0],[2.0,1.0],[2.0312,1.0],[2.0625,1.0],[2.0938,1.0],[2.125,1.0],[2.1562,1.0],[2.1875,1.0],[2.2188,1.0],[2.25,1.0],[2.2812,1.0],[2.3125,1.0],[2.3438,1.0],[2.375,1.0],[2.4062,1.0],[2.4375,1.0],[2.4688,1.0],[2.5,1.0],[2.5312,1.0],[2.5625,1.0],[2.5938,1.0],[2.625,1.0],[2.6562,1.0],[2.6875,1.0],[2.7188,1.0],[2.75,1.0],[2.7812,1.0],[2.8125,1.0],[2.8438,1.0],[2.875,1.0],[2.9062,1.0],[2.9375,1.0],[2.9688,1.0],[3.0,1.0]],"sr":[[-1.0,0.0],[-0.9688,0.0007],[-0.9375,0.0024],[-0.9062,0.0051],[-0.875,0.0088],[-0.8438,0.0134],[-0.8125,0.019],[-0.7812,0.0256],[-0.75,0.0332],[-0.7188,0.0417],[-0.6875,0.0513],[-0.6562,0.0618],[-0.625,0.0732],[-0.5938,0.0857],[-0.5625,0.0991],[-0.5312,0.1135],[-0.5,0.1289],[-0.4688,0.1453],[-0.4375,0.1626],[-0.4062,0.1809],[-0.375,0.2002],[-0.3438,0.2205],[-0.3125,0.2417],[-0.2812,0.2639],[-0.25,0.2871],[-0.2188,0.3113],[-0.1875,0.3364],[-0.1562,0.3625],[-0.125,0.3896],[-0.0938,0.4177],[-0.0625,0.4468],[-0.0312,0.4768],[0.0,0.5078],[0.0312,0.5383],[0.0625,0.5679],[0.0938,0.5964],[0.125,0.624],[0.1562,0.6506],[0.1875,0.6763],[0.2188,0.7009],[0.25,0.7246],[0.2812,0.7473],[0.3125,0.769],[0.3438,0.7898],[0.375,0.8096],[0.4062,0.8284],[0.4375,0.8462],[0.4688,0.863],[0.5,0.8789],[0.5312,0.8938],[0.5625,0.9077],[0.5938,0.9207],[0.625,0.9326],[0.6562,0.9436],[0.6875,0.9536],[0.7188,0.9626],[0.75,0.9707],[0.7812,0.9778],[0.8125,0.9839],[0.8438,0.989],[0.875,0.9932],[0.9062,0.9963],[0.9375,0.9985],[0.9688,0.9998],[1.0,1.0]]},"m":{"bic":[0.9382,0.7154,0.2689,0.0461,4.1504],"l3":[1.0054,0.8247,0.1697,0.0275,7.0923],"l4":[1.0034,0.8981,0.096,0.0199,7.9712],"soft":[0.8451,0.5869,0.1993,0.0313,1.7578],"vert":[0.9305,0.7105,0.2731,0.0474,3.833],"sr":[0.8106,0.5729,0.2512,0.0482,0.0]},"v":{"c":1,"rows":[[0,128,0,0],[0,127,1,0],[-1,127,2,0],[-2,127,3,0],[-3,126,5,0],[-4,126,6,0],[-5,125,8,0],[-5,124,9,0],[-6,123,11,0],[-6,122,13,-1],[-7,121,15,-1],[-7,119,17,-1],[-8,118,19,-1],[-8,116,22,-2],[-8,114,24,-2],[-8,112,26,-2],[-9,111,29,-3],[-9,109,31,-3],[-9,107,33,-3],[-9,104,36,-3],[-9,102,39,-4],[-9,100,41,-4],[-9,97,44,-4],[-9,95,47,-5],[-9,93,49,-5],[-9,90,52,-5],[-9,88,55,-6],[-9,85,58,-6],[-8,82,60,-6],[-8,80,63,-7],[-8,77,66,-7],[-8,74,69,-7],[-8,72,72,-8]]}};
+const store = { get(k, d) { try { const v = localStorage.getItem('tvu_' + k); return v == null ? d : v; } catch (e) { return d; } }, set(k, v) { try { localStorage.setItem('tvu_' + k, v); } catch (e) {} } };
+const OPTS = {
+  src: { name: '1080p as it arrives', col: '--c-src', why: 'The 1080p frame itself, each pixel shown as a 2×2 block.' },
+  sr: { name: 'Fire TV as it comes', col: '--c-sr', why: 'The Cube\'s own scaler as Fire OS sets it up.' },
+  bic: { name: 'Bicubic', col: '--c-bic', why: 'The Cube\'s video scaler with its bicubic filter.' },
+  l4: { name: 'Lanczos 4', col: '--c-l4', why: 'The Cube\'s video scaler with its sharpest filter, Lanczos 4.' },
+  tvp: { name: 'Tesseract VP 4K upscaler', col: '--c-cube', ref: 1, why: 'Rendered on a Fire TV Cube 3: edges smoothed along their own direction, lightly crisped without halos, ringing already in the film reduced, and colour sharpened where it follows brightness.' },
+  fb: { name: 'Tesseract VP 4K upscaler, lighter', col: '--c-cube', ref: 1, why: 'Rendered on a Fire TV Cube 3. What the Cube switches to if a film needs more GPU time: the same edge and colour work without the finer anti-aliasing, crispening and anti-ringing.' },
+  gpu: { name: 'Tesseract VP Lanczos 4 (GPU)', col: '--c-cube', ref: 1, why: 'Rendered on a Fire TV Cube 3. The simpler choice in the 4K setting: Lanczos 4 on the GPU with ringing held in, and colour that follows brightness.' },
+  pc: { name: 'A popular PC upscaler', col: '--c-pc', ref: 1, why: 'A well-known upscaler running on a PC graphics card, captured from its own 4K output. Shown for reference.' },
+  master: { name: '4K original', col: '--fg', why: 'The 4K frame the 1080p was made from, tone mapped by Tesseract VP.' },
+};
+const FRAMES = [
+  {"stem": "pas_6225", "title": "Passengers: the med bay", "refs": 1, "x": 1332, "y": 264, "note": "Thin light rings, panel seams, small screen text and the hexagon pattern behind the glass."},
+  {"stem": "lucy_2855", "title": "Lucy: the printout", "refs": 1, "x": 336, "y": 928, "note": "Small printed characters on the page and the labels on the printer."},
+  {"stem": "prom_3066", "title": "Prometheus: the DNA screen", "refs": 1, "x": 1884, "y": 848, "note": "Tiny screen text, thin graph bars and glowing lines on dark."},
+  {"stem": "fvf_5597", "title": "Ford v Ferrari: pit lane", "refs": 1, "x": 2408, "y": 812, "note": "Crowds, flags, lamp posts and grandstand rows: hundreds of fine lines."},
+  {"stem": "lucy_2571", "title": "Lucy: the laptop", "refs": 1, "x": 2052, "y": 488, "note": "Web pages, graphs and a code window full of small text."},
+  {"stem": "lucy_2883", "title": "Lucy: the apartment", "refs": 1, "x": 2156, "y": 852, "note": "Wall tiles, bottles, the tablecloth pattern and the kitchen shelves."},
+  {"stem": "pas_270", "title": "Passengers: waking up", "refs": 1, "x": 1936, "y": 1348, "note": "Stubble, skin and the hard edges of the sleep pod."},
+  {"stem": "lucy_531", "title": "Lucy: the glasses", "refs": 1, "x": 1356, "y": 268, "note": "Hair, stubble and the edges of the safety glasses."},
+  {"stem": "tvans", "title": "Tropical Vans", "refs": 1, "left": false, "x": 560, "y": 1460, "note": "Number plates, the sign lettering and palm fronds against the sky."},
+  {"stem": "lucy_street", "title": "Lucy: the street of signs", "refs": 1, "left": false, "x": 1880, "y": 620, "note": "Small characters and phone numbers on saturated signs."},
+  {"stem": "lucy_scooters", "title": "Lucy: scooters", "refs": 0, "x": 1480, "y": 560, "note": "Printed text on cardboard boxes and helmet reflections."},
+  {"stem": "sam_kids", "title": "Samsara: three children", "refs": 0, "x": 560, "y": 560, "note": "Thin dark paint lines on white paint."},
+  {"stem": "sam_thiksey", "title": "Samsara: Thiksey monastery", "refs": 0, "x": 1880, "y": 520, "note": "Hundreds of small dark windows in white walls."},
+  {"stem": "obl_flower", "title": "Oblivion: flower in a shell casing", "refs": 0, "x": 2120, "y": 810, "note": "Brass rims, bright highlights and the fine knit pattern on the left."},
+];
+const SW = 1920, SH = 1080, FW = 3840, FH = 2160, MC = 8, BASE_W = 640, BASE_H = 360;
+const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+const plane = (w, h) => ({ w, h, d: new Float32Array(w * h) });
+const SRT = { c: 1, rows: Array.from({ length: 33 }, (_, p) => [0, 64 - p, p, 0]) };	// the super-scaler's 2x: identity and half way, co-sited
+// 2x along one axis with a driver table (33 half-phase rows, mirrored past the half)
+function up2(p, horiz, tab, cosited) {
+  const W = horiz ? p.w * 2 : p.w, H = horiz ? p.h : p.h * 2, o = plane(W, H), n = horiz ? p.w : p.h, len = horiz ? W : H;
+  const T = tab.rows[0].length, c = tab.c, idx = new Int32Array(len * T), wt = new Float32Array(len * T);
+  for (let i = 0; i < len; i++) {
+    const pos = cosited ? i / 2 : (i + 0.5) / 2 - 0.5, k = Math.floor(pos), q = Math.round((pos - k) * 64);
+    const r = q <= 32 ? tab.rows[q] : tab.rows[64 - q].slice().reverse(), s = r.reduce((a, b) => a + b, 0);
+    for (let j = 0; j < T; j++) { idx[i * T + j] = clamp(k + j - c, 0, n - 1); wt[i * T + j] = r[j] / s; }
+  }
+  const s = p.d, d = o.d;
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    const i = horiz ? x : y, b = i * T;
+    let a = 0;
+    if (horiz) { const r = y * p.w; for (let j = 0; j < T; j++) a += s[r + idx[b + j]] * wt[b + j]; }
+    else for (let j = 0; j < T; j++) a += s[idx[b + j] * p.w + x] * wt[b + j];
+    d[y * W + x] = a;
+  }
+  return o;
+}
+function lin2(p, horiz) {	// the chroma formatter's Smooth: linear, centred
+  const W = horiz ? p.w * 2 : p.w, H = horiz ? p.h : p.h * 2, o = plane(W, H), n = horiz ? p.w : p.h;
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    const i = horiz ? x : y, pos = (i + 0.5) / 2 - 0.5, k = Math.floor(pos), f = pos - k, a = clamp(k, 0, n - 1), b = clamp(k + 1, 0, n - 1);
+    o.d[y * W + x] = horiz ? p.d[y * p.w + a] * (1 - f) + p.d[y * p.w + b] * f : p.d[a * p.w + x] * (1 - f) + p.d[b * p.w + x] * f;
+  }
+  return o;
+}
+function rep(p, s) { const o = plane(p.w * s, p.h * s); for (let y = 0; y < o.h; y++) for (let x = 0; x < o.w; x++) o.d[y * o.w + x] = p.d[Math.floor(y / s) * p.w + Math.floor(x / s)]; return o; }
+function arClamp(o, p) {	// each output pixel held inside the 2x2 input pixels it lies between
+  for (let y = 0; y < o.h; y++) {
+    const r0 = clamp(Math.floor((y - 1) / 2), 0, p.h - 1), r1 = clamp(Math.floor((y + 1) / 2), 0, p.h - 1);
+    for (let x = 0; x < o.w; x++) {
+      const c0 = clamp(Math.floor((x - 1) / 2), 0, p.w - 1), c1 = clamp(Math.floor((x + 1) / 2), 0, p.w - 1);
+      const a = p.d[r0 * p.w + c0], b = p.d[r0 * p.w + c1], c = p.d[r1 * p.w + c0], d = p.d[r1 * p.w + c1];
+      const i = y * o.w + x; o.d[i] = clamp(o.d[i], Math.min(a, b, c, d), Math.max(a, b, c, d));
+    }
+  }
+  return o;
+}
+const lz4 = (x) => { x = Math.abs(x); if (x < 1e-9) return 1; if (x >= 4) return 0; const px = Math.PI * x; return 4 * Math.sin(px) * Math.sin(px / 4) / (px * px); };
+const lzs = (x) => 1.2 * lz4(x) - 0.1 * (lz4(x - 0.5) + lz4(x + 0.5));	// Lanczos 4 with a 10% lift at the finest detail
+function upL4(p, horiz, k, sh = 0, ker = lz4) {	// Lanczos 4 by an integer factor k along one axis; sh moves the samples (chroma siting)
+  const W = horiz ? p.w * k : p.w, H = horiz ? p.h : p.h * k, o = plane(W, H), n = horiz ? p.w : p.h, len = horiz ? W : H;
+  const idx = new Int32Array(len * 8), wt = new Float32Array(len * 8);
+  for (let i = 0; i < len; i++) {
+    const pos = (i + 0.5) / k - 0.5 + sh, f = Math.floor(pos); let sum = 0;
+    for (let j = 0; j < 8; j++) { const w = ker(j - 3 - (pos - f)); idx[i * 8 + j] = clamp(f + j - 3, 0, n - 1); wt[i * 8 + j] = w; sum += w; }
+    for (let j = 0; j < 8; j++) wt[i * 8 + j] /= sum;
+  }
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    const b = (horiz ? x : y) * 8; let a = 0;
+    if (horiz) { const r = y * p.w; for (let j = 0; j < 8; j++) a += p.d[r + idx[b + j]] * wt[b + j]; }
+    else for (let j = 0; j < 8; j++) a += p.d[idx[b + j] * p.w + x] * wt[b + j];
+    o.d[y * W + x] = a;
+  }
+  return o;
+}
+function clampK(o, p, k, sh = 0) {	// each output pixel held inside the 2x2 input pixels around it, for a factor k
+  for (let y = 0; y < o.h; y++) {
+    const py = (y + 0.5) / k - 0.5, r0 = clamp(Math.floor(py), 0, p.h - 1), r1 = clamp(Math.floor(py) + 1, 0, p.h - 1);
+    for (let x = 0; x < o.w; x++) {
+      const px = (x + 0.5) / k - 0.5 + sh, c0 = clamp(Math.floor(px), 0, p.w - 1), c1 = clamp(Math.floor(px) + 1, 0, p.w - 1);
+      const a = p.d[r0 * p.w + c0], b = p.d[r0 * p.w + c1], c = p.d[r1 * p.w + c0], d = p.d[r1 * p.w + c1];
+      const i = y * o.w + x; o.d[i] = clamp(o.d[i], Math.min(a, b, c, d), Math.max(a, b, c, d));
+    }
+  }
+  return o;
+}
+function gauss(p, sg) {	// separable Gaussian, edges held
+  const r = Math.floor(4 * sg + 0.5), k = []; let t = 0;
+  for (let i = -r; i <= r; i++) { const v = Math.exp(-i * i / (2 * sg * sg)); k.push(v); t += v; }
+  for (let i = 0; i < k.length; i++) k[i] /= t;
+  const a = plane(p.w, p.h), o = plane(p.w, p.h);
+  for (let y = 0; y < p.h; y++) for (let x = 0; x < p.w; x++) { let v = 0; for (let i = -r; i <= r; i++) v += k[i + r] * p.d[y * p.w + clamp(x + i, 0, p.w - 1)]; a.d[y * p.w + x] = v; }
+  for (let y = 0; y < p.h; y++) for (let x = 0; x < p.w; x++) { let v = 0; for (let i = -r; i <= r; i++) v += k[i + r] * a.d[clamp(y + i, 0, p.h - 1) * p.w + x]; o.d[y * p.w + x] = v; }
+  return o;
+}
+function bil(p, y, x) { y = clamp(y, 0, p.h - 1); x = clamp(x, 0, p.w - 1); const y0 = Math.floor(y), x0 = Math.floor(x), y1 = Math.min(y0 + 1, p.h - 1), x1 = Math.min(x0 + 1, p.w - 1), fy = y - y0, fx = x - x0;
+  return (p.d[y0 * p.w + x0] * (1 - fx) + p.d[y0 * p.w + x1] * fx) * (1 - fy) + (p.d[y1 * p.w + x0] * (1 - fx) + p.d[y1 * p.w + x1] * fx) * fy; }
+function edgeAA(b) {	// smooth only along each edge (its direction from the structure tensor), more where the edge is clear and strong
+  const W = b.w, H = b.h, gx = plane(W, H), gy = plane(W, H), at = (x, y) => b.d[clamp(y, 0, H - 1) * W + clamp(x, 0, W - 1)];
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    gx.d[y * W + x] = ((at(x + 1, y - 1) + 2 * at(x + 1, y) + at(x + 1, y + 1)) - (at(x - 1, y - 1) + 2 * at(x - 1, y) + at(x - 1, y + 1))) / 8;
+    gy.d[y * W + x] = ((at(x - 1, y + 1) + 2 * at(x, y + 1) + at(x + 1, y + 1)) - (at(x - 1, y - 1) + 2 * at(x, y - 1) + at(x + 1, y - 1))) / 8;
+  }
+  const xx = plane(W, H), xy = plane(W, H), yy = plane(W, H);
+  for (let i = 0; i < W * H; i++) { xx.d[i] = gx.d[i] * gx.d[i]; xy.d[i] = gx.d[i] * gy.d[i]; yy.d[i] = gy.d[i] * gy.d[i]; }
+  const A = gauss(xx, 1.5), B = gauss(xy, 1.5), C = gauss(yy, 1.5), o = plane(W, H);
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    const i = y * W + x, a = A.d[i], bb = B.d[i], c = C.d[i], tr = a + c, disc = Math.sqrt(Math.max(tr * tr / 4 - (a * c - bb * bb), 0));
+    const l1 = Math.max(tr / 2 + disc, 0), l2 = Math.max(tr / 2 - disc, 0);
+    let tx = bb, ty = l2 - a; const n = Math.hypot(tx, ty);
+    if (n < 1e-6) { tx = 1; ty = 0; } else { tx /= n; ty /= n; }
+    const s1 = Math.sqrt(l1), s2 = Math.sqrt(l2), coh = (s1 - s2) / (s1 + s2 + 1e-3);
+    let acc = b.d[i] * 0.1;
+    for (const [r, w] of [[1.5, 0.3], [3, 0.15]]) acc += w * (bil(b, y + r * ty, x + r * tx) + bil(b, y - r * ty, x - r * tx));
+    const k = Math.min(Math.max(coh, 0), 1) ** 2 * Math.min(s1 / 3, 1);
+    o.d[i] = b.d[i] + k * (acc - b.d[i]);
+  }
+  return o;
+}
+function steepen(b, g) { const bl = gauss(b, 0.8), o = plane(b.w, b.h); for (let i = 0; i < b.d.length; i++) o.d[i] = b.d[i] + g * (b.d[i] - bl.d[i]); return o; }
+function box3(p) { const o = plane(p.w, p.h); for (let y = 0; y < p.h; y++) for (let x = 0; x < p.w; x++) { let a = 0; for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) a += p.d[clamp(y + dy, 0, p.h - 1) * p.w + clamp(x + dx, 0, p.w - 1)]; o.d[y * p.w + x] = a / 9; } return o; }
+const up4s = (p, left) => upL4(upL4(p, true, 4, left ? 0.25 : 0), false, 4);
+function guidedC(Ys, C, Y4, left) {	// colour that follows brightness, used only where the two clearly change together
+  const w = C.w, h = C.h, g = plane(w, h);
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) { const r = 2 * y * Ys.w + 2 * x; g.d[y * w + x] = (Ys.d[r] + Ys.d[r + 1] + Ys.d[r + Ys.w] + Ys.d[r + Ys.w + 1]) / 4; }
+  const gg = plane(w, h), cc = plane(w, h), gc = plane(w, h);
+  for (let i = 0; i < w * h; i++) { gg.d[i] = g.d[i] * g.d[i]; cc.d[i] = C.d[i] * C.d[i]; gc.d[i] = g.d[i] * C.d[i]; }
+  const mg = box3(g), mc = box3(C), mgg = box3(gg), mcc = box3(cc), mgc = box3(gc), A = plane(w, h), B = plane(w, h), Wt = plane(w, h);
+  for (let i = 0; i < w * h; i++) {
+    const vg = mgg.d[i] - mg.d[i] * mg.d[i], vc = mcc.d[i] - mc.d[i] * mc.d[i], cv = mgc.d[i] - mg.d[i] * mc.d[i];
+    A.d[i] = cv / (vg + 1); B.d[i] = mc.d[i] - A.d[i] * mg.d[i];
+    const r = Math.abs(cv) / Math.sqrt((vg + 1) * (vc + 1));
+    Wt.d[i] = Math.min(Math.max((r - 0.9) / 0.1, 0), 1) * Math.min(Math.max(vg / 25, 0), 1);
+  }
+  const sh = left ? 0.25 : 0, base = clampK(up4s(C, left), C, 4, sh), Au = up4s(A, left), Bu = up4s(B, left), Wu = up4s(Wt, left), gd = plane(base.w, base.h);
+  for (let i = 0; i < gd.d.length; i++) gd.d[i] = Au.d[i] * Y4.d[i] + Bu.d[i];
+  clampK(gd, C, 4, sh);
+  for (let i = 0; i < gd.d.length; i++) { const k = Math.min(Math.max(Wu.d[i], 0), 1); gd.d[i] = base.d[i] + k * (gd.d[i] - base.d[i]); }
+  return gd;
+}
+function bilat(p, ss, sr) {	// smooths differences smaller than sr, keeps edges
+  const o = plane(p.w, p.h);
+  for (let y = 0; y < p.h; y++) for (let x = 0; x < p.w; x++) {
+    const c = p.d[y * p.w + x]; let a = 0, ws = 0;
+    for (let dy = -2; dy <= 2; dy++) for (let dx = -2; dx <= 2; dx++) {
+      const q = p.d[clamp(y + dy, 0, p.h - 1) * p.w + clamp(x + dx, 0, p.w - 1)], d = (q - c) / sr, wgt = Math.exp(-(dy * dy + dx * dx) / (2 * ss * ss) - d * d);
+      a += wgt * q; ws += wgt;
+    }
+    o.d[y * p.w + x] = a / ws;
+  }
+  return o;
+}
+const ar4 = (p, left) => clampK(upL4(upL4(p, true, 4, left ? 0.25 : 0), false, 4), p, 4, left ? 0.25 : 0);	// video's 4:2:0 is left-sited across, centred down
+function scale(p, key) {
+  if (key === 'l4ar') return arClamp(scale(p, 'l4'), p);
+  if (key === 'sr') return up2(up2(p, true, SRT, true), false, SRT, true);
+  return up2(up2(p, true, TABLES.h[key], false), false, TABLES.v, false);
+}
+function run(src, key, X0, Y0, W, H, left) {
+  const cx0 = X0 / 4 - MC, cy0 = Y0 / 4 - MC, cw = W / 4 + 2 * MC, ch = H / 4 + 2 * MC;
+  const Y = plane(cw * 2, ch * 2), CB = plane(cw, ch), CR = plane(cw, ch);
+  for (let y = 0; y < Y.h; y++) for (let x = 0; x < Y.w; x++) Y.d[y * Y.w + x] = src.y[clamp(2 * cy0 + y, 0, SH - 1) * SW + clamp(2 * cx0 + x, 0, SW - 1)];
+  for (let y = 0; y < ch; y++) for (let x = 0; x < cw; x++) { const i = clamp(cy0 + y, 0, SH / 2 - 1) * (SW / 2) + clamp(cx0 + x, 0, SW / 2 - 1); CB.d[y * cw + x] = src.cb[i]; CR.d[y * cw + x] = src.cr[i]; }
+  let out;
+  if (key === 'src') out = [rep(Y, 2), rep(CB, 4), rep(CR, 4)];
+  else if (key === 'l4full') {
+    const base = clampK(upL4(upL4(Y, true, 2, 0, lzs), false, 2, 0, lzs), Y, 2), a = clampK(edgeAA(base), Y, 2), ys = clampK(steepen(a, 0.25), Y, 2);
+    out = [clampK(bilat(ys, 1, 3), Y, 2), bilat(guidedC(Y, CB, ys, left), 1.5, 2.5), bilat(guidedC(Y, CR, ys, left), 1.5, 2.5)];
+  }
+  else if (key === 'l4aa' || key === 'l4aas' || key === 'l4aah' || key === 'l4aax') {
+    const base = clampK(upL4(upL4(Y, true, 2, 0, lzs), false, 2, 0, lzs), Y, 2), a = clampK(edgeAA(base), Y, 2);
+    out = [key === 'l4aa' ? a : clampK(steepen(a, key === 'l4aax' ? 2.0 : key === 'l4aas' ? 0.5 : 0.25), Y, 2), ar4(CB, left), ar4(CR, left)];
+  }
+  else if (key === 'l4ar') out = [clampK(upL4(upL4(Y, true, 2, 0, lzs), false, 2, 0, lzs), Y, 2), ar4(CB, left), ar4(CR, left)];
+  else out = [scale(Y, key), scale(lin2(lin2(CB, false), true), key), scale(lin2(lin2(CR, false), true), key)];
+  const off = 4 * MC, PW = out[0].w;
+  const crop = (p) => { const r = new Float32Array(W * H); for (let y = 0; y < H; y++) r.set(p.d.subarray((y + off) * PW + off, (y + off) * PW + off + W), y * W); return r; };
+  const res = { y: crop(out[0]), cb: crop(out[1]), cr: crop(out[2]) };
+  res.over = overshoot(res.y, Y, off, W, H);
+  return res;
+}
+function overshoot(yv, Ys, off, W, H) {	// past the 2x2 source pixels each output pixel lies between, in luma codes
+  const ov = new Float32Array(W * H);
+  for (let y = 0; y < H; y++) {
+    const fy = Math.floor((y + off - 1) / 2), r0 = clamp(fy, 0, Ys.h - 1), r1 = clamp(fy + 1, 0, Ys.h - 1);
+    for (let x = 0; x < W; x++) {
+      const fx = Math.floor((x + off - 1) / 2), c0 = clamp(fx, 0, Ys.w - 1), c1 = clamp(fx + 1, 0, Ys.w - 1);
+      const a = Ys.d[r0 * Ys.w + c0], b = Ys.d[r0 * Ys.w + c1], c = Ys.d[r1 * Ys.w + c0], d = Ys.d[r1 * Ys.w + c1];
+      const lo = Math.min(a, b, c, d), hi = Math.max(a, b, c, d), v = yv[y * W + x];
+      ov[y * W + x] = v > hi ? v - hi : v < lo ? lo - v : 0;
+    }
+  }
+  return ov;
+}
+function toRGBA(res, n, rgba) {
+  for (let i = 0; i < n; i++) {
+    const yy = (res.y[i] - 16) / 219, pb = (res.cb[i] - 128) / 224, pr = (res.cr[i] - 128) / 224;
+    rgba[i * 4] = clamp((yy + 1.5748 * pr) * 255 + 0.5, 0, 255);
+    rgba[i * 4 + 1] = clamp((yy - 0.1873 * pb - 0.4681 * pr) * 255 + 0.5, 0, 255);
+    rgba[i * 4 + 2] = clamp((yy + 1.8556 * pb) * 255 + 0.5, 0, 255);
+    rgba[i * 4 + 3] = 255;
+  }
+}
+
+// images
+const bmpCache = new Map(), srcCache = new Map();
+const bitmap = (url) => {
+  if (!bmpCache.has(url)) bmpCache.set(url, fetch(url).then((r) => { if (!r.ok) throw new Error(url); return r.blob(); })
+    .then((b) => createImageBitmap(b, { colorSpaceConversion: 'none', premultiplyAlpha: 'none' })));
+  return bmpCache.get(url);
+};
+const work = document.createElement('canvas'), wg = work.getContext('2d', { willReadFrequently: true });
+async function pixels(url, sx, sy, w, h) {
+  const bm = await bitmap(url);
+  sx = sx || 0; sy = sy || 0; w = w || bm.width; h = h || bm.height;
+  work.width = w; work.height = h; wg.clearRect(0, 0, w, h); wg.drawImage(bm, sx, sy, w, h, 0, 0, w, h);
+  return wg.getImageData(0, 0, w, h).data;
+}
+function source(stem) {
+  if (!srcCache.has(stem)) srcCache.set(stem, (async () => {
+    const py = await pixels(`src/${stem}_y.png`), pc = await pixels(`src/${stem}_c.png`);
+    const n = SW * SH, m = n / 4, y = new Uint8Array(n), cb = new Uint8Array(m), cr = new Uint8Array(m);
+    for (let i = 0; i < n; i++) y[i] = py[i * 4];
+    for (let i = 0; i < m; i++) { cb[i] = pc[i * 4]; cr[i] = pc[i * 4 + 1]; }
+    return { y, cb, cr };
+  })());
+  return srcCache.get(stem);
+}
+
+// state
+let FI = clamp(Number(store.get('frame', '0')) || 0, 0, FRAMES.length - 1);
+let A = store.get('A', 'l4'), B = store.get('B', 'tvp'), ZOOM = Number(store.get('zoom', '2')) || 2, MODE = 'one', MARK = 0;
+let CX = 0, CY = 0, FLIP = 0, seq = 0;
+const fr = () => FRAMES[FI];
+const avail = (k) => k !== 'master' || fr().refs;
+const RW = () => BASE_W / ZOOM, RH = () => BASE_H / ZOOM;
+function region() {
+  const w = RW(), h = RH();
+  return [clamp(Math.round((CX - w / 2) / 4) * 4, 0, FW - w), clamp(Math.round((CY - h / 2) / 4) * 4, 0, FH - h), w, h];
+}
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const css = (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+
+const elFrame = document.getElementById('frame');
+FRAMES.forEach((f, i) => elFrame.add(new Option(f.title, i)));
+const panes = [document.getElementById('pA')];
+const selA = document.getElementById('selA'), selB = document.getElementById('selB');
+function fillPickers() {
+  [selA, selB].forEach((sel, i) => {
+    const cur = i ? B : A;
+    sel.innerHTML = '';
+    for (const [k, o] of Object.entries(OPTS)) if (avail(k)) sel.add(new Option(o.name, k));
+    sel.value = avail(cur) ? cur : (i ? 'tvp' : 'l4');
+    if (i) B = sel.value; else A = sel.value;
+  });
+}
+function setSeg(id, v) { document.querySelectorAll(`#${id} button`).forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.v === String(v)))); }
+function segs() { setSeg('zoom', ZOOM); }
+
+function stats() { return ''; }
+async function paint(p, key, my) {
+  const cv = p.querySelector('canvas'), g = cv.getContext('2d'), busy = p.querySelector('.busy'), num = { set innerHTML(v) {}, set textContent(v) {} };
+  const [X0, Y0, w, h] = region(), n = w * h, f = fr();
+  p.querySelector('.dot').style.background = css(OPTS[key].col);
+  p.querySelector('.tag').textContent = OPTS[key].name.replace(' (default)', '');
+  p.querySelector('.why').textContent = OPTS[key].why;
+  cv.width = w; cv.height = h; cv.style.imageRendering = ZOOM < 1 ? 'auto' : 'pixelated';
+  busy.hidden = false;
+  try {
+    const src = await source(f.stem);
+    const master = f.refs ? await pixels(`src/${f.stem}_master.jpg`, X0, Y0, w, h) : null;
+    if (my !== seq) return;
+    const img = g.createImageData(w, h);
+    if (key === 'master') {
+      img.data.set(master);
+      num.innerHTML = '<span>the reference</span>';
+    } else if (OPTS[key].ref) {
+      const px = await pixels(`src/${f.stem}_${key}.${'jpg'}`, X0, Y0, w, h);
+      if (my !== seq) return;
+      img.data.set(px);
+      const res = { y: new Float32Array(n), over: new Float32Array(n) };
+      for (let i = 0; i < n; i++) res.y[i] = 16 + 219 * (0.2126 * px[i * 4] + 0.7152 * px[i * 4 + 1] + 0.0722 * px[i * 4 + 2]) / 255;
+      for (let y = 0; y < h; y++) {
+        const r0 = clamp(Math.floor((Y0 + y - 1) / 2), 0, SH - 1), r1 = clamp(Math.floor((Y0 + y + 1) / 2), 0, SH - 1);
+        for (let x = 0; x < w; x++) {
+          const c0 = clamp(Math.floor((X0 + x - 1) / 2), 0, SW - 1), c1 = clamp(Math.floor((X0 + x + 1) / 2), 0, SW - 1);
+          const a = src.y[r0 * SW + c0], b = src.y[r0 * SW + c1], c = src.y[r1 * SW + c0], d = src.y[r1 * SW + c1];
+          const lo = Math.min(a, b, c, d), hi = Math.max(a, b, c, d), v = res.y[y * w + x];
+          res.over[y * w + x] = v > hi ? v - hi : v < lo ? lo - v : 0;
+        }
+      }
+      num.innerHTML = stats(res, n, master, img.data, key);
+      if (MARK) for (let i = 0; i < n; i++) if (res.over[i] >= MARK) { img.data[i * 4] = 255; img.data[i * 4 + 1] = 40; img.data[i * 4 + 2] = 210; }
+    } else {
+      const res = run(src, key, X0, Y0, w, h, f.left !== false);	// film frames are left-sited; the three made from 4K originals were made centred
+      toRGBA(res, n, img.data);
+      num.innerHTML = stats(res, n, master, img.data, key);
+      if (MARK) for (let i = 0; i < n; i++) if (res.over[i] >= MARK) { img.data[i * 4] = 255; img.data[i * 4 + 1] = 40; img.data[i * 4 + 2] = 210; }
+    }
+    if (my !== seq) return;
+    g.putImageData(img, 0, 0);
+  } catch (e) {
+    g.fillStyle = '#222'; g.fillRect(0, 0, w, h);
+    num.textContent = 'This picture did not load. Reload the page to try again.';
+  } finally { if (my === seq) busy.hidden = true; }
+}
+let ovImg = null;
+async function drawOv() {
+  const cv = document.getElementById('ov'), g = cv.getContext('2d');
+  try { ovImg = await bitmap(`src/${fr().stem}_thumb.webp`); } catch (e) { ovImg = null; }
+  cv.width = 600; cv.height = 338;
+  if (ovImg) g.drawImage(ovImg, 0, 0, cv.width, cv.height); else { g.fillStyle = '#222'; g.fillRect(0, 0, cv.width, cv.height); }
+  const [X0, Y0, w, h] = region(), s = cv.width / FW;
+  g.lineWidth = 3; g.strokeStyle = '#000'; g.strokeRect(X0 * s, Y0 * s, Math.max(6, w * s), Math.max(4, h * s));
+  g.lineWidth = 1.5; g.strokeStyle = css('--accent') || '#e8a43c'; g.strokeRect(X0 * s, Y0 * s, Math.max(6, w * s), Math.max(4, h * s));
+}
+function update() {
+  const my = ++seq, f = fr();
+  document.getElementById('fnote').innerHTML = `<b>Where to look:</b> ${esc(f.note)}`;
+  document.getElementById('hint').textContent = `Showing ${OPTS[FLIP ? B : A].name}. Click the picture or press Space for ${OPTS[FLIP ? A : B].name}. ` +
+    `It is ${RW()}×${RH()} pixels of the 4K picture, ${ZOOM === 1 ? 'at its own size' : ZOOM < 1 ? 'scaled to fit' : ZOOM + '× enlarged'}.`;
+  drawOv();
+  paint(panes[0], FLIP ? B : A, my);
+}
+function save() { store.set('frame', FI); store.set('A', A); store.set('B', B); store.set('zoom', ZOOM); store.set('mode', MODE); store.set('mark', MARK); }
+function setFrame(i) { FI = i; elFrame.value = i; const f = fr(); CX = f.x + 480; CY = f.y + 270; fillPickers(); }
+
+elFrame.addEventListener('change', () => { setFrame(Number(elFrame.value)); save(); update(); });
+selA.addEventListener('change', () => { A = selA.value; FLIP = 0; save(); update(); });
+selB.addEventListener('change', () => { B = selB.value; FLIP = 1; save(); update(); });
+document.getElementById('zoom').addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; ZOOM = Number(b.dataset.v); segs(); save(); update(); });
+panes[0].querySelector('.pic').addEventListener('click', () => { FLIP ^= 1; update(); });
+document.addEventListener('keydown', (e) => { if (e.code === 'Space' && !/SELECT|BUTTON/.test(document.activeElement.tagName)) { e.preventDefault(); FLIP ^= 1; update(); } });
+const ov = document.getElementById('ov');
+let drag = false;
+function moveTo(e) { const r = ov.getBoundingClientRect(); CX = clamp((e.clientX - r.left) / r.width, 0, 1) * FW; CY = clamp((e.clientY - r.top) / r.height, 0, 1) * FH; drawOv(); }
+ov.addEventListener('pointerdown', (e) => { drag = true; ov.setPointerCapture(e.pointerId); moveTo(e); });
+ov.addEventListener('pointermove', (e) => { if (drag) moveTo(e); });
+ov.addEventListener('pointerup', () => { if (drag) { drag = false; update(); } });
+
+
+setFrame(FI);
+segs();
+update();
+</script>
+</body>
+</html>
