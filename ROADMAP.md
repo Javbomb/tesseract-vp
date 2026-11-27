@@ -1,6 +1,6 @@
 # Tesseract VP roadmap
 
-*Updated 27 November 2026: 3D Blu-ray is in development; two-Cube 3D and stacking, profiles per display and 4096x2160 output are planned.*
+*Updated 27 November 2026: frame-packed 3D Blu-ray is in testing; fixed refresh rates, 2.00 and 2.20 scope screens, and Fire OS updates and a full Cube check in Setup are live; two-Cube 3D and stacking, profiles per display, 4096x2160 output and menus in the scope area are planned.*
 
 This roadmap takes Tesseract VP from a tone-mapping box to a full video processor. Phases are listed in the order we work on them. Most of the processing runs in the Cube's video hardware, so features are built to cost little or no CPU while a film plays.
 
@@ -36,7 +36,7 @@ This roadmap takes Tesseract VP from a tone-mapping box to a full video processo
 | ✅ | **Genlock** | <ul><li>The output follows the HDMI input's timing exactly, so frames aren't dropped or repeated once it has locked.</li><li>It locks within about 40 s.</li></ul> |
 | ✅ | **EDID builder** | <ul><li>You choose what the source is told: resolutions, refresh rates, HDR formats, peak and black, 4:2:0, bit depth and ALLM.</li><li>It is built from the receiver's EDID, so sound formats and Atmos pass untouched.</li></ul> |
 | ✅ | **Output menu** | <ul><li>Colour format, bit depth, resolution, refresh rate and colour space, applied over whatever the app picks.</li><li>A mode the display can't carry is lowered automatically to what HDMI 2.0 supports.</li></ul> |
-| ✅ | **Frame-rate matching** | <ul><li>Each film plays at its own rate, read before its first frame (23.976 and 24.000 told apart).</li><li>Streaming apps are included, with the sound kept through the switch.</li><li>At film rates the output goes to 4:4:4 12-bit in the same switch.</li></ul> |
+| ✅ | **Frame-rate matching** | <ul><li>Each film plays at its own rate, read before its first frame (23.976 and 24.000 told apart).</li><li>Streaming apps are included, with the sound kept through the switch.</li><li>At film rates the output goes to 4:4:4 12-bit in the same switch.</li><li>Or one fixed rate for everything: 23.976, 24, 25, 29.97, 30, 50, 59.94 or 60 Hz.</li></ul> |
 | 🔶 | **Frame-rate matching for protected apps, through more receivers** | <ul><li>A switch now waits until the app's DRM sees the HDMI link protected again, and the picture holds for under 3 s.</li><li>Disney+ switched on every chain we tested, with Atmos kept.</li><li>Netflix switches where the HDMI handshake is quick (straight into a display, or a fast receiver: 23.976, 24 and 25 tested in 4K with Atmos). Through slower receivers it stays at the usual rate by itself, or you can choose **Always try**.</li><li>Next: the right rate set before the film starts, through more receivers.</li></ul> |
 | ✅ | **Colour space and gamut** | <ul><li>**BT.2020 out:** menus, SDR and console pictures are converted in so they don't look oversaturated.</li><li>**BT.709 out:** films' wider colours are mapped in along constant hue rather than clipped.</li><li>**Auto:** each signal is flagged as what it is.</li></ul> |
 | ✅ | **Profiles with automatic rules** | Game, HDMI, Film, Video and SDR each load their own preset when the source changes. |
@@ -64,7 +64,8 @@ This roadmap takes Tesseract VP from a tone-mapping box to a full video processo
 |---|---|---|
 | ✅ | **Black bar detection** | <ul><li>Every source: apps, Kodi, the HDMI input, protected streams and Dolby Vision, FEL included.</li><li>Films are measured before they are shown, so a change of shape (an IMAX scene) is met on the frame it happens.</li><li>Subtitles in a bar don't fool it. Fast and Precise modes.</li></ul> |
 | ✅ | **Aspect menu** | <ul><li>Fill, and picture to the top or bottom.</li><li>Anamorphic lenses (1.25, 1.33 and 1.5x).</li><li>Masking for each edge.</li></ul>It applies to every source and changes on the exact frame the film's shape does. |
-| ✅ | **Scope screens** | <ul><li>Scope zoom for 2.35, 2.37 and 2.40 screens.</li><li>Non-linear stretch for 16:9 through an anamorphic lens.</li><li>"Only for pictures wider than…" rules and a manual aspect override.</li></ul> |
+| ✅ | **Scope screens** | <ul><li>Scope zoom for 2.00, 2.20, 2.35, 2.37 and 2.40 screens.</li><li>Non-linear stretch for 16:9 through an anamorphic lens.</li><li>"Only for pictures wider than…" rules and a manual aspect override.</li></ul> |
+| ⬜ | **Menus in the scope area** | With Scope zoom, the home screen and app menus are fitted into the scope area too, not only films. |
 | ✅ | **Subtitles kept in view** | Burned-in subtitles in a bar are recognised, and Fill keeps just enough of the bar for them. |
 | ✅ | **Lens memory automation** | The projector's own lens memories are recalled when the film's shape changes, on projectors Tesseract VP can control over the network. Recall by hand from the remote too. |
 
@@ -86,10 +87,10 @@ This roadmap takes Tesseract VP from a tone-mapping box to a full video processo
 
 | | Feature | Details |
 |---|---|---|
-| ✅ | **Tesseract VP Setup** | <ul><li>A Windows app that prepares, backs up, unlocks and installs a Cube, with a button for every step.</li><li>Display setup: peak, colour space and receiver.</li><li>Restore, roll back and uninstall.</li></ul> |
+| ✅ | **Tesseract VP Setup** | <ul><li>A Windows app that prepares, backs up, unlocks and installs a Cube, with a button for every step.</li><li>Display setup: peak, colour space and receiver.</li><li>An unlocked Cube on older firmware is updated to PS7718.5826 in TWRP, keeping its apps, logins and Kodi, and root.</li><li>**Check** goes through the whole Cube and says what fixes anything that isn't right.</li><li>Restore, roll back and uninstall.</li></ul> |
 | ✅ | **Windows installer** | <ul><li>One download, `Tesseract-VP-Setup.exe`: installs for your account with no administrator prompt, with a Start-menu shortcut and an uninstaller.</li><li>Google's platform-tools are downloaded on first use and checked, so there is nothing else to fetch.</li><li>Backups kept in Documents.</li></ul> |
 | ✅ | **Signed self-updates** | <ul><li>Cubes update themselves from this repository's Stable or Nightly releases.</li><li>Every release is signed and checked before it installs.</li></ul> |
-| ✅ | **Safe updates** | <ul><li>One-step roll back.</li><li>A watchdog that puts the previous version back if a new one keeps failing.</li><li>Backup and restore of every setting.</li></ul> |
+| ✅ | **Safe updates** | <ul><li>One-step roll back.</li><li>A watchdog that puts the previous version back if a new one keeps failing.</li><li>Backup and restore of every setting.</li><li>A rescue app for a Cube that keeps restarting: it catches the Cube and starts it as plain Fire OS.</li><li>A boot guard (in Nightly): boots that keep ending early start the Cube as plain Fire OS until the next install.</li></ul> |
 
 ## Phase 6: Calibration
 
@@ -108,10 +109,12 @@ This roadmap takes Tesseract VP from a tone-mapping box to a full video processo
 
 | | Feature | Details |
 |---|---|---|
-| 🔶 | **3D Blu-ray** | <ul><li>3D films (MVC) played from Kodi, including Blu-ray .iso files, sent as HDMI 3D frame packing at 1080p24, the full-resolution 3D format.</li><li>Side-by-side and top-and-bottom 3D too.</li><li>Supported projectors are switched into 3D automatically.</li><li>In development: the Cube's 3D decoder and the projector's 3D input are confirmed; the frame-packed output and the 3D player are being built.</li></ul> |
+| 🔶 | **3D Blu-ray** | <ul><li>3D films (MVC) played from Kodi, including Blu-ray .iso files, sent as HDMI 3D frame packing at 1080p24, the full-resolution 3D format.</li><li>Side-by-side and top-and-bottom 3D too.</li><li>Supported projectors are switched into 3D automatically.</li><li>In testing: a Blu-ray 3D .iso plays from a network share as HDMI frame packing, both eyes at full 1080p, with lossless audio. Next: the hand-off from Kodi, remote controls and a 3D menu.</li></ul> |
 | ⬜ | **Two Cubes, two projectors** | <ul><li>Two projectors, each fed by its own Cube, with the Cubes genlocked so every frame reaches both screens together.</li><li>**3D:** one projector per eye.</li><li>**Stacked:** both show the whole picture, for twice the light, with matched tone mapping.</li><li>**Split:** one carries the picture and the other only the highlights. They add back to the full picture with colours unchanged.</li><li>Alignment tools to line the two pictures up exactly.</li></ul> |
 | ⬜ | **Profiles per display** | A Cube used with more than one display recognises the connected one and loads its own profile: peak, tone mapping and calibration. |
 | ⬜ | **4096x2160 output** | For projectors with 17:9 panels. |
+| ⬜ | **SDR brightness with HDR10 out** | SDR sources get their own level when the output is HDR10, for displays with one brightness setting for both. |
+| ⬜ | **Tone mapping for CoreELEC and LibreELEC** | The tone mapping as a module for CoreELEC and LibreELEC players. |
 | ⬜ | **Display roll-off model for HDR10 out** | <ul><li>An optional BT.2390 model of a display that rolls off HDR10 by itself, undone before the signal leaves, so the light still tracks PQ to the peak.</li><li>Off by default, checked with the PQ check pattern.</li></ul> |
 | ✅ | **Dolby Vision with full enhancement layer (FEL)** | <ul><li>Full FEL films rebuilt to their 12-bit picture by signde's Kodi FEL, built on djnice's FEL work.</li><li>Sent as Dolby Vision to the display, or tone mapped by us.</li></ul> |
 | ✅ | **Lossless audio, built in** | <ul><li>Dolby TrueHD Atmos, DTS-HD Master Audio and DTS:X go to the receiver untouched, bitstreamed, and Dolby Atmos from Netflix and Disney+ arrives as Atmos.</li><li>Built into Tesseract VP: nothing else to install, and it stays up to date with it.</li><li>The signal card shows the format going out.</li></ul> |
