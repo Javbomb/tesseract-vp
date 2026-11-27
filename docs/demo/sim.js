@@ -158,8 +158,9 @@ window.TVP_REC = {"calib":{"sets":{"sdr":{"grey":null,"lut":null},"hdr":{"grey":
     return img;
   }
   /* burned-in subtitles in the bottom bar */
-  const subLine = 'We should go before the lights come on.';
-  function subsMask(ar) { const [, y1] = band(ar); return mask(text(subLine, W / 2, y1 + (H - y1) * 0.45, 17, { w: 500, align: 'center' })); }
+  /* short enough that its rows stay under 10% lit, so they still count as bar rows */
+  const subLine = 'Hold on.';
+  function subsMask(ar) { const [, y1] = band(ar); return mask(text(subLine, W / 2, y1 + (H - y1) * 0.45, 16, { w: 400, align: 'center' })); }
 
   const KODI = 'org.xbmc.kodi';
   const AU_KODI = { in: { codec: 'truehd', atmos: 1, dtsx: 0, ch: '7.1', src: 'kodi' }, out: { type: 'MAT', bitstream: 1, ch: 8, rate: 192000, atmos: 1, dtsx: 0, from: 'kodi' } };
@@ -193,11 +194,12 @@ window.TVP_REC = {"calib":{"sets":{"sdr":{"grey":null,"lut":null},"hdr":{"grey":
     const s = SC.find((x) => x.id === id) || SC[0];
     if (scene && !scene.menus && scene.fps && scene !== s) st.lastFilm = scene;
     st.scen = s.id; scene = s; sdrL = null; st.paused = false;
+    clearTimeout(det.wait); clearTimeout(subT); subShown = false;
     det = { v: -1, h: 0, keepB: 0 }; hist.length = 0; outFrozen = null; cuts++;
     F = null; toneKey = placeKey = warpKey = '';
     save();
     if (!s.ready) s.ready = Promise.resolve(s.build()).then((img) => { s.base = img; if (s.subs) s.subMask = subsMask(s.ar); });
-    s.ready.then(() => { if (scene === s) changed(); });
+    s.ready.then(() => { if (scene !== s) return; changed(); if (s.subs) subT = setTimeout(() => { if (scene === s) { subShown = true; changed(); } }, 1500); });
   }
   /* the live state: the shape on screen and the HDR the app sends */
   function inHdr() {
@@ -272,15 +274,19 @@ window.TVP_REC = {"calib":{"sets":{"sdr":{"grey":null,"lut":null},"hdr":{"grey":
   }
 
   /* ---------- aspect: the page's own arithmetic (brain/aspect.c), on our frame ---------- */
-  let det = { v: -1, h: 0, keepB: 0 }, cuts = 0;
+  let det = { v: -1, h: 0, keepB: 0 }, cuts = 0, subShown = false, subT = 0;
   /* whole rows near black from the top and bottom; the subtitle line is not picture */
   function detect(subOn) {
     const rowMax = (y) => { let m = 0; for (let i = y * OW * 3, e = i + OW * 3; i < e; i++) if (S2[i] > m) m = S2[i]; return m; };
     let top = 0, bot = OH;
     while (top < OH / 2 && rowMax(top) < 0.05) top++;
     while (bot > OH / 2 && rowMax(bot - 1) < 0.05) bot--;
-    det.v = 2 * Math.min(top, OH - bot) / OH;
-    if (subOn && +P().subs_ignore > 0) {
+    const v = 2 * Math.min(top, OH - bot) / OH;
+    clearTimeout(det.wait);
+    if (det.v < 0 || Math.abs(v - det.v) <= 0.012 || +P().asp_precise <= 0.5) det.v = v;
+    else det.wait = setTimeout(() => { det.v = v; schedule(); }, (v > det.v ? 18 : 6) / (scene.fps || 60) * 1000);
+    if (!subOn && top > 0) det.clean = true;
+    if (subOn && det.clean && +P().subs_ignore > 0) {
       const [, y1] = band(scene.ar), textBottom = y1 + (H - y1) * 0.45 + 11;
       det.keepB = Math.round(10000 * Math.min(H - y1, textBottom - y1 + H / 100) / H);
     }
@@ -379,8 +385,8 @@ window.TVP_REC = {"calib":{"sets":{"sdr":{"grey":null,"lut":null},"hdr":{"grey":
     src.set(scene.base);
     if (pattern) drawPattern(src);
     half(src);
-    detect(!!scene.subs && !pattern);
-    if (scene.subs && !pattern) { paint(src, scene.subMask, cs(1, 1, 1, isHdr() ? 140 : 90)); half(src); }
+    detect(subShown && !pattern);
+    if (subShown && !pattern) { paint(src, scene.subMask, cs(1, 1, 1, isHdr() ? 140 : 90)); half(src); }
     measure();
     return true;
   }
@@ -620,21 +626,26 @@ window.TVP_REC = {"calib":{"sets":{"sdr":{"grey":null,"lut":null},"hdr":{"grey":
   const decCache = {};
   const decLut = (g) => decCache[g] || (decCache[g] = new Float32Array(256).map((_, k) => Math.pow(k / 255, g)));
   const SENC = new Uint8Array(4097).map((_, i) => Math.round(senc(i / 4096) * 255));
+  /* bars as wave.c finds them: a bar row is under 10% lit (so a subtitle line doesn't end it), a bar column is black between the picture's rows */
   function picRows(c) {
-    let top = 0, bot = OH;
-    const rowMax = (y) => { let m = 0; for (let i = y * OW * 3, e = i + OW * 3; i < e; i++) if (c[i] > m) m = c[i]; return m; };
-    while (top < OH / 2 && rowMax(top) <= 12) top++;
-    while (bot > OH / 2 && rowMax(bot - 1) <= 12) bot--;
-    return [top, bot];
+    const lit = (i) => c[i] > 12 || c[i + 1] > 12 || c[i + 2] > 12;
+    const rowBar = (y) => { let n = 0; for (let i = y * OW * 3, e = i + OW * 3; i < e; i += 3) if (lit(i)) n++; return n * 10 < OW; };
+    const colBar = (x, t, b) => { for (let y = t; y < b; y++) if (lit((y * OW + x) * 3)) return false; return true; };
+    let top = 0, bot = OH, left = 0, right = OW;
+    while (top < OH / 2 && rowBar(top)) top++;
+    while (bot > OH / 2 && rowBar(bot - 1)) bot--;
+    while (left < OW / 2 && colBar(left, top, bot)) left++;
+    while (right > OW / 2 && colBar(right - 1, top, bot)) right--;
+    return [top, bot, left, right];
   }
   function thumb(f) {
     if (f.thumb) return f.thumb;
-    const c = f.codes, lin = decLut(f.gamma), [top, bot] = picRows(c), out = new Uint8Array(16 + ON * 4), hdr = new Uint32Array(out.buffer, 0, 4);
+    const c = f.codes, lin = decLut(f.gamma), [top, bot, left, right] = picRows(c), out = new Uint8Array(16 + ON * 4), hdr = new Uint32Array(out.buffer, 0, 4);
     hdr[0] = OW; hdr[1] = OH; hdr[2] = f.frame; hdr[3] = 0;
     const rgb = new Uint8Array(out.buffer, 16, ON * 3), mk = new Uint8Array(out.buffer, 16 + ON * 3, ON), c709 = f.c709;
     for (let i = 0, p = 0; i < ON; i++, p += 3) {
-      const a = c[p], bb = c[p + 1], cc = c[p + 2], at = (a === 255) + (bb === 255) + (cc === 255), y = (i / OW) | 0;
-      mk[i] = at === 3 ? 2 : at ? 1 : !a && !bb && !cc && y >= top && y < bot ? 4 : 0;
+      const a = c[p], bb = c[p + 1], cc = c[p + 2], at = (a === 255) + (bb === 255) + (cc === 255), y = (i / OW) | 0, x = i - y * OW;
+      mk[i] = at === 3 ? 2 : at ? 1 : !a && !bb && !cc && y >= top && y < bot && x >= left && x < right ? 4 : 0;
       let r = lin[a], g = lin[bb], b = lin[cc];
       if (!c709) {
         const r2 = 1.660491 * r - 0.587641 * g - 0.07285 * b, g2 = -0.124551 * r + 1.1329 * g - 0.008349 * b, b2 = -0.018151 * r - 0.100579 * g + 1.11873 * b;
@@ -693,9 +704,9 @@ window.TVP_REC = {"calib":{"sets":{"sdr":{"grey":null,"lut":null},"hdr":{"grey":
   }
   function stats(f) {
     if (f.stats) return f.stats;
-    const c = f.codes, [top, bot] = picRows(c), lin = decLut(f.gamma), hs = [new Uint32Array(256), new Uint32Array(256), new Uint32Array(256)];
+    const c = f.codes, [top, bot, left, right] = picRows(c), lin = decLut(f.gamma), hs = [new Uint32Array(256), new Uint32Array(256), new Uint32Array(256)];
     let n = 0, full = 0, white = 0, black = 0, zero = 0, lsum = 0, msum = 0;
-    for (let p = top * OW * 3; p < bot * OW * 3; p += 3) {
+    for (let y = top; y < bot; y++) for (let p = (y * OW + left) * 3, e = (y * OW + right) * 3; p < e; p += 3) {
       const r = c[p], g = c[p + 1], b = c[p + 2], mx = r > g ? (r > b ? r : b) : (g > b ? g : b), at = (r === 255) + (g === 255) + (b === 255);
       hs[0][r]++; hs[1][g]++; hs[2][b]++; n++;
       if (at === 3) white++; else if (at) full++;
@@ -734,7 +745,7 @@ window.TVP_REC = {"calib":{"sets":{"sdr":{"grey":null,"lut":null},"hdr":{"grey":
       last: lastM, raw_peak: null, curve_peak: null, change: null, fall: null, avg_hl: null, scene_target: null, target_raw: null,
       cuts, black_floor: REC.status.black_floor, handshake: REC.status.handshake, cal_set: tmOn() ? 'hdr' : 'sdr',
       aspect: scene.menus ? 0 : +(16 / 9 / (1 - Math.max(0, det.v))).toFixed(3), bar_v: +Math.max(0, det.v).toFixed(4), bar_h: 0,
-      subs: scene.subs && !pattern ? 1 : 0, subs_keep_t: 0, subs_keep_b: det.keepB,
+      subs: subShown && !pattern ? 1 : 0, subs_keep_t: 0, subs_keep_b: det.keepB,
       peak: { nits: peak, key: outHdr() === 1 ? 'target_nits_hdr' : 'target_nits' },
       params: Object.assign({}, p, { geo_px: gridPts()[Math.round(+p.geo_pt || 0)] ? gridPts()[Math.round(+p.geo_pt || 0)][0] : 0, geo_py: gridPts()[Math.round(+p.geo_pt || 0)] ? gridPts()[Math.round(+p.geo_pt || 0)][1] : 0 }),
       limits: REC.status.limits, defaults: REC.status.defaults,
