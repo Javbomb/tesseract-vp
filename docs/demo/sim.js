@@ -77,12 +77,6 @@ window.TVP_REC = {"calib":{"sets":{"sdr":{"grey":null,"lut":null},"hdr":{"grey":
       else { img[j] += (k[0] - img[j]) * a; img[j + 1] += (k[1] - img[j + 1]) * a; img[j + 2] += (k[2] - img[j + 2]) * a; }
     }
   }
-  function ell(img, cx, cy, rx, ry, c) {
-    for (let y = Math.max(0, cy - ry - 1 | 0); y < Math.min(H, cy + ry + 2); y++) for (let x = Math.max(0, cx - rx - 1 | 0); x < Math.min(W, cx + rx + 2); x++) {
-      const d = Math.sqrt(((x - cx) / rx) ** 2 + ((y - cy) / ry) ** 2), a = clamp((1 - d) * Math.min(rx, ry), 0, 1); if (!a) continue;
-      const i = (y * W + x) * 3; img[i] += (c[0] - img[i]) * a; img[i + 1] += (c[1] - img[i + 1]) * a; img[i + 2] += (c[2] - img[i + 2]) * a;
-    }
-  }
   function bars(img, ar) {
     const [y0, y1] = band(ar);
     img.fill(0, 0, y0 * W * 3); img.fill(0, y1 * W * 3);
@@ -96,156 +90,45 @@ window.TVP_REC = {"calib":{"sets":{"sdr":{"grey":null,"lut":null},"hdr":{"grey":
       each(img, px + 1, py + 1, px + cell - 1, py + cell - 1, () => col);
     });
   }
-  function face(img, cx, cy, s, skin, body) {
-    paint(img, mask((g) => { g.beginPath(); g.ellipse(cx, cy + s * 2.6, s * 1.7, s * 2.1, 0, 0, 7); g.fill(); g.fillRect(cx - s * 1.7, cy + s * 2.6, s * 3.4, s * 4); }, 1), body);
-    paint(img, mask((g) => { g.beginPath(); g.ellipse(cx, cy, s * 0.8, s * 1.05, 0, 0, 7); g.fill(); }, 0.8), (x) => skin.map((v) => v * (0.55 + 0.45 * clamp((x - cx + s) / (2 * s), 0, 1))));
-    paint(img, mask((g) => { g.beginPath(); g.ellipse(cx, cy - s * 0.55, s * 0.85, s * 0.55, 0, Math.PI, 0); g.fill(); }, 0.8), skin.map((v) => v * 0.08));
-  }
   const text = (t, x, y, px, opt) => (g) => { g.font = `${(opt && opt.w) || 700} ${px}px "Sora", system-ui, sans-serif`; g.textAlign = (opt && opt.align) || 'left'; g.textBaseline = 'middle'; if (opt && opt.stroke) { g.lineWidth = opt.stroke; g.strokeText(t, x, y); } else g.fillText(t, x, y); };
 
-  /* ---------- the scenes: each paints its base picture once; dyn adds what moves ---------- */
-  function city(ar) {
-    seed = 7;
-    const img = Pic(), [y0, y1] = band(ar), ph = y1 - y0, hz = y0 + ph * 0.56;
-    each(img, 0, y0, W, hz, (x, y) => { const t = Math.pow((y - y0) / (hz - y0), 1.7); return lerp3(cs(0.1, 0.14, 0.42, 1.2), cs(1, 0.52, 0.33, 85), t); });
-    glow(img, 610, y0 + ph * 0.1, 60, cs(1, 0.7, 0.45, 120)); glow(img, 610, y0 + ph * 0.1, 10, cs(1, 0.92, 0.75, 3600), 2);
-    for (let x = -10; x < W; x += 26 + rnd() * 50) {
-      const bw = 40 + rnd() * 70, top = hz - ph * (0.1 + rnd() * 0.3), shade = 0.06 + rnd() * 0.25;
-      each(img, x, top, x + bw, hz + 2, (px, py) => cs(0.35, 0.33, 0.4, shade * (0.7 + 0.3 * vnoise(px / 6, py / 6))));
-      for (let wy = top + 6; wy < hz - 8; wy += 11) for (let wx = x + 5; wx < x + bw - 7; wx += 10) {
-        const r = rnd(); if (r > 0.42) continue;
-        const c = r < 0.05 ? cs(0.85, 0.92, 1, 420) : cs(1, 0.78, 0.48, 25 + 220 * rnd());
-        each(img, wx, wy, wx + 5, wy + 6, () => c);
-      }
+  /* ---------- the scenes: still pictures, made once ---------- */
+  /* a picture drawn on the canvas into nits: 'pq' reads the codes as PQ BT.2020, 'sdr' as sRGB BT.709 at 100 nits */
+  function fromCanvas(draw, mode) {
+    mg.setTransform(1, 0, 0, 1, 0, 0); mg.filter = 'none'; mg.fillStyle = '#000'; mg.fillRect(0, 0, W, H);
+    draw(mg);
+    const d = mg.getImageData(0, 0, W, H).data, img = Pic(), L = new Float32Array(256);
+    for (let k = 0; k < 256; k++) L[k] = mode === 'pq' ? ipq(k / 255) : sdec(k / 255) * 100;
+    for (let i = 0, j = 0; i < N; i++, j += 3) {
+      const r = L[d[i * 4]], g = L[d[i * 4 + 1]], b = L[d[i * 4 + 2]];
+      if (mode === 'pq') { img[j] = r; img[j + 1] = g; img[j + 2] = b; }
+      else { img[j] = 0.627404 * r + 0.329283 * g + 0.043313 * b; img[j + 1] = 0.069097 * r + 0.91954 * g + 0.011362 * b; img[j + 2] = 0.016391 * r + 0.088013 * g + 0.895595 * b; }
     }
-    /* the street, wet, with the shadowed alley at the left */
-    each(img, 0, hz, W, y1, (x, y) => { const t = (y - hz) / (y1 - hz); return cs(0.32, 0.33, 0.38, (0.25 + 2.2 * t) * (0.6 + 0.8 * fbm(x / 40, y / 12, 3))); });
-    paint(img, mask((g) => { g.lineWidth = 3; for (const k of [-1, 1]) { g.setLineDash([18, 16]); g.beginPath(); g.moveTo(480 + k * 30, hz + 2); g.lineTo(480 + k * 420, y1); g.stroke(); } }), cs(0.9, 0.9, 0.85, 4));
-    each(img, 0, y0 + ph * 0.24, 140, y1, (x, y) => { const brick = (y % 9 < 1) || ((x + (((y / 9) | 0) % 2) * 9) % 18 < 1) ? 0.4 : 1; return cs(0.55, 0.4, 0.35, (0.004 + 0.6 * Math.pow(x / 140, 2.5)) * brick * (0.7 + 0.3 * vnoise(x / 4, y / 4))); });
-    const neon = [['HOTEL', 300, hz - ph * 0.32, 34, c20(1, 0.02, 0.04, 900)], ['BAR', 520, hz - ph * 0.2, 30, c20(0.02, 0.85, 1, 520)], ['24H', 840, hz - ph * 0.27, 26, c20(0.85, 0.02, 1, 380)]];
-    for (const [t, x, y, px, c] of neon) {
-      paint(img, mask(text(t, x, y, px, { stroke: 3 })), c);
-      paint(img, mask(text(t, x, y, px, { stroke: 5 }), 6), c.map((v) => v * 0.05), true);
-      paint(img, mask((g) => { for (let k = 0; k < 7; k++) g.fillRect(x - px * 0.6 + k * px * t.length * 0.11, hz + 10 + (k % 3) * 6, 3 + (k % 2) * 3, (y1 - hz) * (0.5 + 0.08 * (k % 4))); }, 3), c.map((v) => v * 0.012), true);
-    }
-    paint(img, mask((g) => { g.beginPath(); g.moveTo(640, hz - 40); g.lineTo(700, hz - 40); g.lineTo(700, hz - 52); g.lineTo(728, hz - 32); g.lineTo(700, hz - 12); g.lineTo(700, hz - 24); g.lineTo(640, hz - 24); g.fill(); }), c20(0.05, 1, 0.08, 420));
-    chart(img, 168, hz - ph * 0.24, 13, 55);
-    face(img, 420, hz - 6, 11, cs(0.87, 0.6, 0.48, 32), cs(0.2, 0.22, 0.3, 1.6));
-    glow(img, 225, hz - ph * 0.42, 5, cs(1, 0.9, 0.7, 3000), 2); glow(img, 225, hz - ph * 0.38, 40, cs(1, 0.82, 0.6, 40));
-    bars(img, ar);
     return img;
   }
-  function cityDyn(ar) {
-    const [y0, y1] = band(ar), hz = y0 + (y1 - y0) * 0.56;
-    return (img, t) => {
-      const x = ((t * 70) % (W + 300)) - 150, y = hz + (y1 - hz) * 0.35;
-      for (const dx of [0, 26]) { glow(img, x + dx, y, 3.5, cs(1, 0.97, 0.9, 4000), 2); glow(img, x + dx, y, 20, cs(1, 0.95, 0.85, 90)); glow(img, x + dx, y + 30, 10, cs(1, 0.95, 0.85, 30)); }
-    };
+  const loadImg = (src) => new Promise((ok, no) => { const i = new Image(); i.onload = () => ok(i); i.onerror = no; i.src = src; });
+  /* a still into its band (the middle of it, cut to the band's shape), the bars left black */
+  async function still(file, ar, mode) {
+    const im = await loadImg('img/' + file), [y0, y1] = band(ar), w = im.naturalWidth, h = im.naturalHeight;
+    const sh = Math.min(h, w * (y1 - y0) / W), sw = sh * W / (y1 - y0);
+    return fromCanvas((g) => g.drawImage(im, (w - sw) / 2, (h - sh) / 2, sw, sh, 0, y0, W, y1 - y0), mode);
   }
-  function desert(ar) {
-    seed = 3;
-    const img = Pic(), [y0, y1] = band(ar), ph = y1 - y0, hz = y0 + ph * 0.48;
-    each(img, 0, y0, W, hz, (x, y) => lerp3(cs(0.24, 0.45, 0.86, 45), cs(1, 0.84, 0.64, 230), Math.pow((y - y0) / (hz - y0), 1.3)));
-    glow(img, 760, y0 + ph * 0.16, 60, cs(1, 0.9, 0.7, 260)); glow(img, 760, y0 + ph * 0.16, 16, cs(1, 0.96, 0.88, 1000), 2);
-    each(img, 0, hz - 60, W, hz + 4, (x, y) => (y > hz - 10 - 40 * fbm(x / 120, 1.5, 4) ? cs(0.62, 0.5, 0.55, 55) : null));
-    for (let k = 0; k < 4; k++) {
-      const base = hz + (y1 - hz) * (0.05 + k * 0.28), amp = 18 + k * 14;
-      each(img, 0, base - amp * 2, W, y1, (x, y) => {
-        const ridge = base - amp * fbm(x / (160 + 40 * k) + k * 9, k, 3) * 2, s = Math.sin(x / (55 + 30 * k) + k);
-        if (y < ridge) return null;
-        const lit = 0.08 + 0.92 * clamp(s * 1.6 + 0.6, 0, 1);
-        return cs(0.95, 0.68, 0.44, (k * 25 + 110) * lit * (0.85 + 0.25 * vnoise(x / 3, y / 3)) + 6);
-      });
-    }
-    paint(img, mask((g) => { g.beginPath(); g.moveTo(560, hz + 70); g.lineTo(630, hz - 5); g.lineTo(700, hz + 70); g.fill(); }), c20(0.0, 0.62, 0.55, 55));
-    paint(img, mask((g) => g.fillRect(628, hz - 30, 22, 12)), c20(1, 0.3, 0.0, 95));
-    chart(img, 70, hz + 40, 15, 180);
-    face(img, 330, hz + 40, 12, cs(0.86, 0.62, 0.5, 120), cs(0.85, 0.82, 0.75, 60));
-    bars(img, ar);
-    return img;
-  }
-  function desertDyn(ar) {
-    const [y0, y1] = band(ar), hz = y0 + (y1 - y0) * 0.48;
-    return (img, t) => {
-      const cx = ((t * 40) % (W + 400)) - 200;
-      for (let y = hz | 0; y < y1; y++) for (let x = Math.max(0, cx - 160 | 0); x < Math.min(W, cx + 160); x++) {
-        const d = Math.abs(x - cx) / 160, f = 1 - 0.45 * (1 - d * d), i = (y * W + x) * 3; img[i] *= f; img[i + 1] *= f; img[i + 2] *= f;
-      }
-    };
-  }
-  function peaks() {
-    seed = 11;
-    const img = Pic(), [y0, y1] = band(1.9), ph = y1 - y0, hz = y0 + ph * 0.62;
-    each(img, 0, y0, W, hz, (x, y) => lerp3(c20(0.05, 0.22, 1, 18), cs(0.62, 0.78, 1, 140), Math.pow((y - y0) / (hz - y0), 1.6)));
-    each(img, 0, y0, W, hz + 2, (x, y) => {
-      const ridge = hz - ph * (0.12 + 0.42 * fbm(x / 170, 3, 5)); if (y < ridge) return null;
-      const slope = fbm((x + 6) / 170, 3, 3) - fbm((x - 6) / 170, 3, 3), snow = y < ridge + 40 + 60 * vnoise(x / 30, 2), l = clamp(0.5 - slope * 12, 0.06, 1);
-      return snow ? lerp3(cs(0.7, 0.8, 1, 60), cs(1, 0.98, 0.95, 600 + 900 * vnoise(x / 4, y / 4)), l) : cs(0.45, 0.42, 0.42, 4 + 40 * l);
-    });
-    each(img, 0, hz, W, y1, (x, y) => (y < hz + ph * 0.16 ? cs(0.12, 0.3, 0.14, 1 + 4 * vnoise(x / 4, y / 5)) : cs(0.3, 0.5, 0.7, 6 + 14 * fbm(x / 60, y / 8, 2))));
-    chart(img, 820, hz + ph * 0.2, 12, 90);
-    return img;
-  }
-  function peaksDyn(img, t) {
-    const [y0, y1] = band(1.9), ph = y1 - y0;
-    const x = 120 + ((t * 30) % 720), y = y0 + ph * 0.25 + 12 * Math.sin(t / 3);
-    ell(img, x, y, 18, 2.5, cs(0.2, 0.2, 0.22, 3)); ell(img, x - 2, y + 2, 5, 3, cs(0.2, 0.2, 0.22, 3));
-    glow(img, 500 + 40 * Math.sin(t), y0 + ph * 0.86, 3, cs(1, 1, 0.95, 2500 * (0.5 + 0.5 * Math.sin(t * 5))), 2);
-  }
-  function reef(ar) {
-    seed = 5;
-    const img = Pic(), [y0, y1] = band(ar), ph = y1 - y0;
-    each(img, 0, y0, W, y1, (x, y) => { const t = (y - y0) / ph; return lerp3(c20(0.02, 0.7, 0.92, 140), c20(0.0, 0.18, 0.6, 1.5), Math.pow(t, 0.45)) .map((v) => v * (0.85 + 0.3 * fbm(x / 90, y / 40, 3))); });
-    for (let k = 0; k < 7; k++) { const x = 80 + k * 130 + rnd() * 40; paint(img, mask((g) => { g.beginPath(); g.moveTo(x, y0); g.lineTo(x + 30, y0); g.lineTo(x - 90, y1); g.lineTo(x - 140, y1); g.fill(); }, 14), c20(0.3, 0.9, 1, 70 * (0.5 + rnd())), true); }
-    each(img, 0, y1 - ph * 0.14, W, y1, (x, y) => cs(0.85, 0.78, 0.6, 22 * (0.7 + 0.5 * vnoise(x / 5, y / 5))));
-    const corals = [[c20(1, 0.12, 0.3, 45), 120], [c20(0.62, 0.08, 1, 32), 330], [c20(1, 0.82, 0.0, 70), 560], [c20(1, 0.3, 0.5, 40), 780]];
-    for (const [c, x] of corals) paint(img, mask((g) => { for (let i = 0; i < 9; i++) { g.beginPath(); g.ellipse(x + (rnd() - 0.5) * 110, y1 - ph * (0.12 + rnd() * 0.2), 12 + rnd() * 22, 20 + rnd() * 30, rnd() * 3, 0, 7); g.fill(); } }, 1.5), (px, py) => c.map((v) => v * (0.6 + 0.6 * vnoise(px / 6, py / 6))));
-    chart(img, 40, y0 + ph * 0.42, 11, 40);
-    return img;
-  }
-  function reefDyn(ar) {
-    const [y0, y1] = band(ar), ph = y1 - y0;
-    return (img, t) => {
-      for (let i = 0; i < 14; i++) glow(img, (i * 71 + t * 9) % W, y0 + 4 + (i % 3) * 3, 2.2, cs(1, 1, 0.95, 2000 * (0.5 + 0.5 * Math.sin(t * 3 + i))), 2);
-      for (let f = 0; f < 4; f++) {
-        const x = ((t * (35 + f * 12) + f * 260) % (W + 120)) - 60, y = y0 + ph * (0.35 + f * 0.1) + 8 * Math.sin(t + f), c = f % 2 ? c20(1, 0.42, 0.0, 85) : c20(0.04, 0.28, 1, 45);
-        ell(img, x, y, 20, 9, c); ell(img, x - 25, y, 7, 8, c);
-        if (f % 2) ell(img, x - 2, y, 2.5, 8, cs(1, 1, 1, 160));
-      }
-    };
-  }
-  function room() {
-    seed = 9;
-    const img = Pic(), s = (r, g, b, v) => cs(r, g, b, 100 * v);
-    each(img, 0, 0, W, 380, (x, y) => s(0.82, 0.74, 0.62, 0.32 * (0.8 + 0.2 * (1 - y / 380)) * (0.92 + 0.08 * vnoise(x / 40, y / 40))));
-    each(img, 0, 380, W, H, (x, y) => s(0.55, 0.36, 0.22, 0.18 * (0.75 + 0.35 * vnoise(x / 70, y / 3))));
-    each(img, 640, 60, 900, 330, (x, y) => (y < 230 ? s(0.75, 0.85, 1, 1) : s(0.5, 0.7, 0.45, 0.55)));
-    each(img, 760, 60, 772, 330, () => s(0.9, 0.9, 0.88, 0.5)); each(img, 640, 190, 900, 200, () => s(0.9, 0.9, 0.88, 0.5));
-    paint(img, mask((g) => { g.beginPath(); g.roundRect(60, 300, 420, 150, 30); g.fill(); }, 1), s(0.1, 0.45, 0.48, 0.12));
-    const books = [[0.75, 0.1, 0.12], [0.1, 0.3, 0.7], [0.9, 0.7, 0.1], [0.15, 0.55, 0.25], [0.55, 0.2, 0.6], [0.95, 0.45, 0.1]];
-    for (let i = 0; i < 18; i++) { const c = books[i % 6]; each(img, 70 + i * 17, 150 + (i % 3) * 4, 84 + i * 17, 230, () => s(...c, 0.25)); }
-    each(img, 60, 230, 380, 238, () => s(0.4, 0.28, 0.18, 0.15));
-    glow(img, 560, 230, 10, s(1, 0.9, 0.75, 1.6), 2); glow(img, 560, 240, 60, s(1, 0.85, 0.65, 0.12));
-    face(img, 300, 260, 16, s(0.88, 0.65, 0.54, 0.45), s(0.75, 0.1, 0.12, 0.2));
-    chart(img, 520, 400, 16, 60);
-    return img;
-  }
-  function roomDyn(img, t) { const a = Math.sin(t * 2.2) * 0.35; glow(img, 470 + 40 * Math.sin(a), 120 + 40 * Math.cos(a), 6, cs(0.85, 0.7, 0.3, 30), 2); }
-  function forest() {
-    seed = 13;
-    const img = Pic();
-    each(img, 0, 0, W, H, (x, y) => c20(0.12, 0.7, 0.12, (3 + 55 * fbm(x / 50, y / 50, 4)) * (1 - 0.5 * y / H)));
-    for (let k = 0; k < 9; k++) { const x = rnd() * W, w = 14 + rnd() * 26; each(img, x, 0, x + w, H, (px, py) => cs(0.4, 0.3, 0.22, 2 + 3 * vnoise(px / 3, py / 20))); }
-    for (let k = 0; k < 4; k++) { const x = 100 + k * 230; paint(img, mask((g) => { g.beginPath(); g.moveTo(x, 0); g.lineTo(x + 40, 0); g.lineTo(x + 160, H); g.lineTo(x + 90, H); g.fill(); }, 18), cs(1, 0.95, 0.75, 90), true); }
-    for (let i = 0; i < 40; i++) glow(img, rnd() * W, 380 + rnd() * 150, 3, i % 2 ? c20(0.9, 0.05, 0.75, 150) : c20(1, 0.85, 0.0, 170), 2);
-    chart(img, 40, 40, 12, 90);
-    return img;
-  }
-  function forestDyn(img, t) {
-    for (let y = 60; y < 470; y++) for (let x = 600; x < 670; x++) {
-      const v = vnoise((x - 600) / 5, (y - t * 220) / 9), w = 1 - Math.abs(x - 635) / 35, i = (y * W + x) * 3;
-      if (w <= 0) continue; const n = (250 + 650 * v) * w; img[i] = img[i] * (1 - w) + n; img[i + 1] = img[i + 1] * (1 - w) + n; img[i + 2] = img[i + 2] * (1 - w) + n * 1.02;
-    }
+  function testCard() {
+    return fromCanvas((g) => {
+      g.fillStyle = '#3c3c3c'; g.fillRect(0, 0, W, H);
+      g.strokeStyle = '#e6e6e6'; g.lineWidth = 2;
+      for (let x = 0; x <= W; x += 60) { g.beginPath(); g.moveTo(x, 0); g.lineTo(x, H); g.stroke(); }
+      for (let y = 0; y <= H; y += 60) { g.beginPath(); g.moveTo(0, y); g.lineTo(W, y); g.stroke(); }
+      g.lineWidth = 3; g.strokeRect(1.5, 1.5, W - 3, H - 3);
+      g.beginPath(); g.arc(W / 2, H / 2, 240, 0, 7); g.stroke();
+      for (const [x, y] of [[90, 90], [W - 90, 90], [90, H - 90], [W - 90, H - 90]]) { g.beginPath(); g.arc(x, y, 50, 0, 7); g.stroke(); }
+      const bars = ['#bfbfbf', '#bfbf00', '#00bfbf', '#00bf00', '#bf00bf', '#bf0000', '#0000bf'];
+      bars.forEach((c, i) => { g.fillStyle = c; g.fillRect(240 + i * 480 / 7, 150, 480 / 7 + 1, 150); });
+      for (let i = 0; i < 16; i++) { const v = Math.round(i * 255 / 15); g.fillStyle = `rgb(${v},${v},${v})`; g.fillRect(240 + i * 30, 300, 30, 60); }
+      g.fillStyle = '#fff'; g.fillRect(240, 360, 240, 30); g.fillStyle = '#000'; g.fillRect(480, 360, 240, 30);
+      g.fillStyle = '#fff'; g.font = '600 18px "Sora", system-ui, sans-serif'; g.textAlign = 'center'; g.fillText('16:9 test pattern', W / 2, 425);
+      g.beginPath(); g.moveTo(W / 2, H / 2 - 12); g.lineTo(W / 2, H / 2 + 12); g.moveTo(W / 2 - 12, H / 2); g.lineTo(W / 2 + 12, H / 2); g.stroke();
+    }, 'sdr');
   }
   function game() {
     seed = 17;
@@ -259,10 +142,10 @@ window.TVP_REC = {"calib":{"sets":{"sdr":{"grey":null,"lut":null},"hdr":{"grey":
     paint(img, mask(text('LAP 2/3', 40, 40, 26)), cs(1, 1, 1, 260));
     paint(img, mask(text('212 km/h', 920, 500, 30, { align: 'right' })), c20(1, 0.5, 0.0, 420));
     paint(img, mask((g) => { g.lineWidth = 3; g.beginPath(); g.arc(880, 80, 50, 0, 7); g.stroke(); }), cs(1, 1, 1, 220));
+    glow(img, 700, 330, 26, c20(1, 0.55, 0.05, 700)); glow(img, 700, 330, 8, cs(1, 0.95, 0.7, 3200), 2);
     chart(img, 30, 420, 12, 120);
     return img;
   }
-  function gameDyn(img, t) { const f = 0.6 + 0.4 * Math.sin(t * 9) * Math.sin(t * 3.1); glow(img, 700, 330, 26, c20(1, 0.55, 0.05, 900 * f)); glow(img, 700, 330, 8, cs(1, 0.95, 0.7, 4000 * f), 2); }
   function menus() {
     const img = Pic(), s = (r, g, b, v) => cs(r, g, b, 100 * v);
     each(img, 0, 0, W, H, (x, y) => s(0.32, 0.36, 0.48, 0.035 + 0.03 * y / H));
@@ -281,16 +164,19 @@ window.TVP_REC = {"calib":{"sets":{"sdr":{"grey":null,"lut":null},"hdr":{"grey":
   const KODI = 'org.xbmc.kodi';
   const AU_KODI = { in: { codec: 'truehd', atmos: 1, dtsx: 0, ch: '7.1', src: 'kodi' }, out: { type: 'MAT', bitstream: 1, ch: 8, rate: 192000, atmos: 1, dtsx: 0, from: 'kodi' } };
   const AU_DDP = { in: { codec: 'eac3', atmos: 1, dtsx: 0, ch: '', src: 'hal' }, out: { type: 'DD+', bitstream: 1, ch: 8, rate: 48000, atmos: 1, dtsx: 0, from: 'hal' } };
+  const AU_DD = { in: { codec: 'ac3', atmos: 0, dtsx: 0, ch: '5.1', src: 'kodi' }, out: { type: 'DD', bitstream: 1, ch: 6, rate: 48000, atmos: 0, dtsx: 0, from: 'kodi' } };
   const SC = [
-    { id: 'film239', label: '4K HDR10 film, 2.39:1 scope', app: KODI, w: 3840, h: 2160, fps: 23.976, hdr: 'HDR10', md: [4000, 0.005, 'P3-D65'], cll: [3790, 410], file: 'City at dusk (demo).mkv', ar: 2.39, subs: true, codec: 'hevc', au: AU_KODI, build: () => city(2.39), dyn: () => cityDyn(2.39) },
-    { id: 'film185', label: '4K HDR10 film, 1.85:1', app: KODI, w: 3840, h: 2160, fps: 24, hdr: 'HDR10', md: [1000, 0.0001, 'P3-D65'], cll: [1000, 260], file: 'Desert morning (demo).mkv', ar: 1.85, codec: 'hevc', au: AU_KODI, build: () => desert(1.85), dyn: () => desertDyn(1.85) },
-    { id: 'imax', label: '4K HDR10 IMAX film, 1.90 and 2.39 shots', app: KODI, w: 3840, h: 2160, fps: 23.976, hdr: 'HDR10', md: [1000, 0.005, 'P3-D65'], cll: [1480, 300], file: 'High peaks IMAX (demo).mkv', ar: (t) => ((t % 20) < 10 ? 1.9 : 2.39), codec: 'hevc', au: AU_KODI, build: peaks, dyn: () => peaksDyn },
-    { id: 'dv', label: '4K Dolby Vision film, 2.00:1', app: KODI, w: 3840, h: 2160, fps: 23.976, hdr: 'Dolby Vision', md: [1000, 0.0001, 'P3-D65'], cll: [2050, 180], file: 'Reef (demo, Dolby Vision 8.1).mkv', ar: 2, codec: 'hevc', au: AU_KODI, build: () => reef(2), dyn: () => reefDyn(2) },
-    { id: 'tv', label: '1080p SDR TV show, 16:9', app: KODI, w: 1920, h: 1080, fps: 25, hdr: 'SDR', file: 'Living room S01E02 (demo).mkv', ar: 16 / 9, codec: 'h264', au: { in: { codec: 'ac3', atmos: 0, dtsx: 0, ch: '5.1', src: 'kodi' }, out: { type: 'DD', bitstream: 1, ch: 6, rate: 48000, atmos: 0, dtsx: 0, from: 'kodi' } }, build: room, dyn: () => roomDyn },
-    { id: 'video50', label: 'Streaming app: 4K HDR10 video, 50 fps', app: 'com.example.video', w: 3840, h: 2160, fps: 50, hdr: 'HDR10', md: [1000, 0.005, 'BT.2020'], cll: [0, 0], ar: 16 / 9, codec: 'vp9', au: AU_DDP, build: forest, dyn: () => forestDyn },
-    { id: 'hdmi', label: 'HDMI input: game console 4K60 HDR10', app: 'hdmi', w: 3840, h: 2160, fps: 60, hdr: 'HDR10', ar: 16 / 9, hdmi: true, au: { in: null, out: { type: '', bitstream: 0, ch: 8, rate: 48000, atmos: 0, dtsx: 0, from: 'hal' } }, build: game, dyn: () => gameDyn },
-    { id: 'netflix', label: 'Netflix (protected: no picture capture, like the real Cube)', app: 'com.netflix.ninja', w: 3840, h: 2160, fps: 23.976, hdr: 'HDR10', dvTitle: true, md: [1000, 0.0001, 'P3-D65'], cll: [0, 0], ar: 2, codec: 'hevc', protected: true, au: AU_DDP, build: () => reef(2), dyn: () => reefDyn(2) },
-    { id: 'menus', label: 'Nothing playing (menus)', app: 'launcher', menus: true, ar: 16 / 9, build: menus, dyn: () => null },
+    { id: 'film239', label: '4K HDR10 film, 2.39:1 scope', app: KODI, w: 3840, h: 2160, fps: 23.976, hdr: 'HDR10', md: [1000, 0.005, 'P3-D65'], cll: [180, 40], file: 'Scope film (demo).mkv', ar: 2.39, subs: true, codec: 'hevc', au: AU_KODI, build: () => still('scope.jpg', 16 / 9, 'pq') },
+    { id: 'film185', label: '4K HDR10 film, 1.85:1', app: KODI, w: 3840, h: 2160, fps: 24, hdr: 'HDR10', md: [1000, 0.0001, 'P3-D65'], cll: [1000, 260], file: 'Flat film (demo).mkv', ar: 1.85, codec: 'hevc', au: AU_KODI, build: () => still('flat.jpg', 1.85, 'pq') },
+    { id: 'imax190', label: '4K HDR10 IMAX film, a 1.90:1 shot', app: KODI, w: 3840, h: 2160, fps: 23.976, hdr: 'HDR10', md: [1000, 0.005, 'P3-D65'], cll: [400, 120], file: 'IMAX film (demo).mkv', ar: 1.9, codec: 'hevc', au: AU_KODI, build: () => still('imax.jpg', 1.9, 'pq') },
+    { id: 'imax239', label: '4K HDR10 IMAX film, a 2.39:1 shot', app: KODI, w: 3840, h: 2160, fps: 23.976, hdr: 'HDR10', md: [1000, 0.005, 'P3-D65'], cll: [400, 120], file: 'IMAX film (demo).mkv', ar: 2.39, codec: 'hevc', au: AU_KODI, build: async () => { const i = await still('imax.jpg', 1.9, 'pq'); bars(i, 2.39); return i; } },
+    { id: 'dv', label: '4K Dolby Vision film, 2.00:1', app: KODI, w: 3840, h: 2160, fps: 23.976, hdr: 'Dolby Vision', md: [1000, 0.0001, 'P3-D65'], cll: [2050, 180], file: 'Dolby Vision film (demo, profile 8.1).mkv', ar: 2, codec: 'hevc', au: AU_KODI, build: () => still('dv.jpg', 2, 'pq') },
+    { id: 'tv', label: '1080p SDR TV show, 16:9', app: KODI, w: 1920, h: 1080, fps: 25, hdr: 'SDR', file: 'TV show S01E02 (demo).mkv', ar: 16 / 9, codec: 'h264', au: AU_DD, build: () => still('tv.jpg', 16 / 9, 'sdr') },
+    { id: 'pattern', label: 'Test pattern: grid and colour bars, 1080p SDR', app: KODI, w: 1920, h: 1080, fps: 23.976, hdr: 'SDR', file: 'Test pattern (demo).mkv', ar: 16 / 9, codec: 'h264', au: AU_DD, build: testCard },
+    { id: 'video50', label: 'Streaming app: 4K HDR10 video, 50 fps', app: 'com.example.video', w: 3840, h: 2160, fps: 50, hdr: 'HDR10', md: [1000, 0.005, 'BT.2020'], cll: [0, 0], ar: 16 / 9, codec: 'vp9', au: AU_DDP, build: () => still('video.jpg', 16 / 9, 'pq') },
+    { id: 'hdmi', label: 'HDMI input: game console 4K60 HDR10', app: 'hdmi', w: 3840, h: 2160, fps: 60, hdr: 'HDR10', ar: 16 / 9, hdmi: true, au: { in: null, out: { type: '', bitstream: 0, ch: 8, rate: 48000, atmos: 0, dtsx: 0, from: 'hal' } }, build: game },
+    { id: 'netflix', label: 'Netflix (protected: no picture capture, like the real Cube)', app: 'com.netflix.ninja', w: 3840, h: 2160, fps: 23.976, hdr: 'HDR10', dvTitle: true, md: [1000, 0.0001, 'P3-D65'], cll: [0, 0], ar: 2, codec: 'hevc', protected: true, au: AU_DDP, build: () => still('stream.jpg', 2, 'pq') },
+    { id: 'menus', label: 'Nothing playing (menus)', app: 'launcher', menus: true, ar: 16 / 9, build: menus },
   ];
 
   /* ---------- state ---------- */
@@ -302,19 +188,18 @@ window.TVP_REC = {"calib":{"sets":{"sdr":{"grey":null,"lut":null},"hdr":{"grey":
   if (!SC.some((s) => s.id === st.scen)) st.scen = 'film239';
   const save = () => { try { localStorage.setItem(LS, JSON.stringify({ params: st.params, scen: st.scen, presets: st.presets, geoPts: st.geoPts, pins: st.pins, prefs: st.prefs, rules: st.rules, hooks: st.hooks, profiles: st.profiles })); } catch (e) {} };
   const P = () => st.params;
-  let scene = null, clock = 0, clockAt = performance.now(), frameNo = 1;
-  const now = () => (st.paused ? clock : clock + (performance.now() - clockAt) / 1000);
+  let scene = null;
   function setScene(id) {
     const s = SC.find((x) => x.id === id) || SC[0];
-    if (scene && !scene.menus && scene.fps) st.lastFilm = scene;
-    st.scen = s.id;
-    if (!s.base) { s.base = s.build(); s.dynF = s.dyn(); if (s.subs) s.subMask = subsMask(s.ar); }
-    scene = s; sdrL = null; clock = 0; clockAt = performance.now(); st.paused = false;
-    det = { v: -1, h: 0, pend: null, keepB: 0, subsT: -100 }; hist.length = 0; outFrozen = null; cuts = 0;
-    dirty = true; save();
+    if (scene && !scene.menus && scene.fps && scene !== s) st.lastFilm = scene;
+    st.scen = s.id; scene = s; sdrL = null; st.paused = false;
+    det = { v: -1, h: 0, keepB: 0 }; hist.length = 0; outFrozen = null; cuts++;
+    F = null; toneKey = placeKey = warpKey = '';
+    save();
+    if (!s.ready) s.ready = Promise.resolve(s.build()).then((img) => { s.base = img; if (s.subs) s.subMask = subsMask(s.ar); });
+    s.ready.then(() => { if (scene === s) changed(); });
   }
   /* the live state: the shape on screen and the HDR the app sends */
-  const shapeAt = (t) => (typeof scene.ar === 'function' ? scene.ar(t) : scene.ar);
   function inHdr() {
     if (scene.menus) return 'SDR';
     if (scene.dvTitle) { const a = Math.round(+P().apps_dv || 0); return a === 2 ? 'Dolby Vision' : a === 3 ? 'LLDV' : 'HDR10'; }
@@ -387,25 +272,17 @@ window.TVP_REC = {"calib":{"sets":{"sdr":{"grey":null,"lut":null},"hdr":{"grey":
   }
 
   /* ---------- aspect: the page's own arithmetic (brain/aspect.c), on our frame ---------- */
-  let det = { v: -1, h: 0, pend: null, keepB: 0, subsT: -100 }, cuts = 0;
-  function detect(src, t, subOn) {
-    /* whole rows near black from the top and bottom; the subtitle line is not picture */
-    const rowMax = (y) => { let m = 0; for (let x = 0, i = y * W * 3; x < W * 3; x++) if (src[i + x] > m) m = src[i + x]; return m; };
-    let top = 0, bot = H;
-    while (top < H / 2 && rowMax(top) < 0.05) top++;
-    while (bot > H / 2 && rowMax(bot - 1) < 0.05) bot--;
-    const v = 2 * Math.min(top, H - bot) / H, nowS = performance.now() / 1000;
-    if (det.v < 0) det.v = v;
-    else if (Math.abs(v - det.v) > 0.012) {
-      /* Fast meets a change on its frames; Precise holds it three times as long (about 1.5 s on protected streams) */
-      const precise = +P().asp_precise > 0.5, wait = precise ? (scene.protected ? 1.5 : 0.5) : 0;
-      if (!det.pend || Math.abs(det.pend.v - v) > 0.012) det.pend = { v, at: nowS };
-      else if (nowS - det.pend.at >= wait) { det.v = v; det.pend = null; cuts++; }
-    } else det.pend = null;
+  let det = { v: -1, h: 0, keepB: 0 }, cuts = 0;
+  /* whole rows near black from the top and bottom; the subtitle line is not picture */
+  function detect(subOn) {
+    const rowMax = (y) => { let m = 0; for (let i = y * OW * 3, e = i + OW * 3; i < e; i++) if (S2[i] > m) m = S2[i]; return m; };
+    let top = 0, bot = OH;
+    while (top < OH / 2 && rowMax(top) < 0.05) top++;
+    while (bot > OH / 2 && rowMax(bot - 1) < 0.05) bot--;
+    det.v = 2 * Math.min(top, OH - bot) / OH;
     if (subOn && +P().subs_ignore > 0) {
-      const [, y1] = band(scene.ar), textBottom = y1 + (H - y1) * 0.45 + 11, barRows = H - y1;
-      det.keepB = Math.max(det.keepB, Math.round(10000 * Math.min(barRows, textBottom - y1 + H / 100) / H));
-      det.subsT = nowS;
+      const [, y1] = band(scene.ar), textBottom = y1 + (H - y1) * 0.45 + 11;
+      det.keepB = Math.round(10000 * Math.min(H - y1, textBottom - y1 + H / 100) / H);
     }
   }
   function aspGeom() {
@@ -471,60 +348,113 @@ window.TVP_REC = {"calib":{"sets":{"sdr":{"grey":null,"lut":null},"hdr":{"grey":
     sdrL[0] = 1; return sdrL;
   }
 
-  /* ---------- one output frame: tone map, colour, calibrate, place (aspect, masks), warp (geometry) ---------- */
-  let dirty = true, frameAt = 0, F = null;
-  const SRC = Pic();
+  /* ---------- one output frame, at the size the page draws (480 x 270): tone map, colour, calibrate, place, warp ---------- */
+  const OW = TW, OH = TH, ON = OW * OH, ENCN = 4096;
+  const SRC = Pic(), S2 = new Float32Array(ON * 3), CODES = new Uint8Array(ON * 3), PLACED = new Uint8Array(ON * 3), WARPED = new Uint8Array(ON * 3);
+  const ENC = [new Uint8Array(ENCN + 1), new Uint8Array(ENCN + 1), new Uint8Array(ENCN + 1)];
   function gammaOut() { const g = +P().out_gamma || 0; return g >= 1.5 ? g : g >= 0.5 ? 2.4 : 2.2; }
-  function render() {
-    const t = now();
-    if (!dirty && F && (st.paused || performance.now() - frameAt < 180)) return F;
-    dirty = false; frameAt = performance.now();
-    const p = P(), src = SRC; src.set(scene.base);
-    if (scene.dynF) scene.dynF(src, t);
-    if (!scene.menus) bars(src, shapeAt(t));
-    const subOn = scene.subs && (t % 9) < 4.5;
-    if (pattern) drawPattern(src);
-    detect(src, t, subOn && !pattern);
-    if (subOn && !pattern) paint(src, scene.subMask, cs(1, 1, 1, isHdr() ? 140 : 90));
-    if (!st.paused) frameNo = 1 + Math.floor(t * (scene.fps || 60));
-    /* measurements for /api/status: on the source, as the brain's analysis sees it */
-    measure(src);
-    const sdrIn = pattern ? !pattern.hdr : !isHdr(), lut = curveLut(), peak = peakN(), g = gammaOut(), pass = !sdrIn && !tmOn();
-    const to709 = +p.out_gamut >= 0.5 && +p.out_gamut < 1.5 && !sdrIn && outHdr() !== 1 && !pass;
-    const lim = !sdrIn && !to709 && !pass && +p.gamut_limit > 0.5 ? limitMatrix() : null;
-    const hdrCal = !sdrIn && tmOn(), pre = hdrCal ? 'calh_' : 'cal_';
-    const cg = (+p[pre + 'gamma'] || 0), cw = (+p[pre + 'white'] || 100) / 100, cb = (+p[pre + 'black'] || 0) / 219;
-    const gain = ['r', 'g', 'b'].map((c) => cw * (+p[pre + c + '_gain'] || 100) / 100), off = ['r', 'g', 'b'].map((c) => cb + (+p[pre + c + '_off'] || 0) / 219);
-    const encG = 1 / g, calG = (g + cg) / g, hdrSrc = !pattern && scene.hdr !== 'SDR' && !scene.menus, sdrLut = hdrSrc && sdrIn ? sdrCurve() : null;
-    const codes = new Uint8Array(N * 3);
-    for (let i = 0; i < N; i++) {
-      const j = i * 3;
-      let r = src[j], gg = src[j + 1], b = src[j + 2];
-      if (sdrIn && hdrSrc) { const m = Math.max(r, gg, b); if (m > 0) { const k = sdrLut[Math.min(LUTN - 1, Math.round(Math.sqrt(m / 10000) * (LUTN - 1)))] / 100; r *= k; gg *= k; b *= k; } }
-      else if (sdrIn) { r /= 100; gg /= 100; b /= 100; }
-      else {
-        const m = Math.max(r, gg, b);
-        if (m > 0) { const k = lut[Math.min(LUTN - 1, Math.round(Math.sqrt(m / 10000) * (LUTN - 1)))]; r *= k / peak; gg *= k / peak; b *= k / peak; }
-        if (to709 || lim) {
-          const M = to709 ? M2020_709 : lim.to;
-          let a = [M[0][0] * r + M[0][1] * gg + M[0][2] * b, M[1][0] * r + M[1][1] * gg + M[1][2] * b, M[2][0] * r + M[2][1] * gg + M[2][2] * b];
-          const y = to709 ? 0.2126 * a[0] + 0.7152 * a[1] + 0.0722 * a[2] : Y20(r, gg, b), lo = Math.min(a[0], a[1], a[2]);
-          if (lo < 0 && y > 0) { const s = y / (y - lo); a = a.map((v) => y + (v - y) * s); }
-          if (to709) [r, gg, b] = a; else [r, gg, b] = mul(lim.back, a);
-        }
-      }
-      const c = [r, gg, b];
-      for (let k = 0; k < 3; k++) {
-        let v = c[k] <= 0 ? 0 : Math.pow(Math.min(c[k], 1), encG);
-        if (cg && v > 0) v = Math.pow(v, calG);
-        v = v * gain[k] + off[k];
-        codes[j + k] = v <= 0 ? 0 : v >= 1 ? 255 : Math.round(v * 255);
+  /* every scene is a still: the frame is made when the scene or a setting changes, then held */
+  let toneKey = '', placeKey = '', warpKey = '', outVer = 0, F = null, frameNo = 1, forceSrc = true;
+  const waiters = [];
+  function changed() { forceSrc = true; schedule(); }
+  let schedT = 0;
+  function schedule() { if (!schedT) schedT = setTimeout(() => { schedT = 0; ensureFrame(); }, 16); }
+  function wake() { while (waiters.length) waiters.shift()(); }
+  /* half size: the average of each 2 x 2 */
+  function half(src) {
+    for (let y = 0, o = 0; y < OH; y++) {
+      const a = y * 2 * W * 3, b = a + W * 3;
+      for (let x = 0; x < OW; x++, o += 3) {
+        const i = a + x * 6, j = b + x * 6;
+        S2[o] = (src[i] + src[i + 3] + src[j] + src[j + 3]) * 0.25;
+        S2[o + 1] = (src[i + 1] + src[i + 4] + src[j + 1] + src[j + 4]) * 0.25;
+        S2[o + 2] = (src[i + 2] + src[i + 5] + src[j + 2] + src[j + 5]) * 0.25;
       }
     }
-    const placed = place(codes);
-    const geo = geoActive() ? warp(placed) : placed;
-    F = { t, frame: frameNo, codes: geo, gamma: g, c709: to709 || sdrIn, waves: {}, thumb: null, scopes: null, stats: null };
+  }
+  function ensureSource() {
+    if (!forceSrc || !scene.base) return false;
+    forceSrc = false;
+    const src = SRC;
+    src.set(scene.base);
+    if (pattern) drawPattern(src);
+    half(src);
+    detect(!!scene.subs && !pattern);
+    if (scene.subs && !pattern) { paint(src, scene.subMask, cs(1, 1, 1, isHdr() ? 140 : 90)); half(src); }
+    measure();
+    return true;
+  }
+  const TONE_KEYS = ['out_gamut', 'out_hdr', 'out_gamma', 'gamut_limit', 'prim_rx', 'prim_ry', 'prim_gx', 'prim_gy', 'prim_bx', 'prim_by', 'target_nits', 'target_nits_hdr', 'apps_dv', 'edid_mode', 'edid_hdr', 'edid_depth',
+    'cal_black', 'cal_white', 'cal_gamma', 'cal_r_gain', 'cal_g_gain', 'cal_b_gain', 'cal_r_off', 'cal_g_off', 'cal_b_off', 'calh_black', 'calh_white', 'calh_gamma', 'calh_r_gain', 'calh_g_gain', 'calh_b_gain', 'calh_r_off', 'calh_g_off', 'calh_b_off'];
+  const PLACE_KEYS = ['aspect_mode', 'aspect_lens', 'aspect_scope', 'aspect_subs', 'aspect_min', 'aspect_force', 'aspect_nls', 'mask_top', 'mask_bottom', 'mask_left', 'mask_right'];
+  const GEO_KEYS = ['geo_on', 'geo_filter', 'geo_kv', 'geo_kh', 'geo_pin', 'geo_curve', 'geo_c0x', 'geo_c0y', 'geo_c1x', 'geo_c1y', 'geo_c2x', 'geo_c2y', 'geo_c3x', 'geo_c3y', 'geo_grid'];
+  const keyOf = (ks) => { const p = P(); let s = ''; for (const k of ks) s += p[k] + ','; return s; };
+  let toneInfo = null;
+  function ensureFrame() {
+    if (!scene.base) return null;
+    const src = ensureSource();
+    const tk = keyOf(TONE_KEYS) + (pattern ? pattern.id + pattern.hdr : '') + scene.id;
+    let changedTone = src || tk !== toneKey;
+    if (changedTone) { if (tk !== toneKey) { toneKey = tk; toneInfo = toneSetup(); } tone(); }
+    const pk = keyOf(PLACE_KEYS) + det.v + ',' + det.keepB;
+    const changedPlace = changedTone || pk !== placeKey;
+    if (changedPlace) { placeKey = pk; place(); }
+    const wk = keyOf(GEO_KEYS) + JSON.stringify(gridPts());
+    const warpOn = geoWarp();
+    if (changedPlace || wk !== warpKey) {
+      warpKey = wk;
+      if (warpOn) warp(); else WARPED.set(PLACED);
+      outVer++;
+      frameNo++;
+      F = { id: outVer, frame: frameNo, codes: WARPED, gamma: toneInfo.g, c709: toneInfo.c709, waves: {}, thumb: null, scopes: null, stats: null };
+      wake();
+    }
     return F;
+  }
+  const render = ensureFrame;
+  /* everything that depends only on the settings: the curve and the per-channel code tables */
+  function toneSetup() {
+    const p = P(), sdrIn = pattern ? !pattern.hdr : !isHdr(), pass = !sdrIn && !tmOn(), g = gammaOut();
+    const to709 = +p.out_gamut >= 0.5 && +p.out_gamut < 1.5 && !sdrIn && outHdr() !== 1 && !pass;
+    const lim = !sdrIn && !to709 && !pass && +p.gamut_limit > 0.5 ? limitMatrix() : null;
+    const pre = !sdrIn && tmOn() ? 'calh_' : 'cal_';
+    const cg = +p[pre + 'gamma'] || 0, cw = (+p[pre + 'white'] || 100) / 100, cb = (+p[pre + 'black'] || 0) / 219, encG = 1 / g, calG = (g + cg) / g;
+    ['r', 'g', 'b'].forEach((c, k) => {
+      const gain = cw * (+p[pre + c + '_gain'] || 100) / 100, off = cb + (+p[pre + c + '_off'] || 0) / 219, T = ENC[k];
+      for (let i = 0; i <= ENCN; i++) {
+        let v = Math.pow((i / ENCN) * (i / ENCN), encG);
+        if (cg && v > 0) v = Math.pow(v, calG);
+        v = v * gain + off;
+        T[i] = v <= 0 ? 0 : v >= 1 ? 255 : Math.round(v * 255);
+      }
+    });
+    const hdrSrc = !pattern && scene.hdr !== 'SDR' && !scene.menus;
+    return { sdrIn, hdrSrc, g, to709, lim, lut: curveLut(), sdrLut: hdrSrc && sdrIn ? sdrCurve() : null, peak: peakN(), c709: to709 || sdrIn };
+  }
+  function tone() {
+    const T = toneInfo, lut = T.lut, sl = T.sdrLut, ip = 1 / T.peak, E0 = ENC[0], E1 = ENC[1], E2 = ENC[2], K = LUTN - 1, q = 1 / 10000;
+    const M = T.to709 ? M2020_709 : T.lim ? T.lim.to : null, B = T.lim ? T.lim.back : null, to709 = T.to709;
+    const m00 = M && M[0][0], m01 = M && M[0][1], m02 = M && M[0][2], m10 = M && M[1][0], m11 = M && M[1][1], m12 = M && M[1][2], m20 = M && M[2][0], m21 = M && M[2][1], m22 = M && M[2][2];
+    for (let j = 0; j < ON * 3; j += 3) {
+      let r = S2[j], g = S2[j + 1], b = S2[j + 2];
+      const m = r > g ? (r > b ? r : b) : (g > b ? g : b);
+      if (T.sdrIn) {
+        if (sl) { if (m > 0) { const k = sl[Math.min(K, (Math.sqrt(m * q) * K + 0.5) | 0)] * 0.01; r *= k; g *= k; b *= k; } }
+        else { r *= 0.01; g *= 0.01; b *= 0.01; }
+      } else {
+        if (m > 0) { const k = lut[Math.min(K, (Math.sqrt(m * q) * K + 0.5) | 0)] * ip; r *= k; g *= k; b *= k; }
+        if (M) {
+          let a0 = m00 * r + m01 * g + m02 * b, a1 = m10 * r + m11 * g + m12 * b, a2 = m20 * r + m21 * g + m22 * b;
+          const y = to709 ? 0.2126 * a0 + 0.7152 * a1 + 0.0722 * a2 : 0.2627 * r + 0.678 * g + 0.0593 * b, lo = a0 < a1 ? (a0 < a2 ? a0 : a2) : (a1 < a2 ? a1 : a2);
+          if (lo < 0 && y > 0) { const s = y / (y - lo); a0 = y + (a0 - y) * s; a1 = y + (a1 - y) * s; a2 = y + (a2 - y) * s; }
+          if (to709) { r = a0; g = a1; b = a2; }
+          else { r = B[0][0] * a0 + B[0][1] * a1 + B[0][2] * a2; g = B[1][0] * a0 + B[1][1] * a1 + B[1][2] * a2; b = B[2][0] * a0 + B[2][1] * a1 + B[2][2] * a2; }
+        }
+      }
+      CODES[j] = E0[r <= 0 ? 0 : r >= 1 ? ENCN : (Math.sqrt(r) * ENCN + 0.5) | 0];
+      CODES[j + 1] = E1[g <= 0 ? 0 : g >= 1 ? ENCN : (Math.sqrt(g) * ENCN + 0.5) | 0];
+      CODES[j + 2] = E2[b <= 0 ? 0 : b >= 1 ? ENCN : (Math.sqrt(b) * ENCN + 0.5) | 0];
+    }
   }
   function limitMatrix() {
     const p = P(), prim = +p.gamut_limit > 1.5 ? [[+p.prim_rx, +p.prim_ry], [+p.prim_gx, +p.prim_gy], [+p.prim_bx, +p.prim_by]] : P3;
@@ -532,28 +462,33 @@ window.TVP_REC = {"calib":{"sets":{"sdr":{"grey":null,"lut":null},"hdr":{"grey":
     return { to, back: inv(to) };
   }
   /* the source frame into the screen: crop, box (with the non-linear stretch), masks */
-  function place(c) {
-    const g = aspGeom(), out = new Uint8Array(N * 3);
-    let bx = g.bx, by = g.by, bw = g.bw, bh = g.bh;
-    const sx0 = g.cl * W, sw = (1 - g.cl - g.cr) * W, sy0 = g.ct * H, sh = (1 - g.ct - g.cb) * H;
+  function place() {
+    const g = aspGeom(), c = CODES, out = PLACED;
+    out.fill(0);
+    const k = OW / W, bx = g.bx * k, by = g.by * k, bw = g.bw * k, bh = g.bh * k;
+    const sx0 = g.cl * OW, sw = (1 - g.cl - g.cr) * OW, sy0 = g.ct * OH, sh = (1 - g.ct - g.cb) * OH;
     const mt = bh * g.m[0], mb = bh * g.m[1], ml = bw * g.m[2], mr = bw * g.m[3];
-    const nls = g.nls > 1 ? g.nls : 0, a = Math.min(nls, 1.8), bslope = 2 - a;
-    for (let y = 0; y < H; y++) {
-      if (y < by + mt || y >= by + bh - mb) continue;
-      const fy = clamp(sy0 + (y + 0.5 - by) / bh * sh - 0.5, 0, H - 1), y0 = fy | 0, y1 = Math.min(H - 1, y0 + 1), wy = fy - y0;
-      for (let x = 0; x < W; x++) {
-        if (x < bx + ml || x >= bx + bw - mr) continue;
-        let u = (x + 0.5 - bx) / bw;
-        if (nls) { const s = u * 2 - 1; u = (a * s + (bslope - a) * s * Math.abs(s) / 2 + 1) / 2; }
-        const fx = clamp(sx0 + u * sw - 0.5, 0, W - 1), x0 = fx | 0, x1 = Math.min(W - 1, x0 + 1), wx = fx - x0, o = (y * W + x) * 3;
-        const i00 = (y0 * W + x0) * 3, i01 = (y0 * W + x1) * 3, i10 = (y1 * W + x0) * 3, i11 = (y1 * W + x1) * 3;
-        for (let k = 0; k < 3; k++) out[o + k] = (c[i00 + k] * (1 - wx) + c[i01 + k] * wx) * (1 - wy) + (c[i10 + k] * (1 - wx) + c[i11 + k] * wx) * wy + 0.5;
+    const nls = g.nls > 1 ? g.nls : 0, a = Math.min(nls, 1.8), bs = 2 - a;
+    const x0s = Math.max(0, Math.ceil(bx + ml - 0.5)), x1s = Math.min(OW, Math.ceil(bx + bw - mr - 0.5));
+    const fxs = new Float32Array(OW);
+    for (let x = x0s; x < x1s; x++) {
+      let u = (x + 0.5 - bx) / bw;
+      if (nls) { const s = u * 2 - 1; u = (a * s + (bs - a) * s * Math.abs(s) / 2 + 1) / 2; }
+      fxs[x] = clamp(sx0 + u * sw - 0.5, 0, OW - 1);
+    }
+    for (let y = Math.max(0, Math.ceil(by + mt - 0.5)); y < Math.min(OH, Math.ceil(by + bh - mb - 0.5)); y++) {
+      const fy = clamp(sy0 + (y + 0.5 - by) / bh * sh - 0.5, 0, OH - 1), y0 = fy | 0, y1 = Math.min(OH - 1, y0 + 1), wy = fy - y0, r0 = y0 * OW * 3, r1 = y1 * OW * 3;
+      for (let x = x0s, o = (y * OW + x0s) * 3; x < x1s; x++, o += 3) {
+        const fx = fxs[x], xa = fx | 0, xb = xa < OW - 1 ? xa + 1 : xa, wx = fx - xa, i00 = r0 + xa * 3, i01 = r0 + xb * 3, i10 = r1 + xa * 3, i11 = r1 + xb * 3;
+        const w00 = (1 - wx) * (1 - wy), w01 = wx * (1 - wy), w10 = (1 - wx) * wy, w11 = wx * wy;
+        out[o] = c[i00] * w00 + c[i01] * w01 + c[i10] * w10 + c[i11] * w11 + 0.5;
+        out[o + 1] = c[i00 + 1] * w00 + c[i01 + 1] * w01 + c[i10 + 1] * w10 + c[i11 + 1] * w11 + 0.5;
+        out[o + 2] = c[i00 + 2] * w00 + c[i01 + 2] * w01 + c[i10 + 2] * w10 + c[i11 + 2] * w11 + 0.5;
       }
     }
-    return out;
   }
 
-  /* ---------- geometry (geometry.c / mesh.c through warpd): only where the real Cube corrects ---------- */
+  /* ---------- geometry (geometry.c / mesh.c through warpd) ---------- */
   function geoIdentity() {
     const p = P();
     if (['geo_kv', 'geo_kh', 'geo_pin', 'geo_curve'].some((k) => Math.abs(+p[k] || 0) > 1e-6)) return false;
@@ -582,53 +517,60 @@ window.TVP_REC = {"calib":{"sets":{"sdr":{"grey":null,"lut":null},"hdr":{"grey":
     return { on: on ? 1 : 0, set: set ? 1 : 0, state, why, cpu: state === 'on' ? (scene.fps > 30 ? 14 : 9) : 0, frames: state === 'on' ? 100 : 0, gpu_ms: state === 'on' ? (scene.fps > 30 ? 4 : 3) : 0 };
   }
   const geoActive = () => geoState().state === 'on';
+  /* the demo bends every scene's picture (the Cube corrects only what geoState says) */
+  const geoWarp = () => +P().geo_on > 0.5 && !geoIdentity();
   /* Catmull-Rom across the grid's moves, so the points are joined smoothly */
-  function gridMove(u, v) {
-    const [gw, gh] = gridDims(); if (!gw) return [0, 0];
-    const pts = gridPts(), fx = u * (gw - 1), fy = v * (gh - 1), ix = Math.floor(fx), iy = Math.floor(fy), tx = fx - ix, ty = fy - iy;
-    const cr = (a, b, c, d, t) => 0.5 * (2 * b + (c - a) * t + (2 * a - 5 * b + 4 * c - d) * t * t + (3 * b - a - 3 * c + d) * t * t * t);
-    const at = (x, y, k) => pts[clamp(y, 0, gh - 1) * gw + clamp(x, 0, gw - 1)][k];
-    return [0, 1].map((k) => { const r = [-1, 0, 1, 2].map((dy) => cr(at(ix - 1, iy + dy, k), at(ix, iy + dy, k), at(ix + 1, iy + dy, k), at(ix + 2, iy + dy, k), tx)); return cr(r[0], r[1], r[2], r[3], ty) / 100; });
-  }
-  function warp(src) {
-    const p = P(), G = CVP.geo, sh = G.shaper(p), c = G.corners(p), NX = 48, NY = 27;
-    const pos = new Float32Array((NX + 1) * (NY + 1) * 2);
-    for (let j = 0; j <= NY; j++) for (let i = 0; i <= NX; i++) {
-      const u = i / NX, v = j / NY, q = G.quad(c, ...sh(u, v)), d = gridMove(u, v), o = (j * (NX + 1) + i) * 2;
-      pos[o] = (q[0] + d[0]) * W; pos[o + 1] = (q[1] + d[1]) * H;
+  const crs = (a, b, c, d, t) => 0.5 * (2 * b + (c - a) * t + (2 * a - 5 * b + 4 * c - d) * t * t + (3 * b - a - 3 * c + d) * t * t * t);
+  function gridMove(u, v, gw, gh, pts, out) {
+    if (!gw) { out[0] = out[1] = 0; return; }
+    const fx = u * (gw - 1), fy = v * (gh - 1), ix = Math.min(gw - 2, Math.floor(fx)), iy = Math.min(gh - 2, Math.floor(fy)), tx = fx - ix, ty = fy - iy;
+    for (let k = 0; k < 2; k++) {
+      const row = (dy) => { const y = clamp(iy + dy, 0, gh - 1) * gw, at = (dx) => pts[y + clamp(ix + dx, 0, gw - 1)][k]; return crs(at(-1), at(0), at(1), at(2), tx); };
+      out[k] = crs(row(-1), row(0), row(1), row(2), ty) / 100;
     }
-    const out = new Uint8Array(N * 3), f = Math.round(+p.geo_filter || 0), cubic = f === 3 || f === 2 || (f === 0 && (scene.fps || 60) <= 30);
-    const tri = (ax, ay, au, av, bx, by, bu, bv, cx, cy, cu, cv) => {
-      const minX = Math.max(0, Math.floor(Math.min(ax, bx, cx))), maxX = Math.min(W - 1, Math.ceil(Math.max(ax, bx, cx)));
-      const minY = Math.max(0, Math.floor(Math.min(ay, by, cy))), maxY = Math.min(H - 1, Math.ceil(Math.max(ay, by, cy)));
-      const d = (by - cy) * (ax - cx) + (cx - bx) * (ay - cy); if (Math.abs(d) < 1e-9) return;
-      for (let y = minY; y <= maxY; y++) for (let x = minX; x <= maxX; x++) {
-        const px = x + 0.5, py = y + 0.5, l1 = ((by - cy) * (px - cx) + (cx - bx) * (py - cy)) / d, l2 = ((cy - ay) * (px - cx) + (ax - cx) * (py - cy)) / d, l3 = 1 - l1 - l2;
-        if (l1 < -1e-4 || l2 < -1e-4 || l3 < -1e-4) continue;
-        sample(src, (l1 * au + l2 * bu + l3 * cu) * W - 0.5, (l1 * av + l2 * bv + l3 * cv) * H - 0.5, out, (y * W + x) * 3, cubic, f === 3);
-      }
-    };
+  }
+  const NX = 48, NY = 27, MESH = new Float32Array((NX + 1) * (NY + 1) * 2), MV = [0, 0];
+  function warp() {
+    const p = P(), G = CVP.geo, sh = G.shaper(p), c = G.corners(p), [gw, gh] = gridDims(), pts = gridPts();
+    for (let j = 0; j <= NY; j++) for (let i = 0; i <= NX; i++) {
+      const u = i / NX, v = j / NY, q = G.quad(c, ...sh(u, v)), o = (j * (NX + 1) + i) * 2;
+      gridMove(u, v, gw, gh, pts, MV);
+      MESH[o] = (q[0] + MV[0]) * OW; MESH[o + 1] = (q[1] + MV[1]) * OH;
+    }
+    WARPED.fill(0);
+    const f = Math.round(+p.geo_filter || 0), cubic = f === 3 || f === 2 || (f === 0 && (scene.fps || 60) <= 30), A = f === 3 ? -0.75 : -0.5;
     for (let j = 0; j < NY; j++) for (let i = 0; i < NX; i++) {
       const a = (j * (NX + 1) + i) * 2, b = a + 2, cc = a + (NX + 1) * 2, dd = cc + 2, u0 = i / NX, u1 = (i + 1) / NX, v0 = j / NY, v1 = (j + 1) / NY;
-      tri(pos[a], pos[a + 1], u0, v0, pos[b], pos[b + 1], u1, v0, pos[dd], pos[dd + 1], u1, v1);
-      tri(pos[a], pos[a + 1], u0, v0, pos[dd], pos[dd + 1], u1, v1, pos[cc], pos[cc + 1], u0, v1);
+      tri(MESH[a], MESH[a + 1], u0, v0, MESH[b], MESH[b + 1], u1, v0, MESH[dd], MESH[dd + 1], u1, v1, cubic, A);
+      tri(MESH[a], MESH[a + 1], u0, v0, MESH[dd], MESH[dd + 1], u1, v1, MESH[cc], MESH[cc + 1], u0, v1, cubic, A);
     }
-    return out;
   }
-  function sample(s, fx, fy, out, o, cubic, sharp) {
-    fx = clamp(fx, 0, W - 1); fy = clamp(fy, 0, H - 1);
-    const x0 = fx | 0, y0 = fy | 0, tx = fx - x0, ty = fy - y0;
-    if (!cubic) {
-      const x1 = Math.min(W - 1, x0 + 1), y1 = Math.min(H - 1, y0 + 1);
-      for (let k = 0; k < 3; k++) out[o + k] = (s[(y0 * W + x0) * 3 + k] * (1 - tx) + s[(y0 * W + x1) * 3 + k] * tx) * (1 - ty) + (s[(y1 * W + x0) * 3 + k] * (1 - tx) + s[(y1 * W + x1) * 3 + k] * tx) * ty + 0.5;
-      return;
-    }
-    const A = sharp ? -0.75 : -0.5, wt = (t) => { const a = Math.abs(t); return a <= 1 ? (A + 2) * a * a * a - (A + 3) * a * a + 1 : a < 2 ? A * a * a * a - 5 * A * a * a + 8 * A * a - 4 * A : 0; };
-    const wx = [wt(1 + tx), wt(tx), wt(1 - tx), wt(2 - tx)], wy = [wt(1 + ty), wt(ty), wt(1 - ty), wt(2 - ty)];
-    for (let k = 0; k < 3; k++) {
-      let v = 0;
-      for (let j = 0; j < 4; j++) { const yy = clamp(y0 - 1 + j, 0, H - 1) * W; let r = 0; for (let i = 0; i < 4; i++) r += wx[i] * s[(yy + clamp(x0 - 1 + i, 0, W - 1)) * 3 + k]; v += wy[j] * r; }
-      out[o + k] = clamp(Math.round(v), 0, 255);
+  const cw = (t, A) => { const q = t < 0 ? -t : t; return q <= 1 ? (A + 2) * q * q * q - (A + 3) * q * q + 1 : q < 2 ? A * q * q * q - 5 * A * q * q + 8 * A * q - 4 * A : 0; };
+  function tri(ax, ay, au, av, bx, by, bu, bv, cx, cy, cu, cv, cubic, A) {
+    const minX = Math.max(0, Math.floor(Math.min(ax, bx, cx))), maxX = Math.min(OW - 1, Math.ceil(Math.max(ax, bx, cx)));
+    const minY = Math.max(0, Math.floor(Math.min(ay, by, cy))), maxY = Math.min(OH - 1, Math.ceil(Math.max(ay, by, cy)));
+    const d = (by - cy) * (ax - cx) + (cx - bx) * (ay - cy); if (Math.abs(d) < 1e-9) return;
+    const id = 1 / d, s = PLACED, out = WARPED;
+    for (let y = minY; y <= maxY; y++) for (let x = minX; x <= maxX; x++) {
+      const px = x + 0.5, py = y + 0.5, l1 = ((by - cy) * (px - cx) + (cx - bx) * (py - cy)) * id, l2 = ((cy - ay) * (px - cx) + (ax - cx) * (py - cy)) * id, l3 = 1 - l1 - l2;
+      if (l1 < -1e-4 || l2 < -1e-4 || l3 < -1e-4) continue;
+      const fx = clamp((l1 * au + l2 * bu + l3 * cu) * OW - 0.5, 0, OW - 1), fy = clamp((l1 * av + l2 * bv + l3 * cv) * OH - 0.5, 0, OH - 1), o = (y * OW + x) * 3;
+      const x0 = fx | 0, y0 = fy | 0, tx = fx - x0, ty = fy - y0;
+      if (!cubic) {
+        const x1 = x0 < OW - 1 ? x0 + 1 : x0, y1 = y0 < OH - 1 ? y0 + 1 : y0, i00 = (y0 * OW + x0) * 3, i01 = (y0 * OW + x1) * 3, i10 = (y1 * OW + x0) * 3, i11 = (y1 * OW + x1) * 3;
+        for (let k = 0; k < 3; k++) out[o + k] = (s[i00 + k] * (1 - tx) + s[i01 + k] * tx) * (1 - ty) + (s[i10 + k] * (1 - tx) + s[i11 + k] * tx) * ty + 0.5;
+        continue;
+      }
+      const wx0 = cw(1 + tx, A), wx1 = cw(tx, A), wx2 = cw(1 - tx, A), wx3 = cw(2 - tx, A), wy0 = cw(1 + ty, A), wy1 = cw(ty, A), wy2 = cw(1 - ty, A), wy3 = cw(2 - ty, A);
+      const xa = clamp(x0 - 1, 0, OW - 1) * 3, xb = x0 * 3, xc = clamp(x0 + 1, 0, OW - 1) * 3, xd = clamp(x0 + 2, 0, OW - 1) * 3;
+      const ra = clamp(y0 - 1, 0, OH - 1) * OW * 3, rb = y0 * OW * 3, rc = clamp(y0 + 1, 0, OH - 1) * OW * 3, rd = clamp(y0 + 2, 0, OH - 1) * OW * 3;
+      for (let k = 0; k < 3; k++) {
+        const v = wy0 * (wx0 * s[ra + xa + k] + wx1 * s[ra + xb + k] + wx2 * s[ra + xc + k] + wx3 * s[ra + xd + k])
+          + wy1 * (wx0 * s[rb + xa + k] + wx1 * s[rb + xb + k] + wx2 * s[rb + xc + k] + wx3 * s[rb + xd + k])
+          + wy2 * (wx0 * s[rc + xa + k] + wx1 * s[rc + xb + k] + wx2 * s[rc + xc + k] + wx3 * s[rc + xd + k])
+          + wy3 * (wx0 * s[rd + xa + k] + wx1 * s[rd + xb + k] + wx2 * s[rd + xc + k] + wx3 * s[rd + xd + k]);
+        out[o + k] = v <= 0 ? 0 : v >= 255 ? 255 : v + 0.5;
+      }
     }
   }
 
@@ -655,126 +597,136 @@ window.TVP_REC = {"calib":{"sets":{"sdr":{"grey":null,"lut":null},"hdr":{"grey":
     else if (id === 'grey') { const v = sdec(pattern.index / 10); each(img, W * 0.34, H * 0.34, W * 0.66, H * 0.66, () => s(v)); }
   }
 
-  /* ---------- measurements for /api/status ---------- */
+  /* ---------- measurements for /api/status, from the source ---------- */
   const hist = [], meas = { raw: 0, curve: 0, fall: 0, hl: 0, hist: new Array(128).fill(0) };
-  function measure(src) {
-    const h = new Array(128).fill(0), tgt = peakN(), mx = [];
-    let n = 0, sum = 0, hn = 0, hs = 0, top = 0;
-    for (let i = 0; i < N; i += 2) {
-      const j = i * 3, m = Math.min(10000, Math.max(src[j], src[j + 1], src[j + 2]));
-      h[Math.round(pq(m) * 127)] += 32;
+  const PQBIN = new Uint8Array(LUTN), NITS = new Float32Array(LUTN), FINE = new Uint32Array(LUTN);
+  for (let k = 0; k < LUTN; k++) { NITS[k] = Math.pow(k / (LUTN - 1), 2) * 10000; PQBIN[k] = Math.round(pq(NITS[k]) * 127); }
+  function measure() {
+    const h = new Array(128).fill(0), tgt = peakN(), K = LUTN - 1;
+    let n = 0, sum = 0, hn = 0, hs = 0;
+    FINE.fill(0);
+    for (let j = 0; j < ON * 3; j += 3) {
+      const r = S2[j], g = S2[j + 1], b = S2[j + 2], m0 = r > g ? (r > b ? r : b) : (g > b ? g : b), m = m0 > 10000 ? 10000 : m0;
+      const k = (Math.sqrt(m / 10000) * K + 0.5) | 0;
+      FINE[k]++; h[PQBIN[k]] += 64;
       if (m > 0.01) { n++; sum += m; if (m > tgt) { hn++; hs += m; } }
-      if (m > top) top = m;
-      if (m > 200) mx.push(m);
     }
-    mx.sort((a, b) => b - a);
-    const raw = mx.length ? mx[Math.min(mx.length - 1, Math.floor(N / 2 * 0.00001))] : top;
-    meas.raw = raw; meas.curve = meas.curve ? meas.curve + (raw - meas.curve) * 0.3 : raw; meas.fall = n ? sum / n : 0; meas.hl = hn ? hs / hn : 0; meas.hist = h;
+    let k = K, acc = 0;
+    for (; k > 0; k--) { acc += FINE[k]; if (acc > ON * 0.00001) break; }
+    meas.raw = NITS[k]; meas.curve = NITS[k]; meas.fall = n ? sum / n : 0; meas.hl = hn ? hs / hn : 0; meas.hist = h;
   }
 
-  /* ---------- the analysis outputs: thumb, waveform, scopes, picture stats ---------- */
-  const decLut = (g) => { const l = new Float32Array(256); for (let k = 0; k < 256; k++) l[k] = Math.pow(k / 255, g); return l; };
-  const SENC = new Uint8Array(4096).map((_, i) => Math.round(senc(i / 4095) * 255));
+  /* ---------- the analysis outputs from the held frame: thumb, waveform, scopes, picture stats ---------- */
+  const decCache = {};
+  const decLut = (g) => decCache[g] || (decCache[g] = new Float32Array(256).map((_, k) => Math.pow(k / 255, g)));
+  const SENC = new Uint8Array(4097).map((_, i) => Math.round(senc(i / 4096) * 255));
   function picRows(c) {
-    const rowMax = (y) => { let m = 0; for (let i = y * W * 3, e = i + W * 3; i < e; i++) if (c[i] > m) m = c[i]; return m; };
-    let top = 0, bot = H;
-    while (top < H / 2 && rowMax(top) <= 12) top++;
-    while (bot > H / 2 && rowMax(bot - 1) <= 12) bot--;
+    let top = 0, bot = OH;
+    const rowMax = (y) => { let m = 0; for (let i = y * OW * 3, e = i + OW * 3; i < e; i++) if (c[i] > m) m = c[i]; return m; };
+    while (top < OH / 2 && rowMax(top) <= 12) top++;
+    while (bot > OH / 2 && rowMax(bot - 1) <= 12) bot--;
     return [top, bot];
   }
   function thumb(f) {
     if (f.thumb) return f.thumb;
-    const c = f.codes, lin = decLut(f.gamma), [top, bot] = picRows(c), out = new Uint8Array(16 + TW * TH * 4), hdr = new Uint32Array(out.buffer, 0, 4);
-    hdr[0] = TW; hdr[1] = TH; hdr[2] = f.frame; hdr[3] = 0;
-    const rgb = new Uint8Array(out.buffer, 16, TW * TH * 3), mk = new Uint8Array(out.buffer, 16 + TW * TH * 3, TW * TH);
-    for (let y = 0; y < TH; y++) for (let x = 0; x < TW; x++) {
-      let r = 0, g = 0, b = 0, m = 0;
-      for (let j = 0; j < 2; j++) for (let i = 0; i < 2; i++) {
-        const row = y * 2 + j, p = (row * W + x * 2 + i) * 3, a = c[p], bb = c[p + 1], cc = c[p + 2], at = (a === 255) + (bb === 255) + (cc === 255);
-        r += lin[a]; g += lin[bb]; b += lin[cc];
-        if (at === 3) m |= 2; else if (at) m |= 1; else if (!a && !bb && !cc && row >= top && row < bot) m |= 4;
+    const c = f.codes, lin = decLut(f.gamma), [top, bot] = picRows(c), out = new Uint8Array(16 + ON * 4), hdr = new Uint32Array(out.buffer, 0, 4);
+    hdr[0] = OW; hdr[1] = OH; hdr[2] = f.frame; hdr[3] = 0;
+    const rgb = new Uint8Array(out.buffer, 16, ON * 3), mk = new Uint8Array(out.buffer, 16 + ON * 3, ON), c709 = f.c709;
+    for (let i = 0, p = 0; i < ON; i++, p += 3) {
+      const a = c[p], bb = c[p + 1], cc = c[p + 2], at = (a === 255) + (bb === 255) + (cc === 255), y = (i / OW) | 0;
+      mk[i] = at === 3 ? 2 : at ? 1 : !a && !bb && !cc && y >= top && y < bot ? 4 : 0;
+      let r = lin[a], g = lin[bb], b = lin[cc];
+      if (!c709) {
+        const r2 = 1.660491 * r - 0.587641 * g - 0.07285 * b, g2 = -0.124551 * r + 1.1329 * g - 0.008349 * b, b2 = -0.018151 * r - 0.100579 * g + 1.11873 * b;
+        r = r2; g = g2; b = b2;
+        const y7 = 0.2126 * r + 0.7152 * g + 0.0722 * b, lo = r < g ? (r < b ? r : b) : (g < b ? g : b);
+        if (lo < 0 && y7 > 0) { const s = y7 / (y7 - lo); r = y7 + (r - y7) * s; g = y7 + (g - y7) * s; b = y7 + (b - y7) * s; }
       }
-      let v = [r / 4, g / 4, b / 4];
-      if (!f.c709) {
-        v = mul(M2020_709, v);
-        const y709 = 0.2126 * v[0] + 0.7152 * v[1] + 0.0722 * v[2], lo = Math.min(v[0], v[1], v[2]);
-        if (lo < 0 && y709 > 0) { const s = y709 / (y709 - lo); v = v.map((q) => y709 + (q - y709) * s); }
-      }
-      const o = (y * TW + x) * 3;
-      for (let k = 0; k < 3; k++) rgb[o + k] = SENC[Math.round(clamp(v[k], 0, 1) * 4095)];
-      mk[y * TW + x] = m;
+      rgb[p] = SENC[r <= 0 ? 0 : r >= 1 ? 4096 : (r * 4096 + 0.5) | 0];
+      rgb[p + 1] = SENC[g <= 0 ? 0 : g >= 1 ? 4096 : (g * 4096 + 0.5) | 0];
+      rgb[p + 2] = SENC[b <= 0 ? 0 : b >= 1 ? 4096 : (b * 4096 + 0.5) | 0];
     }
     return (f.thumb = out.buffer);
   }
+  /* the brain's waveform has 960 / merge columns of 540 rows; each of our 480 x 270 pixels counts as the four it stands for */
   function wave(f, mode, merge, colour) {
     const key = mode + merge + colour; if (f.waves[key]) return f.waves[key];
-    const cols = W / merge, planes = mode === 'rgb' ? 3 : 1, hasC = colour && planes === 1, c = f.codes;
+    const cols = 960 / merge, planes = mode === 'rgb' ? 3 : 1, hasC = colour && planes === 1, c = f.codes;
     const buf = new ArrayBuffer(24 + planes * 256 * cols * 2 + (hasC ? 256 * cols * 3 : 0)), h = new Uint32Array(buf, 0, 6);
     h[0] = cols; h[1] = planes; h[2] = f.frame; h[3] = 0; h[4] = hasC ? 1 : 0; h[5] = scene.menus ? 2 : 1;
     const cnt = new Uint16Array(buf, 24, planes * 256 * cols), acc = hasC ? new Float32Array(256 * cols * 3) : null;
-    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
-      const p = (y * W + x) * 3, r = c[p], g = c[p + 1], b = c[p + 2], col = (x / merge) | 0;
-      if (planes === 3) { cnt[r * cols + col]++; cnt[(256 + g) * cols + col]++; cnt[(512 + b) * cols + col]++; }
-      else {
-        const k = mode === 'max' ? Math.max(r, g, b) : Math.round(0.2627 * r + 0.678 * g + 0.0593 * b);
-        cnt[k * cols + col]++;
-        if (acc) { const q = (k * cols + col) * 3; acc[q] += r; acc[q + 1] += g; acc[q + 2] += b; }
+    const split = merge === 1, add = split ? 2 : 4, shift = merge === 4 ? 1 : 0, max = mode === 'max';
+    for (let i = 0, p = 0; i < ON; i++, p += 3) {
+      const x = i % OW, col = split ? x * 2 : x >> shift, r = c[p], g = c[p + 1], b = c[p + 2];
+      if (planes === 3) {
+        cnt[r * cols + col] += add; cnt[(256 + g) * cols + col] += add; cnt[(512 + b) * cols + col] += add;
+        if (split) { cnt[r * cols + col + 1] += add; cnt[(256 + g) * cols + col + 1] += add; cnt[(512 + b) * cols + col + 1] += add; }
+      } else {
+        const k = max ? (r > g ? (r > b ? r : b) : (g > b ? g : b)) : (0.2627 * r + 0.678 * g + 0.0593 * b + 0.5) | 0;
+        cnt[k * cols + col] += add; if (split) cnt[k * cols + col + 1] += add;
+        if (acc) { const q = (k * cols + col) * 3; acc[q] += r; acc[q + 1] += g; acc[q + 2] += b; if (split) { acc[q + 3] += r; acc[q + 4] += g; acc[q + 5] += b; } }
       }
     }
     if (acc) {
       const cc = new Uint8Array(buf, 24 + 256 * cols * 2, 256 * cols * 3);
-      for (let i = 0; i < 256 * cols; i++) { const m = Math.max(acc[i * 3], acc[i * 3 + 1], acc[i * 3 + 2]); if (m > 0) for (let k = 0; k < 3; k++) cc[i * 3 + k] = Math.round(255 * acc[i * 3 + k] / m); }
+      for (let i = 0; i < 256 * cols * 3; i += 3) { const m = Math.max(acc[i], acc[i + 1], acc[i + 2]); if (m > 0) { cc[i] = 255 * acc[i] / m; cc[i + 1] = 255 * acc[i + 1] / m; cc[i + 2] = 255 * acc[i + 2] / m; } }
     }
     return (f.waves[key] = buf);
   }
+  const SCOPE_BYTES = 24 + 200 * 225 * 2 + 256 * 256 * 2;
   function scopes(f) {
     if (f.scopes) return f.scopes;
-    const cw = 200, ch = 225, vn = 256, buf = new ArrayBuffer(24 + cw * ch * 2 + vn * vn * 2), h = new Uint32Array(buf, 0, 6);
+    const cw = 200, ch = 225, vn = 256, buf = new ArrayBuffer(SCOPE_BYTES), h = new Uint32Array(buf, 0, 6);
     h[0] = cw; h[1] = ch; h[2] = vn; h[3] = 0; h[4] = f.frame; h[5] = 0;
     const cie = new Uint16Array(buf, 24, cw * ch), vec = new Uint16Array(buf, 24 + cw * ch * 2, vn * vn), c = f.codes, lin = decLut(f.gamma);
-    const M = f.c709 ? mm(M2020_XYZ, M709_2020) : M2020_XYZ;
-    for (let y = 0; y < TH; y++) for (let x = 0; x < TW; x++) {
-      const p = (y * 2 * W + x * 2) * 3, r = c[p] / 255, g = c[p + 1] / 255, b = c[p + 2] / 255;
-      const yy = 0.2627 * r + 0.678 * g + 0.0593 * b, cb = (b - yy) / 1.8814, cr = (r - yy) / 1.4746;
-      const vi = clamp(Math.floor((cb + 0.5) * vn), 0, vn - 1), vj = clamp(Math.floor((cr + 0.5) * vn), 0, vn - 1);
+    const M = f.c709 ? mm(M2020_XYZ, M709_2020) : M2020_XYZ, [a0, a1, a2] = M[0], [b0, b1, b2] = M[1], [d0, d1, d2] = M[2];
+    for (let p = 0; p < ON * 3; p += 3) {
+      const R = c[p], G = c[p + 1], Bc = c[p + 2], r = R / 255, g = G / 255, b = Bc / 255;
+      const yy = 0.2627 * r + 0.678 * g + 0.0593 * b, vi = clamp(((b - yy) / 1.8814 + 0.5) * vn | 0, 0, vn - 1), vj = clamp(((r - yy) / 1.4746 + 0.5) * vn | 0, 0, vn - 1);
       if (vec[vj * vn + vi] < 65535) vec[vj * vn + vi]++;
-      const L = [lin[c[p]], lin[c[p + 1]], lin[c[p + 2]]], X = mul(M, L), s = X[0] + X[1] + X[2];
-      if (X[1] < 0.004 || s <= 0) continue;
-      const cx = Math.floor(X[0] / s / 0.8 * cw), cy = Math.floor(X[1] / s / 0.9 * ch);
+      const lr = lin[R], lg = lin[G], lb = lin[Bc], X = a0 * lr + a1 * lg + a2 * lb, Y = b0 * lr + b1 * lg + b2 * lb, s = X + Y + d0 * lr + d1 * lg + d2 * lb;
+      if (Y < 0.004 || s <= 0) continue;
+      const cx = (X / s / 0.8 * cw) | 0, cy = (Y / s / 0.9 * ch) | 0;
       if (cx >= 0 && cx < cw && cy >= 0 && cy < ch && cie[cy * cw + cx] < 65535) cie[cy * cw + cx]++;
     }
     return (f.scopes = buf);
   }
   function stats(f) {
     if (f.stats) return f.stats;
-    const c = f.codes, [top, bot] = picRows(c), lin = decLut(f.gamma), hs = [new Array(256).fill(0), new Array(256).fill(0), new Array(256).fill(0)];
+    const c = f.codes, [top, bot] = picRows(c), lin = decLut(f.gamma), hs = [new Uint32Array(256), new Uint32Array(256), new Uint32Array(256)];
     let n = 0, full = 0, white = 0, black = 0, zero = 0, lsum = 0, msum = 0;
-    for (let y = top; y < bot; y++) for (let x = 0; x < W; x += 2) {
-      const p = (y * W + x) * 3, r = c[p], g = c[p + 1], b = c[p + 2], mx = Math.max(r, g, b), at = (r === 255) + (g === 255) + (b === 255);
+    for (let p = top * OW * 3; p < bot * OW * 3; p += 3) {
+      const r = c[p], g = c[p + 1], b = c[p + 2], mx = r > g ? (r > b ? r : b) : (g > b ? g : b), at = (r === 255) + (g === 255) + (b === 255);
       hs[0][r]++; hs[1][g]++; hs[2][b]++; n++;
       if (at === 3) white++; else if (at) full++;
       if (!mx) black++; else if (mx > 16 && (!r || !g || !b)) zero++;
       lsum += 0.2627 * r + 0.678 * g + 0.0593 * b; msum += lin[mx];
     }
+    n = n || 1;
     const pctl = (hh) => { let a = 0, k = 255; for (; k > 0; k--) { a += hh[k]; if (a > n * 0.001) break; } return k; };
     const mxk = (hh) => { let k = 255; while (k > 0 && !hh[k]) k--; return k; };
-    const mean = (hh) => hh.reduce((s, v, k) => s + v * k, 0) / (n || 1);
+    const mean = (hh) => { let s = 0; for (let k = 0; k < 256; k++) s += hh[k] * k; return +(s / n).toFixed(1); };
     const tg = peakN();
-    return (f.stats = { frame: f.frame, source: scene.menus ? 'screen' : 'video', target: tg, rows: [top, bot], chan_full: 100 * full / n, white_clip: 100 * white / n, black_zero: 100 * black / n, chan_zero: 100 * zero / n,
-      max: hs.map(mxk), p999: hs.map(pctl), mean: hs.map((h) => +mean(h).toFixed(1)), apl: 100 * lsum / n / 255, avg_nits: msum / n * tg });
+    return (f.stats = { frame: f.frame, source: scene.menus ? 'screen' : 'video', target: tg, rows: [top * 2, bot * 2], chan_full: 100 * full / n, white_clip: 100 * white / n, black_zero: 100 * black / n, chan_zero: 100 * zero / n,
+      max: hs.map(mxk), p999: hs.map(pctl), mean: hs.map(mean), apl: 100 * lsum / n / 255, avg_nits: msum / n * tg });
   }
 
   /* ---------- /api/status and /api/info ---------- */
   const GRIDX = () => CVP.GRID;
   function status() {
-    const f = render(), p = P(), active = tmOn() && !st.paused && !pattern;
+    ensureFrame();
+    const p = P(), active = !!scene.base && tmOn() && !st.paused && !pattern;
     if (active) { dtmFrames += 6; seenHdr = true; }
     const peak = peakN();
     if (active) { hist.push([+meas.raw.toFixed(1), +meas.curve.toFixed(1), 0, peak]); while (hist.length > 240) hist.shift(); }
     const H240 = new Array(240 - hist.length).fill([0, 0, 0, 0]).concat(hist);
-    const g = GRIDX(), curve = [];
     curveLut();
-    for (let k = 1; k < g.length; k++) curve.push([+g[k].toPrecision(5), +Math.min(peak, isHdr() ? curveFn(Math.min(g[k], 10000)) : g[k] * peak / 100).toPrecision(5)]);
+    const ck = curveKey + isHdr();
+    if (ck !== curveFor) {
+      const g = GRIDX(); curveFor = ck; curveOut = [];
+      for (let k = 1; k < g.length; k++) curveOut.push([+g[k].toPrecision(5), +Math.min(peak, isHdr() ? curveFn(Math.min(g[k], 10000)) : g[k] * peak / 100).toPrecision(5)]);
+    }
+    const curve = curveOut;
     const lastM = { raw_peak: +meas.raw.toFixed(1), curve_peak: +meas.curve.toFixed(1), fall: +meas.fall.toFixed(2), avg_hl: +meas.hl.toFixed(1), scene_target: peak, target_raw: peak };
     const s = {
       frame: dtmFrames, fps: active ? scene.fps : 0,
@@ -782,16 +734,16 @@ window.TVP_REC = {"calib":{"sets":{"sdr":{"grey":null,"lut":null},"hdr":{"grey":
       last: lastM, raw_peak: null, curve_peak: null, change: null, fall: null, avg_hl: null, scene_target: null, target_raw: null,
       cuts, black_floor: REC.status.black_floor, handshake: REC.status.handshake, cal_set: tmOn() ? 'hdr' : 'sdr',
       aspect: scene.menus ? 0 : +(16 / 9 / (1 - Math.max(0, det.v))).toFixed(3), bar_v: +Math.max(0, det.v).toFixed(4), bar_h: 0,
-      subs: performance.now() / 1000 - det.subsT < 5 ? 1 : 0, subs_keep_t: 0, subs_keep_b: det.keepB,
+      subs: scene.subs && !pattern ? 1 : 0, subs_keep_t: 0, subs_keep_b: det.keepB,
       peak: { nits: peak, key: outHdr() === 1 ? 'target_nits_hdr' : 'target_nits' },
       params: Object.assign({}, p, { geo_px: gridPts()[Math.round(+p.geo_pt || 0)] ? gridPts()[Math.round(+p.geo_pt || 0)][0] : 0, geo_py: gridPts()[Math.round(+p.geo_pt || 0)] ? gridPts()[Math.round(+p.geo_pt || 0)][1] : 0 }),
       limits: REC.status.limits, defaults: REC.status.defaults,
       protected: scene.protected ? 1 : 0, osd: 0, osd_wanted: osdOn, hist: meas.hist, curve, history: H240,
     };
-    if (active) Object.assign(s, lastM, { change: 0.004 + 0.003 * Math.random() });
+    if (active) Object.assign(s, lastM, { change: 0 });
     return s;
   }
-  let osdOn = 0, dtmFrames = 0, seenHdr = false;
+  let osdOn = 0, dtmFrames = 0, seenHdr = false, curveFor = '', curveOut = [];
   function info() {
     const o = output(), p = P(), hdr = inHdr(), [iw, ih] = inSize(), tm = tmOn(), oh = outHdr(), playing = !scene.menus;
     const sig = pattern ? (pattern.hdr ? (pattern.direct || oh === 1 ? 'HDR10-GAMMA_ST2084' : 'SDR') : 'SDR')
@@ -857,7 +809,8 @@ window.TVP_REC = {"calib":{"sets":{"sdr":{"grey":null,"lut":null},"hdr":{"grey":
       if (!(k in p) || (lim[k] && (v < lim[k][0] || v > lim[k][1]))) continue;
       p[k] = v;
     }
-    gridPts(); dirty = true; save();
+    gridPts(); save();
+    if (['subs_ignore', 'apps_dv', 'edid_mode', 'edid_hdr', 'edid_depth'].some((k) => form(body).has(k))) changed(); else schedule();
   }
   function rulesState() {
     const o = output();
@@ -865,29 +818,40 @@ window.TVP_REC = {"calib":{"sets":{"sdr":{"grey":null,"lut":null},"hdr":{"grey":
       dtm: tmOn() && !st.paused ? 'on' : 'off', res: scene.menus ? 'none' : inSize()[1] >= 2160 ? '4K' : '1080p', fps: (scene.fps || 0).toFixed(3), allm: scene.hdmi ? 'yes' : 'no', paused: st.paused ? 'yes' : 'no', watching: scene.menus ? 'no' : 'yes' };
   }
   const kind = () => (scene.hdmi ? 'game' : scene.menus ? '' : !isHdr() ? 'sdr' : scene.fps > 40 ? 'video' : 'film');
+  const EMPTY_THUMB = new Uint32Array([TW, TH, 0, 0]).buffer, EMPTY_WAVE = new Uint32Array([960, 3, 0, 0, 0, 1]).buffer, EMPTY_SCOPES = new ArrayBuffer(SCOPE_BYTES);
+  new Uint32Array(EMPTY_SCOPES, 0, 3).set([200, 225, 256]);
+  /* a held frame the page already has is answered once it changes, or after a while; nothing is redrawn meanwhile */
+  const served = {};
+  async function fresh(k) {
+    let f = ensureFrame();
+    if (f && served[k] === f.id) { await new Promise((ok) => { waiters.push(ok); setTimeout(ok, 4000); }); f = ensureFrame(); }
+    if (f) served[k] = f.id;
+    return f;
+  }
   async function api(path, qs, method, body) {
     const post = method === 'POST';
     switch (path) {
       case '/api/status': return J(status());
       case '/api/info': return J(info());
-      case '/api/picture': render(); return J(stats(render()));
-      case '/api/thumb': return B(scene.protected ? new Uint32Array([TW, TH, 0, 0]).buffer : thumb(render()));
+      case '/api/picture': { const f = await fresh('pic'); return f ? J(stats(f)) : J({ frame: 0 }); }
+      case '/api/thumb': { if (scene.protected) return B(EMPTY_THUMB); const f = await fresh('thumb'); return B(f ? thumb(f) : EMPTY_THUMB); }
       case '/api/wavehist': {
         if (scene.protected) return B(new Uint32Array([960, 3, 0, 0, 0, 1]).buffer);
         const m = qs.get('mode') === 'parade' ? 'rgb' : qs.get('mode') || 'rgb';
-        return B(wave(render(), m, +qs.get('merge') || 1, qs.get('color') === '1'));
+        const f = await fresh('wave' + m + qs.get('merge') + qs.get('color'));
+        return B(f ? wave(f, m, +qs.get('merge') || 1, qs.get('color') === '1') : EMPTY_WAVE);
       }
-      case '/api/scopes': { if (!scene.protected) return B(scopes(render())); const e = new ArrayBuffer(24 + 200 * 225 * 2 + 256 * 256 * 2); new Uint32Array(e, 0, 6).set([200, 225, 256, 0, 0, 0]); return B(e); }
+      case '/api/scopes': { if (scene.protected) return B(EMPTY_SCOPES); const f = await fresh('scopes'); return B(f ? scopes(f) : EMPTY_SCOPES); }
       case '/api/params': setParams(body); return OK();
       case '/api/defaults': {
         const p = P(), keep = { target_nits: p.target_nits, target_nits_hdr: p.target_nits_hdr };
         for (const k in REC.status.defaults) if (!k.startsWith('geo_')) p[k] = REC.status.defaults[k];
-        Object.assign(p, keep); dirty = true; save(); return OK();
+        Object.assign(p, keep); changed(); save(); return OK();
       }
       case '/api/presets': {
         if (post) {
           const b = form(body), name = b.get('name'), action = b.get('action');
-          if (action === 'load') { const q = st.presets.find((x) => x.name === name); if (q) { Object.assign(P(), q.params); dirty = true; } }
+          if (action === 'load') { const q = st.presets.find((x) => x.name === name); if (q) { Object.assign(P(), q.params); changed(); } }
           else { st.presets = st.presets.filter((x) => x.name !== name); if (action === 'save') st.presets.push({ name, params: Object.assign({}, P()) }); }
           save();
         }
@@ -941,7 +905,7 @@ window.TVP_REC = {"calib":{"sets":{"sdr":{"grey":null,"lut":null},"hdr":{"grey":
           if (b.stop) pattern = null;
           else if (b.template || b.set) { const t = PATTERNS.templates.find((x) => x.id === b.template); pattern = { id: b.template || b.set, index: b.index || 0, hdr: t ? t.hdr : false, direct: !!b.direct, what: t ? t.name : `Greyscale ${(b.index || 0) * 10}%` }; }
           else if (b.pqcheck) { pattern = { id: 'hramp', hdr: true, what: 'HDR10 out check' }; }
-          dirty = true;
+          changed();
         }
         return J(Object.assign({ running: !!pattern, what: pattern ? pattern.what : '', hdr: !!(pattern && pattern.hdr), direct: !!(pattern && pattern.direct), width: pattern ? 1920 : 0, height: pattern ? 1080 : 0, posted: 0, shown: 0, busy: null }, PATTERNS));
       }
@@ -965,17 +929,33 @@ window.TVP_REC = {"calib":{"sets":{"sdr":{"grey":null,"lut":null},"hdr":{"grey":
   bar.innerHTML = `<b class="dtag">Demo</b><label class="dpick"><span>Playing</span><select id="tvpScen" aria-label="What the simulated Cube plays">${SC.map((s) => `<option value="${s.id}">${s.label}</option>`).join('')}</select></label>
     <button type="button" id="tvpPause" class="dbtn">Pause</button><span class="dnote">A simulated Cube with an XGIMI TITAN behind an AV7702mkII, in your browser. Demo: the picture uses a simple stand-in curve, not Tesseract VP's dynamic tone mapping.</span><button type="button" id="tvpReset" class="dbtn" title="Back to the starting settings">Reset demo</button>`;
   document.body.insertBefore(bar, document.body.firstChild);
-  const realIH = Object.getOwnPropertyDescriptor(window, 'innerHeight') || Object.getOwnPropertyDescriptor(Window.prototype, 'innerHeight');
-  try { Object.defineProperty(window, 'innerHeight', { configurable: true, get: () => (realIH.get ? realIH.get.call(window) : document.documentElement.clientHeight) - bar.offsetHeight }); } catch (e) {}
+  /* the page sizes itself to the window in its fit layout: take the bar's height off what it sets */
+  const app = document.getElementById('app');
+  let appH = -1;
+  new MutationObserver(() => {
+    const h = parseFloat(app.style.height);
+    if (!document.documentElement.classList.contains('fit') || !(h > 0) || Math.abs(h - appH) < 0.5) return;
+    appH = h - bar.offsetHeight / (parseFloat(app.style.zoom) || 1);
+    app.style.height = appH + 'px';
+  }).observe(app, { attributes: true, attributeFilter: ['style'] });
   new ResizeObserver(() => window.dispatchEvent(new Event('resize'))).observe(bar);
   const sel = bar.querySelector('#tvpScen'), pb = bar.querySelector('#tvpPause');
   sel.onchange = () => { setScene(sel.value); pb.textContent = 'Pause'; };
-  pb.onclick = () => { if (st.paused) { clockAt = performance.now(); st.paused = false; } else { clock = now(); st.paused = true; } pb.textContent = st.paused ? 'Play' : 'Pause'; dirty = true; };
+  pb.onclick = () => { st.paused = !st.paused; pb.textContent = st.paused ? 'Play' : 'Pause'; };
   let resetArm = 0;
   bar.querySelector('#tvpReset').onclick = (e) => {
     if (Date.now() - resetArm > 3000) { resetArm = Date.now(); e.target.textContent = 'Press again to reset'; setTimeout(() => (e.target.textContent = 'Reset demo'), 3000); return; }
     try { localStorage.removeItem(LS); } catch (x) {}
     location.reload();
   };
+  /* geometry bends every scene here; say so where the Cube itself would leave the picture as it is */
+  setInterval(() => {
+    const n = document.getElementById('geoNote'); if (!n || !scene) return;
+    let d = document.getElementById('tvpGeoDemo');
+    if (!d) { d = document.createElement('p'); d.id = 'tvpGeoDemo'; d.className = 'secnote'; n.after(d); }
+    const g = geoState(), msg = g.on && g.set && g.state !== 'on' ? "Demo: the picture bends on every scene here. On the Cube, correction covers Kodi's SDR films and the HDMI input up to 1080p." : '';
+    if (d.textContent !== msg) d.textContent = msg;
+    d.hidden = !msg;
+  }, 1000);
   setScene(st.scen); sel.value = st.scen;
 })();
