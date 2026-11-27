@@ -14,7 +14,7 @@ Tesseract VP turns a Fire TV Cube into a video processor that sits between your 
 
 This repository holds Tesseract VP's **signed releases**, its [roadmap](ROADMAP.md) and the [wiki](https://github.com/Javbomb/tesseract-vp/wiki). Installed Cubes update themselves from here.
 
-**[Download Tesseract VP Setup for Windows](https://github.com/Javbomb/tesseract-vp/releases/download/stable/Tesseract-VP-Setup.exe)** · [Website](https://javbomb.github.io/tesseract-vp/) · [DTM compare](https://javbomb.github.io/tesseract-vp/compare/) · [Upscaling compare](https://javbomb.github.io/tesseract-vp/upscaling/) · [UI demo](https://javbomb.github.io/tesseract-vp/demo/) · [All releases](https://github.com/Javbomb/tesseract-vp/releases) · [Install](#installing) · [Wiki](https://github.com/Javbomb/tesseract-vp/wiki)
+**[Download Tesseract VP Setup for Windows](https://github.com/Javbomb/tesseract-vp/releases/download/stable/Tesseract-VP-Setup.exe)** · [Website](https://javbomb.github.io/tesseract-vp/) · [DTM compare](https://javbomb.github.io/tesseract-vp/compare/) · [Upscaling compare](https://javbomb.github.io/tesseract-vp/upscaling/) · [UI demo](https://javbomb.github.io/tesseract-vp/demo/) · [HDMI output test](https://javbomb.github.io/tesseract-vp/hdmi-test/) · [All releases](https://github.com/Javbomb/tesseract-vp/releases) · [Install](#installing) · [Wiki](https://github.com/Javbomb/tesseract-vp/wiki)
 
 > **Testers wanted.** The first Stable release, **20261126**, is out. If you have an unlocked Fire TV Cube (3rd generation), please try it and tell us how it goes: the wiki's [Testing guide](https://github.com/Javbomb/tesseract-vp/wiki/Testing-guide) lists what to try, and problems go in [Issues](https://github.com/Javbomb/tesseract-vp/issues/new/choose).
 
@@ -27,6 +27,8 @@ This repository holds Tesseract VP's **signed releases**, its [roadmap](ROADMAP.
 ### Dynamic tone mapping
 
 > **[▶ DTM compare: flip Tesseract VP frame by frame against another popular DTM solution](https://javbomb.github.io/tesseract-vp/compare/)**: real 4K HDR film frames, both rendered for a 100-nit projector, with waveforms. Click or press Space to switch.
+
+> **[▶ HDMI output test: what the Cube actually sends, measured with a capture card](https://javbomb.github.io/tesseract-vp/hdmi-test/)**: bit depth, dither, colour and the HDMI input, with every test picture and the counts behind each result.
 
 - **Every frame is measured and gets its own curve.** Each picture is fitted to your screen's real peak brightness.
 - **1:1 wherever it can be.** A scene that fits your screen is shown 1:1, as mastered. One that doesn't is compressed to fit, as gently as possible: as much of the picture as it can stays 1:1, and the rest, mid-tones included when the scene is far brighter than your screen, is brought down smoothly. Highlights roll off smoothly toward your screen's peak instead of hard clipping, the curve moves gently between scenes, and colours are held to their hue as they are brought in.
