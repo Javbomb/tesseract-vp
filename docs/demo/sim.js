@@ -1,4 +1,4 @@
-window.TVP_REC = {"calib":{"sets":{"sdr":{"grey":null,"lut":null},"hdr":{"grey":null,"lut":null}},"patches":{"set":"hdr","raw":false,"levels":"video"},"resolve":{"pc":"","state":"off"},"pgen":{"on":true,"state":"waiting for HCFR or Calman"}},"cec":{"gen":61,"own":{"la":11,"pa":"1.1.0.0"},"scanning":false,"age_s":60,"devices":[{"la":0,"name":"XGIMI TITAN","type":"Display","maker":"MediaTek","vendor":"6d746b","pa":"0.0.0.0","pa_known":true,"power":0,"ver":"1.4","sam":-1,"seen_s":13,"behind":false,"can":{"status":1,"name":1,"address":1,"vendor":1,"version":1,"wake":-1,"standby":-1,"keys":-1,"volume":-1,"audio_mode":-1,"routing":-1}},{"la":5,"name":"AV7702mkII","type":"Audio system","maker":"Marantz","vendor":"000678","pa":"1.0.0.0","pa_known":true,"power":0,"ver":"1.4","sam":1,"seen_s":27,"behind":false,"can":{"status":1,"name":1,"address":1,"vendor":1,"version":1,"wake":-1,"standby":-1,"keys":-1,"volume":1,"audio_mode":1,"routing":-1}}],"audio":{"volume":47,"mute":false,"db":-33,"to":5},"active":"","routes":{"lists_set":false,"power_on":"","power_off":"","standby":"list","display_off":"cube","vol":"auto","play":"none","play_wake":0,"home_wake":1,"switch_amp":0,"src":{}},"fireos":[{"k":"cec","name":"HDMI-CEC in Fire OS","what":"Fire OS's own CEC service. Off, Fire OS ignores the bus: no wake, no address. Keep on.","now":1,"fire":1,"ours":1},{"k":"sleep_in","name":"Cube sleeps when the display does","what":"Fire OS sleeps the Cube on any <Standby> it hears. Ours: the rule below decides.","now":0,"fire":0,"ours":1},{"k":"sleep_out","name":"Display off with the Cube","what":"Fire OS sends the display <Standby> when the Cube sleeps. Ours: the power list decides.","now":0,"fire":1,"ours":0},{"k":"otp","name":"Wake the display and amp only on a remote press","what":"Fire OS wakes the display and the amp (One Touch Play) on Home, also on Home sent by apps and scripts. Ours: only after a key pressed on a remote; any other wake is held back.","now":0,"fire":1,"ours":0}],"undo":true,"log":[{"ago":129,"s":"Display appeared"},{"ago":130,"s":"Audio system appeared"}]},"edid":{"mode":0,"applied":0,"msg":"","avr":"00ffffffffffff00354937000101010100190103807341780acf74a3574cb02309484c000000010101ff01ffff01010101010101012008e80030f2705a80b0588a00c48e2100001e023a801871382d40582c4500c48e2100001e000000fc006d6172616e747a2d4156520a20000000fd003b461f8c3c000a202020202020012c02036df0510514901f20225d5f6061626465665e6321380f7f073d1ec01507505f7e03570603677e034d02005f7e01835f00006e030c001100b83c2080800102030468d85dc40178800302e30f0033e3060f01eb0146d0004d63523ea4cc39e305df01e200ffe61146d00070000000000000000000000000000000000000008e","now":"00ffffffffffff00354937000101010100190103807341780acf74a3574cb02309484c000000010101ff01ffff01010101010101012008e80030f2705a80b0588a00c48e2100001e023a801871382d40582c4500c48e2100001e000000fc006d6172616e747a2d4156520a20000000fd003b461f8c3c000a202020202020012c02036df0510514901f20225d5f6061626465665e6321380f7f073d1ec01507505f7e03570603677e034d02005f7e01835f00006e030c001100b83c2080800102030468d85dc40178800302e30f0033e3060f01eb0146d0004d63523ea4cc39e305df01e200ffe61146d00070000000000000000000000000000000000000008e"},"geometry":{"on":0,"filter":"auto","kv":0.0,"kh":0.0,"pin":0.0,"curve":0.0,"corners":[[0.0,0.0],[0.0,0.0],[0.0,0.0],[0.0,0.0]],"grid":{"w":0,"h":0,"pt":0,"pts":[]},"set":0,"state":"off","why":"","cpu":0,"frames":0,"gpu_ms":0.0},"info_menus":{"playing":false,"input":{"width":0,"height":0,"fps":0.0,"codec":"","decoder":"","hdr":"","fel":0,"process":"","file":"","ui_width":1920,"ui_height":1080,"ui_bpp":32,"colour":"BT.709","gamut":"BT.709"},"output":{"width":3840,"height":2160,"hz":59.94,"vic":97,"mode":"2160p60hz","format":"422,12bit","signal":"SDR","pq_sink":1,"colour":"BT.2020","gamut":"BT.709","map":"BT.709 → BT.2020","label":"BT.709"},"upgrade":{"on":0,"state":"off","why":"","cpu":0,"frames":0,"module_4k":1,"gpu4k":0,"steps":-1},"geometry":{"on":0,"set":0,"state":"off","why":"","cpu":0,"frames":0,"gpu_ms":0.0},"out_ctl":{"mode":"2160p60hz","attr":"422,12bit","rate_note":""},"audio":{"in":null,"out":null,"hdmi_type":"MAT"}},"ir":{"blaster":true,"receiver":true,"learning":{"state":"none","left":0,"name":"","msg":""},"last":"","codes":[{"name":"Light","what":"raw, 38 kHz","carrier":38000,"edges":255,"frames":1},{"name":"Fan low","what":"raw, 38 kHz","carrier":38000,"edges":255,"frames":1},{"name":"Fan medium","what":"raw, 38 kHz","carrier":38000,"edges":237,"frames":1},{"name":"Fan high","what":"raw, 38 kHz","carrier":38000,"edges":239,"frames":1},{"name":"Fan off","what":"raw, 38 kHz","carrier":38000,"edges":255,"frames":1}]},"kodiwl":{"kodi":1,"needs":0,"saved":0,"ok":1},"lens":{"state":"off","ip":"","model":"XGIMI TITAN","msg":"the projector doesn't answer (off, or not allowed)","memories":[],"candidates":[]},"pins":{"pins":"dyn_tuning,clip_nits,bright_adj,punch_adj,hl_adj,colour_adj,white_hot,clip_guard,shadow_adj,depth_adj"},"play3d":{"active":0,"state":"idle","fp":0,"view":"3d","sink3d":0},"prefs":{"prefs":"side=right,mode=rgb,scale=nits,gain=0"},"remote":{"guide":{"n":0,"ago":-1.0,"dev":""},"menu":{"n":0,"ago":-1.0,"dev":""},"nav":{"n":0,"ago":-1.0,"dev":""},"raw":{"n":0,"code":0,"ago":-1.0,"dev":"","hold":0},"heal":{"n":0,"ago":-1.0,"text":""},"app":{"installed":1,"version":"1.0","stopped":0},"filter":{"enabled":1,"running":1,"overlay":"allow"},"module":{"installed":1,"off":0,"pending":0,"layouts":45},"remote":{"from":"connected","name":"Amazon Fire TV Remote","id":"0171:0414:0057","layout":"/system/usr/keylayout/Vendor_0171_Product_0414.kl","code":362,"live":"F12","module":"F12","other":""}},"status":{"params":{"target_nits":100,"target_nits_hdr":100,"peak_percentile":0.99999,"subs_ignore":1,"subs_band":18,"rise_seconds":0.25,"fall_seconds":2,"cut_threshold":0.6,"cut_rolling":1,"clip_nits":4000,"chroma_out":1,"kodi_upgrade":0,"kodi_deband":0,"kodi_sharp":0,"kodi_up4k":0,"kodi_up4k_chroma":1,"dyn_tuning":0.5,"avghl_ceiling":2.05542,"punch":2.55,"curve":1,"add_peak":0,"min_ratio":1.08377,"floor_exp":0.36,"fall_hl_mod":0.784373,"shadow_depth":0.183,"hl_lift":0.21692,"hl_desat":0.2032,"ahead_frames":2,"hdmi_ahead":1,"aspect_mode":0,"aspect_scope":240,"aspect_subs":1,"chroma_up":1,"scale_up":3,"scale_v":1,"scale_down":0,"aspect_lens":133,"aspect_nls":0,"aspect_min":0,"aspect_force":0,"mask_top":0,"mask_bottom":0,"mask_left":0,"mask_right":0,"out_format":0,"out_depth":0,"out_res":0,"in_res":0,"out_rate":1,"edid_mode":0,"edid_res":0,"edid_rates":0,"edid_hdr":0,"edid_peak":0,"edid_black":0,"edid_420":0,"edid_depth":0,"edid_allm":0,"apps_dv":0,"cec_switch":0,"hw_ahead":1,"asp_precise":0,"out_range":0,"black_auto":1,"power_all":0,"vol_cec":0,"rate_stay":0,"net_hold":0,"net_hold_adj":0,"net_strict":0,"cal_black":0,"cal_white":100,"cal_gamma":0,"cal_r_gain":100,"cal_g_gain":100,"cal_b_gain":100,"cal_r_off":0,"cal_g_off":0,"cal_b_off":0,"calh_black":0,"calh_white":100,"calh_gamma":0,"calh_r_gain":100,"calh_g_gain":100,"calh_b_gain":100,"calh_r_off":0,"calh_g_off":0,"calh_b_off":0,"lldv_dst":2,"out_gamut":0,"out_hdr":0,"out_black":0.005,"out_gamma":0,"osd_nits":203,"gamut_limit":0,"prim_rx":0.68,"prim_ry":0.32,"prim_gx":0.265,"prim_gy":0.69,"prim_bx":0.15,"prim_by":0.06,"edid_dv":0,"edid_dv_max":1000,"edid_dv_min":0.005,"edid_dv_prim":0,"low_latency":2,"genlock":1,"lip_sync":1,"clip_guard":0.65,"blue_weight":0.08,"red_weight":0.36,"green_weight":0.59,"gain_mix":1,"white_fit":0.2297,"top_shape":0.7,"deep_lift":0.7,"pop":0,"shadow_sep":0,"keep_dim":2.3,"oetf_room":0.56,"split_room":0.33,"white_top":0.966,"white_log":1,"white_dim":0.25,"white_sat":1.8,"cg_share":0.748,"cg_top0":0.86,"cg_topmax":0.616,"cg_knee":0.9,"split_share":0.55,"split_knee":0.4,"split_capmode":1,"flat_exp":0.75,"flat_share":0.002,"bright_adj":0,"punch_adj":0,"scene_bright":0,"white_hot":0.6,"colour_adj":0,"depth_adj":2.5,"hl_adj":0,"shadow_adj":0,"shadow_keep":2.06663,"contrast":0,"contrast_no_darken":1,"flicker_ms":250,"speed_scale":1,"speed1":10,"speed2":20,"speed3":40,"speed4":80,"speed5":160,"speed6":320,"geo_on":0,"geo_filter":0,"geo_kv":0,"geo_kh":0,"geo_pin":0,"geo_curve":0,"geo_c0x":0,"geo_c0y":0,"geo_c1x":0,"geo_c1y":0,"geo_c2x":0,"geo_c2y":0,"geo_c3x":0,"geo_c3y":0,"geo_grid":0,"geo_pt":0,"geo_px":0,"geo_py":0},"limits":{"target_nits":[20,10000],"target_nits_hdr":[20,10000],"peak_percentile":[0.99,1],"subs_ignore":[0,1],"subs_band":[5,30],"rise_seconds":[0,10],"fall_seconds":[0,30],"cut_threshold":[0.05,2],"cut_rolling":[0,1],"clip_nits":[0,10000],"chroma_out":[0,1],"kodi_upgrade":[0,1],"kodi_deband":[0,2],"kodi_sharp":[0,3],"kodi_up4k":[0,2],"kodi_up4k_chroma":[0,1],"dyn_tuning":[0,100],"avghl_ceiling":[0,6],"punch":[0,10],"curve":[0,1],"add_peak":[0,1],"min_ratio":[1,4],"floor_exp":[0,1],"fall_hl_mod":[0,1],"shadow_depth":[0,0.5],"hl_lift":[0,1],"hl_desat":[0,2],"ahead_frames":[0,2],"hdmi_ahead":[0,2],"aspect_mode":[0,5],"aspect_scope":[200,280],"aspect_subs":[0,1],"chroma_up":[0,1],"scale_up":[0,4],"scale_v":[0,1],"scale_down":[0,2],"aspect_lens":[100,200],"aspect_nls":[0,1],"aspect_min":[0,3],"aspect_force":[0,3],"mask_top":[0,30],"mask_bottom":[0,30],"mask_left":[0,30],"mask_right":[0,30],"out_format":[0,4],"out_depth":[0,12],"out_res":[0,2],"in_res":[0,1],"out_rate":[0,60],"edid_mode":[0,1],"edid_res":[0,2],"edid_rates":[0,2],"edid_hdr":[0,2],"edid_peak":[0,10000],"edid_black":[0,1],"edid_420":[0,1],"edid_depth":[0,12],"edid_allm":[0,1],"apps_dv":[0,3],"cec_switch":[0,1],"hw_ahead":[0,1],"asp_precise":[0,1],"out_range":[0,1],"black_auto":[0,1],"power_all":[0,2],"vol_cec":[0,1],"rate_stay":[0,1],"net_hold":[0,10],"net_hold_adj":[-2,2],"net_strict":[0,2],"cal_black":[-20,20],"cal_white":[80,120],"cal_gamma":[-0.5,0.5],"cal_r_gain":[80,120],"cal_g_gain":[80,120],"cal_b_gain":[80,120],"cal_r_off":[-20,20],"cal_g_off":[-20,20],"cal_b_off":[-20,20],"calh_black":[-20,20],"calh_white":[80,120],"calh_gamma":[-0.5,0.5],"calh_r_gain":[80,120],"calh_g_gain":[80,120],"calh_b_gain":[80,120],"calh_r_off":[-20,20],"calh_g_off":[-20,20],"calh_b_off":[-20,20],"lldv_dst":[1,2],"out_gamut":[0,2],"out_hdr":[0,2],"out_black":[0,1],"out_gamma":[0,2.6],"osd_nits":[80,1000],"gamut_limit":[0,2],"prim_rx":[0.4,0.8],"prim_ry":[0.2,0.45],"prim_gx":[0.05,0.4],"prim_gy":[0.45,0.9],"prim_bx":[0.1,0.2],"prim_by":[0.01,0.15],"edid_dv":[0,2],"edid_dv_max":[100,10000],"edid_dv_min":[0,1],"edid_dv_prim":[0,2],"low_latency":[0,2],"genlock":[0,1],"lip_sync":[0,1],"clip_guard":[0,2],"blue_weight":[0.0625,1],"red_weight":[0.0625,1],"green_weight":[0.0625,1],"gain_mix":[0,1],"white_fit":[0,0.5],"top_shape":[0,1],"deep_lift":[-1,1],"pop":[-0.3,0.3],"shadow_sep":[0,1],"keep_dim":[0,3],"oetf_room":[0,0.6],"split_room":[0,0.5],"white_top":[0.9,1],"white_log":[0,1],"white_dim":[0,1],"white_sat":[0,2],"cg_share":[0,1.5],"cg_top0":[0.5,1],"cg_topmax":[0,1],"cg_knee":[0.5,1],"split_share":[0,1],"split_knee":[0.05,1],"split_capmode":[0,1],"flat_exp":[0,1],"flat_share":[0.002,0.1],"bright_adj":[-5,5],"punch_adj":[-5,5],"scene_bright":[-1,1],"white_hot":[0,1],"colour_adj":[-5,5],"depth_adj":[0,5],"hl_adj":[-5,5],"shadow_adj":[-5,5],"shadow_keep":[0,50],"contrast":[0,1],"contrast_no_darken":[0,1],"flicker_ms":[0,5000],"speed_scale":[0.1,5],"speed1":[0,1000],"speed2":[0,1000],"speed3":[0,1000],"speed4":[0,1000],"speed5":[0,1000],"speed6":[0,1000],"geo_on":[0,1],"geo_filter":[0,3],"geo_kv":[-25,25],"geo_kh":[-25,25],"geo_pin":[-15,15],"geo_curve":[-15,15],"geo_c0x":[-25,25],"geo_c0y":[-25,25],"geo_c1x":[-25,25],"geo_c1y":[-25,25],"geo_c2x":[-25,25],"geo_c2y":[-25,25],"geo_c3x":[-25,25],"geo_c3y":[-25,25],"geo_grid":[0,17],"geo_pt":[0,288],"geo_px":[-20,20],"geo_py":[-20,20]},"defaults":{"target_nits":100,"target_nits_hdr":0,"peak_percentile":0.99999,"subs_ignore":1,"subs_band":18,"rise_seconds":0.25,"fall_seconds":2,"cut_threshold":0.6,"cut_rolling":1,"clip_nits":4000,"chroma_out":1,"kodi_upgrade":0,"kodi_deband":0,"kodi_sharp":0,"kodi_up4k":0,"kodi_up4k_chroma":1,"dyn_tuning":0.5,"avghl_ceiling":2.05542,"punch":2.55,"curve":1,"add_peak":0,"min_ratio":1.08377,"floor_exp":0.36,"fall_hl_mod":0.784373,"shadow_depth":0.183,"hl_lift":0.21692,"hl_desat":0.2032,"ahead_frames":2,"hdmi_ahead":1,"aspect_mode":0,"aspect_scope":240,"aspect_subs":1,"chroma_up":1,"scale_up":3,"scale_v":1,"scale_down":0,"aspect_lens":133,"aspect_nls":0,"aspect_min":0,"aspect_force":0,"mask_top":0,"mask_bottom":0,"mask_left":0,"mask_right":0,"out_format":0,"out_depth":0,"out_res":0,"in_res":0,"out_rate":0,"edid_mode":0,"edid_res":0,"edid_rates":0,"edid_hdr":0,"edid_peak":0,"edid_black":0,"edid_420":0,"edid_depth":0,"edid_allm":0,"apps_dv":0,"cec_switch":0,"hw_ahead":1,"asp_precise":0,"out_range":0,"black_auto":0,"power_all":0,"vol_cec":0,"rate_stay":0,"net_hold":0,"net_hold_adj":0,"net_strict":0,"cal_black":0,"cal_white":100,"cal_gamma":0,"cal_r_gain":100,"cal_g_gain":100,"cal_b_gain":100,"cal_r_off":0,"cal_g_off":0,"cal_b_off":0,"calh_black":0,"calh_white":100,"calh_gamma":0,"calh_r_gain":100,"calh_g_gain":100,"calh_b_gain":100,"calh_r_off":0,"calh_g_off":0,"calh_b_off":0,"lldv_dst":2,"out_gamut":0,"out_hdr":0,"out_black":0.005,"out_gamma":0,"osd_nits":203,"gamut_limit":0,"prim_rx":0.68,"prim_ry":0.32,"prim_gx":0.265,"prim_gy":0.69,"prim_bx":0.15,"prim_by":0.06,"edid_dv":0,"edid_dv_max":1000,"edid_dv_min":0.005,"edid_dv_prim":0,"low_latency":2,"genlock":1,"lip_sync":1,"clip_guard":0.65,"blue_weight":0.08,"red_weight":0.36,"green_weight":0.59,"gain_mix":1,"white_fit":0.2297,"top_shape":0.7,"deep_lift":0.7,"pop":0,"shadow_sep":0,"keep_dim":2.3,"oetf_room":0.56,"split_room":0.33,"white_top":0.966,"white_log":1,"white_dim":0.25,"white_sat":1.8,"cg_share":0.748,"cg_top0":0.86,"cg_topmax":0.616,"cg_knee":0.9,"split_share":0.55,"split_knee":0.4,"split_capmode":1,"flat_exp":0.75,"flat_share":0.002,"bright_adj":0,"punch_adj":0,"scene_bright":0,"white_hot":0.6,"colour_adj":0,"depth_adj":2.5,"hl_adj":0,"shadow_adj":0,"shadow_keep":2.06663,"contrast":0,"contrast_no_darken":1,"flicker_ms":250,"speed_scale":1,"speed1":10,"speed2":20,"speed3":40,"speed4":80,"speed5":160,"speed6":320,"geo_on":0,"geo_filter":0,"geo_kv":0,"geo_kh":0,"geo_pin":0,"geo_curve":0,"geo_c0x":0,"geo_c0y":0,"geo_c1x":0,"geo_c1y":0,"geo_c2x":0,"geo_c2y":0,"geo_c3x":0,"geo_c3y":0,"geo_grid":0,"geo_pt":0,"geo_px":0,"geo_py":0},"handshake":{"ms":573,"n":40,"netflix":1,"trim":0},"cal_set":"sdr","black_floor":{"floor":-1.0,"off":0.0,"watched":0}},"update":{"version":"20261127-e5eb9c3","channel":"nightly","feed":"https://github.com/Javbomb/tesseract-vp/releases/download","feed_set":true,"status":"up to date: 20261127-e5eb9c3 (nightly)","t":1795738337,"busy":false,"available":false,"restart":false}};
+window.TVP_REC = {"calib":{"sets":{"sdr":{"grey":null,"lut":null},"hdr":{"grey":null,"lut":null}},"patches":{"set":"hdr","raw":false,"levels":"video"},"resolve":{"pc":"","state":"off"},"pgen":{"on":true,"state":"waiting for HCFR or Calman"}},"cec":{"gen":61,"own":{"la":11,"pa":"1.1.0.0"},"scanning":false,"age_s":60,"devices":[{"la":0,"name":"XGIMI TITAN","type":"Display","maker":"MediaTek","vendor":"6d746b","pa":"0.0.0.0","pa_known":true,"power":0,"ver":"1.4","sam":-1,"seen_s":13,"behind":false,"can":{"status":1,"name":1,"address":1,"vendor":1,"version":1,"wake":-1,"standby":-1,"keys":-1,"volume":-1,"audio_mode":-1,"routing":-1}},{"la":5,"name":"AV7702mkII","type":"Audio system","maker":"Marantz","vendor":"000678","pa":"1.0.0.0","pa_known":true,"power":0,"ver":"1.4","sam":1,"seen_s":27,"behind":false,"can":{"status":1,"name":1,"address":1,"vendor":1,"version":1,"wake":-1,"standby":-1,"keys":-1,"volume":1,"audio_mode":1,"routing":-1}}],"audio":{"volume":47,"mute":false,"db":-33,"to":5},"active":"","routes":{"lists_set":false,"power_on":"","power_off":"","standby":"list","display_off":"cube","vol":"auto","play":"none","play_wake":0,"home_wake":1,"switch_amp":0,"src":{}},"fireos":[{"k":"cec","name":"HDMI-CEC in Fire OS","what":"Fire OS's own CEC service. Off, Fire OS ignores the bus: no wake, no address. Keep on.","now":1,"fire":1,"ours":1},{"k":"sleep_in","name":"Cube sleeps when the display does","what":"Fire OS sleeps the Cube on any <Standby> it hears. Ours: the rule below decides.","now":0,"fire":0,"ours":1},{"k":"sleep_out","name":"Display off with the Cube","what":"Fire OS sends the display <Standby> when the Cube sleeps. Ours: the power list decides.","now":0,"fire":1,"ours":0},{"k":"otp","name":"Wake the display and amp only on a remote press","what":"Fire OS wakes the display and the amp (One Touch Play) on Home, also on Home sent by apps and scripts. Ours: only after a key pressed on a remote; any other wake is held back.","now":0,"fire":1,"ours":0}],"undo":true,"log":[{"ago":129,"s":"Display appeared"},{"ago":130,"s":"Audio system appeared"}]},"edid":{"mode":0,"applied":0,"msg":"","avr":"00ffffffffffff00354937000101010100190103807341780acf74a3574cb02309484c000000010101ff01ffff01010101010101012008e80030f2705a80b0588a00c48e2100001e023a801871382d40582c4500c48e2100001e000000fc006d6172616e747a2d4156520a20000000fd003b461f8c3c000a202020202020012c02036df0510514901f20225d5f6061626465665e6321380f7f073d1ec01507505f7e03570603677e034d02005f7e01835f00006e030c001100b83c2080800102030468d85dc40178800302e30f0033e3060f01eb0146d0004d63523ea4cc39e305df01e200ffe61146d00070000000000000000000000000000000000000008e","now":"00ffffffffffff00354937000101010100190103807341780acf74a3574cb02309484c000000010101ff01ffff01010101010101012008e80030f2705a80b0588a00c48e2100001e023a801871382d40582c4500c48e2100001e000000fc006d6172616e747a2d4156520a20000000fd003b461f8c3c000a202020202020012c02036df0510514901f20225d5f6061626465665e6321380f7f073d1ec01507505f7e03570603677e034d02005f7e01835f00006e030c001100b83c2080800102030468d85dc40178800302e30f0033e3060f01eb0146d0004d63523ea4cc39e305df01e200ffe61146d00070000000000000000000000000000000000000008e"},"geometry":{"on":0,"filter":"auto","kv":0.0,"kh":0.0,"pin":0.0,"curve":0.0,"corners":[[0.0,0.0],[0.0,0.0],[0.0,0.0],[0.0,0.0]],"grid":{"w":0,"h":0,"pt":0,"pts":[]},"set":0,"state":"off","why":"","cpu":0,"frames":0,"gpu_ms":0.0},"info_menus":{"playing":false,"input":{"width":0,"height":0,"fps":0.0,"codec":"","decoder":"","hdr":"","fel":0,"process":"","file":"","ui_width":1920,"ui_height":1080,"ui_bpp":32,"colour":"BT.709","gamut":"BT.709"},"output":{"width":3840,"height":2160,"hz":59.94,"vic":97,"mode":"2160p60hz","format":"422,12bit","signal":"SDR","pq_sink":1,"colour":"BT.2020","gamut":"BT.709","map":"BT.709 → BT.2020","label":"BT.709"},"upgrade":{"on":0,"state":"off","why":"","cpu":0,"frames":0,"module_4k":1,"gpu4k":0,"steps":-1},"geometry":{"on":0,"set":0,"state":"off","why":"","cpu":0,"frames":0,"gpu_ms":0.0},"out_ctl":{"mode":"2160p60hz","attr":"422,12bit","rate_note":""},"audio":{"in":null,"out":null,"hdmi_type":"MAT"}},"ir":{"blaster":true,"receiver":true,"learning":{"state":"none","left":0,"name":"","msg":""},"last":"","codes":[{"name":"Light","what":"raw, 38 kHz","carrier":38000,"edges":255,"frames":1},{"name":"Fan low","what":"raw, 38 kHz","carrier":38000,"edges":255,"frames":1},{"name":"Fan medium","what":"raw, 38 kHz","carrier":38000,"edges":237,"frames":1},{"name":"Fan high","what":"raw, 38 kHz","carrier":38000,"edges":239,"frames":1},{"name":"Fan off","what":"raw, 38 kHz","carrier":38000,"edges":255,"frames":1}]},"kodiwl":{"kodi":1,"needs":0,"saved":0,"ok":1},"lens":{"state":"off","ip":"","model":"XGIMI TITAN","msg":"the projector doesn't answer (off, or not allowed)","memories":[],"candidates":[]},"pins":{"pins":"dyn_tuning,clip_nits,bright_adj,punch_adj,hl_adj,colour_adj,white_hot,clip_guard,shadow_adj,depth_adj"},"play3d":{"active":0,"state":"idle","fp":0,"view":"3d","sink3d":0},"prefs":{"prefs":"side=right,mode=rgb,scale=nits,gain=0"},"remote":{"guide":{"n":0,"ago":-1.0,"dev":""},"menu":{"n":0,"ago":-1.0,"dev":""},"nav":{"n":0,"ago":-1.0,"dev":""},"raw":{"n":0,"code":0,"ago":-1.0,"dev":"","hold":0},"heal":{"n":0,"ago":-1.0,"text":""},"app":{"installed":1,"version":"1.0","stopped":0},"filter":{"enabled":1,"running":1,"overlay":"allow"},"module":{"installed":1,"off":0,"pending":0,"layouts":45},"remote":{"from":"connected","name":"Amazon Fire TV Remote","id":"0171:0414:0057","layout":"/system/usr/keylayout/Vendor_0171_Product_0414.kl","code":362,"live":"F12","module":"F12","other":""}},"status":{"params":{"target_nits":100,"target_nits_hdr":100,"peak_percentile":0.99999,"subs_ignore":1,"subs_band":18,"rise_seconds":0.25,"fall_seconds":2,"cut_threshold":0.6,"cut_rolling":1,"clip_nits":4000,"chroma_out":1,"kodi_upgrade":0,"kodi_deband":0,"kodi_sharp":0,"kodi_up4k":0,"kodi_up4k_chroma":1,"dyn_tuning":0.5,"avghl_ceiling":2.05542,"punch":2.55,"curve":1,"add_peak":0,"min_ratio":1.08377,"floor_exp":0.36,"fall_hl_mod":0.784373,"shadow_depth":0.183,"hl_lift":0.21692,"hl_desat":0.2032,"ahead_frames":2,"hdmi_ahead":1,"aspect_mode":0,"aspect_scope":240,"aspect_subs":1,"chroma_up":1,"scale_up":3,"scale_v":1,"scale_down":0,"aspect_lens":133,"aspect_nls":0,"aspect_min":0,"aspect_force":0,"mask_top":0,"mask_bottom":0,"mask_left":0,"mask_right":0,"out_format":0,"out_depth":0,"out_res":0,"in_res":0,"out_rate":1,"edid_mode":0,"edid_res":0,"edid_rates":0,"edid_hdr":0,"edid_peak":0,"edid_black":0,"edid_420":0,"edid_depth":0,"edid_allm":0,"apps_dv":0,"cec_switch":0,"hw_ahead":1,"asp_precise":0,"out_range":0,"black_auto":1,"power_all":0,"vol_cec":0,"rate_stay":0,"net_hold":0,"net_hold_adj":0,"net_strict":0,"cal_black":0,"cal_white":100,"cal_gamma":0,"cal_r_gain":100,"cal_g_gain":100,"cal_b_gain":100,"cal_r_off":0,"cal_g_off":0,"cal_b_off":0,"calh_black":0,"calh_white":100,"calh_gamma":0,"calh_r_gain":100,"calh_g_gain":100,"calh_b_gain":100,"calh_r_off":0,"calh_g_off":0,"calh_b_off":0,"lldv_dst":2,"out_gamut":0,"out_hdr":0,"out_black":0.005,"out_gamma":0,"osd_nits":203,"gamut_limit":0,"prim_rx":0.68,"prim_ry":0.32,"prim_gx":0.265,"prim_gy":0.69,"prim_bx":0.15,"prim_by":0.06,"edid_dv":0,"edid_dv_max":1000,"edid_dv_min":0.005,"edid_dv_prim":0,"low_latency":2,"genlock":1,"lip_sync":1,"clip_guard":0.65,"blue_weight":0.08,"red_weight":0.36,"green_weight":0.59,"gain_mix":1,"white_fit":0.2297,"top_shape":0.7,"deep_lift":0.7,"pop":0,"shadow_sep":0,"keep_dim":2.3,"oetf_room":0.56,"split_room":0.33,"white_top":0.966,"white_log":1,"white_dim":0.25,"white_sat":1.8,"cg_share":0.748,"cg_top0":0.86,"cg_topmax":0.616,"cg_knee":0.9,"split_share":0.55,"split_knee":0.4,"split_capmode":1,"flat_exp":0.75,"flat_share":0.002,"bright_adj":0,"punch_adj":0,"scene_bright":0,"white_hot":0.6,"colour_adj":0,"depth_adj":2.5,"hl_adj":0,"shadow_adj":0,"shadow_keep":2.06663,"contrast":0,"contrast_no_darken":1,"flicker_ms":250,"speed_scale":1,"speed1":10,"speed2":20,"speed3":40,"speed4":80,"speed5":160,"speed6":320,"geo_on":0,"geo_filter":0,"geo_kv":0,"geo_kh":0,"geo_pin":0,"geo_curve":0,"geo_c0x":0,"geo_c0y":0,"geo_c1x":0,"geo_c1y":0,"geo_c2x":0,"geo_c2y":0,"geo_c3x":0,"geo_c3y":0,"geo_grid":0,"geo_pt":0,"geo_px":0,"geo_py":0},"limits":{"target_nits":[20,10000],"target_nits_hdr":[20,10000],"peak_percentile":[0.99,1],"subs_ignore":[0,1],"subs_band":[5,30],"rise_seconds":[0,10],"fall_seconds":[0,30],"cut_threshold":[0.05,2],"cut_rolling":[0,1],"clip_nits":[0,10000],"chroma_out":[0,1],"kodi_upgrade":[0,1],"kodi_deband":[0,2],"kodi_sharp":[0,3],"kodi_up4k":[0,2],"kodi_up4k_chroma":[0,1],"dyn_tuning":[0,100],"avghl_ceiling":[0,6],"punch":[0,10],"curve":[0,1],"add_peak":[0,1],"min_ratio":[1,4],"floor_exp":[0,1],"fall_hl_mod":[0,1],"shadow_depth":[0,0.5],"hl_lift":[0,1],"hl_desat":[0,2],"ahead_frames":[0,2],"hdmi_ahead":[0,2],"aspect_mode":[0,5],"aspect_scope":[200,280],"aspect_subs":[0,1],"chroma_up":[0,1],"scale_up":[0,4],"scale_v":[0,1],"scale_down":[0,2],"aspect_lens":[100,200],"aspect_nls":[0,1],"aspect_min":[0,3],"aspect_force":[0,3],"mask_top":[0,30],"mask_bottom":[0,30],"mask_left":[0,30],"mask_right":[0,30],"out_format":[0,4],"out_depth":[0,12],"out_res":[0,2],"in_res":[0,1],"out_rate":[0,60],"edid_mode":[0,1],"edid_res":[0,2],"edid_rates":[0,2],"edid_hdr":[0,2],"edid_peak":[0,10000],"edid_black":[0,1],"edid_420":[0,1],"edid_depth":[0,12],"edid_allm":[0,1],"apps_dv":[0,3],"cec_switch":[0,1],"hw_ahead":[0,1],"asp_precise":[0,1],"out_range":[0,1],"black_auto":[0,1],"power_all":[0,2],"vol_cec":[0,1],"rate_stay":[0,1],"net_hold":[0,10],"net_hold_adj":[-2,2],"net_strict":[0,2],"cal_black":[-20,20],"cal_white":[80,120],"cal_gamma":[-0.5,0.5],"cal_r_gain":[80,120],"cal_g_gain":[80,120],"cal_b_gain":[80,120],"cal_r_off":[-20,20],"cal_g_off":[-20,20],"cal_b_off":[-20,20],"calh_black":[-20,20],"calh_white":[80,120],"calh_gamma":[-0.5,0.5],"calh_r_gain":[80,120],"calh_g_gain":[80,120],"calh_b_gain":[80,120],"calh_r_off":[-20,20],"calh_g_off":[-20,20],"calh_b_off":[-20,20],"lldv_dst":[1,2],"out_gamut":[0,2],"out_hdr":[0,2],"out_black":[0,1],"out_gamma":[0,2.6],"osd_nits":[80,1000],"gamut_limit":[0,2],"prim_rx":[0.4,0.8],"prim_ry":[0.2,0.45],"prim_gx":[0.05,0.4],"prim_gy":[0.45,0.9],"prim_bx":[0.1,0.2],"prim_by":[0.01,0.15],"edid_dv":[0,2],"edid_dv_max":[100,10000],"edid_dv_min":[0,1],"edid_dv_prim":[0,2],"low_latency":[0,2],"genlock":[0,1],"lip_sync":[0,1],"clip_guard":[0,2],"blue_weight":[0.0625,1],"red_weight":[0.0625,1],"green_weight":[0.0625,1],"gain_mix":[0,1],"white_fit":[0,0.5],"top_shape":[0,1],"deep_lift":[-1,1],"pop":[-0.3,0.3],"shadow_sep":[0,1],"keep_dim":[0,3],"oetf_room":[0,0.6],"split_room":[0,0.5],"white_top":[0.9,1],"white_log":[0,1],"white_dim":[0,1],"white_sat":[0,2],"cg_share":[0,1.5],"cg_top0":[0.5,1],"cg_topmax":[0,1],"cg_knee":[0.5,1],"split_share":[0,1],"split_knee":[0.05,1],"split_capmode":[0,1],"flat_exp":[0,1],"flat_share":[0.002,0.1],"bright_adj":[-5,5],"punch_adj":[-5,5],"scene_bright":[-1,1],"white_hot":[0,1],"colour_adj":[-5,5],"depth_adj":[0,5],"hl_adj":[-5,5],"shadow_adj":[-5,5],"shadow_keep":[0,50],"contrast":[0,1],"contrast_no_darken":[0,1],"flicker_ms":[0,5000],"speed_scale":[0.1,5],"speed1":[0,1000],"speed2":[0,1000],"speed3":[0,1000],"speed4":[0,1000],"speed5":[0,1000],"speed6":[0,1000],"geo_on":[0,1],"geo_filter":[0,3],"geo_kv":[-25,25],"geo_kh":[-25,25],"geo_pin":[-15,15],"geo_curve":[-15,15],"geo_c0x":[-25,25],"geo_c0y":[-25,25],"geo_c1x":[-25,25],"geo_c1y":[-25,25],"geo_c2x":[-25,25],"geo_c2y":[-25,25],"geo_c3x":[-25,25],"geo_c3y":[-25,25],"geo_grid":[0,17],"geo_pt":[0,288],"geo_px":[-20,20],"geo_py":[-20,20]},"defaults":{"target_nits":100,"target_nits_hdr":0,"peak_percentile":0.99999,"subs_ignore":1,"subs_band":18,"rise_seconds":0.25,"fall_seconds":2,"cut_threshold":0.6,"cut_rolling":1,"clip_nits":4000,"chroma_out":1,"kodi_upgrade":0,"kodi_deband":0,"kodi_sharp":0,"kodi_up4k":0,"kodi_up4k_chroma":1,"dyn_tuning":0.5,"avghl_ceiling":2.05542,"punch":2.55,"curve":1,"add_peak":0,"min_ratio":1.08377,"floor_exp":0.36,"fall_hl_mod":0.784373,"shadow_depth":0.183,"hl_lift":0.21692,"hl_desat":0.2032,"ahead_frames":2,"hdmi_ahead":1,"aspect_mode":0,"aspect_scope":240,"aspect_subs":1,"chroma_up":1,"scale_up":3,"scale_v":1,"scale_down":0,"aspect_lens":133,"aspect_nls":0,"aspect_min":0,"aspect_force":0,"mask_top":0,"mask_bottom":0,"mask_left":0,"mask_right":0,"out_format":0,"out_depth":0,"out_res":0,"in_res":0,"out_rate":0,"edid_mode":0,"edid_res":0,"edid_rates":0,"edid_hdr":0,"edid_peak":0,"edid_black":0,"edid_420":0,"edid_depth":0,"edid_allm":0,"apps_dv":0,"cec_switch":0,"hw_ahead":1,"asp_precise":0,"out_range":0,"black_auto":0,"power_all":0,"vol_cec":0,"rate_stay":0,"net_hold":0,"net_hold_adj":0,"net_strict":0,"cal_black":0,"cal_white":100,"cal_gamma":0,"cal_r_gain":100,"cal_g_gain":100,"cal_b_gain":100,"cal_r_off":0,"cal_g_off":0,"cal_b_off":0,"calh_black":0,"calh_white":100,"calh_gamma":0,"calh_r_gain":100,"calh_g_gain":100,"calh_b_gain":100,"calh_r_off":0,"calh_g_off":0,"calh_b_off":0,"lldv_dst":2,"out_gamut":0,"out_hdr":0,"out_black":0.005,"out_gamma":0,"osd_nits":203,"gamut_limit":0,"prim_rx":0.68,"prim_ry":0.32,"prim_gx":0.265,"prim_gy":0.69,"prim_bx":0.15,"prim_by":0.06,"edid_dv":0,"edid_dv_max":1000,"edid_dv_min":0.005,"edid_dv_prim":0,"low_latency":2,"genlock":1,"lip_sync":1,"clip_guard":0.65,"blue_weight":0.08,"red_weight":0.36,"green_weight":0.59,"gain_mix":1,"white_fit":0.2297,"top_shape":0.7,"deep_lift":0.7,"pop":0,"shadow_sep":0,"keep_dim":2.3,"oetf_room":0.56,"split_room":0.33,"white_top":0.966,"white_log":1,"white_dim":0.25,"white_sat":1.8,"cg_share":0.748,"cg_top0":0.86,"cg_topmax":0.616,"cg_knee":0.9,"split_share":0.55,"split_knee":0.4,"split_capmode":1,"flat_exp":0.75,"flat_share":0.002,"bright_adj":0,"punch_adj":0,"scene_bright":0,"white_hot":0.6,"colour_adj":0,"depth_adj":2.5,"hl_adj":0,"shadow_adj":0,"shadow_keep":2.06663,"contrast":0,"contrast_no_darken":1,"flicker_ms":250,"speed_scale":1,"speed1":10,"speed2":20,"speed3":40,"speed4":80,"speed5":160,"speed6":320,"geo_on":0,"geo_filter":0,"geo_kv":0,"geo_kh":0,"geo_pin":0,"geo_curve":0,"geo_c0x":0,"geo_c0y":0,"geo_c1x":0,"geo_c1y":0,"geo_c2x":0,"geo_c2y":0,"geo_c3x":0,"geo_c3y":0,"geo_grid":0,"geo_pt":0,"geo_px":0,"geo_py":0},"handshake":{"ms":573,"n":40,"netflix":1,"trim":0},"cal_set":"sdr","black_floor":{"floor":-1.0,"off":0.0,"watched":0}},"update":{"version":"20261127-e5eb9c3","channel":"nightly","feed":"https://github.com/Javbomb/tesseract-vp/releases/download","feed_set":true,"status":"up to date: 20261127-e5eb9c3 (nightly)","t":1795738337,"busy":false,"available":false,"restart":false},"renders":{"scene01":{"bars":true,"rows":[70,470],"hdr":true,"src_peak":2568.2,"fall":555.8,"renders":[["sdr",50,"scene01_sdr50.jpg",292.3],["sdr",100,"scene01_sdr100.jpg",344.2],["sdr",150,"scene01_sdr150.jpg",392.8],["sdr",200,"scene01_sdr200.jpg",435.3],["sdr",300,"scene01_sdr300.jpg",508.0],["hdr10",400,"scene01_hdr10400.jpg",608.2],["hdr10",600,"scene01_hdr10600.jpg",912.3],["hdr10",800,"scene01_hdr10800.jpg",1216.4],["hdr10",1000,"scene01_hdr101000.jpg",1520.5],["hdr10",1500,"scene01_hdr101500.jpg",2280.7]]},"scene02":{"bars":false,"rows":[0,540],"hdr":true,"src_peak":294.7,"fall":20.7,"renders":[["sdr",50,"scene02_sdr50.jpg",50],["sdr",100,"scene02_sdr100.jpg",100],["sdr",150,"scene02_sdr150.jpg",150],["sdr",200,"scene02_sdr200.jpg",200],["sdr",300,"scene02_sdr300.jpg",300],["hdr10",400,"scene02_hdr10400.jpg",400],["hdr10",600,"scene02_hdr10600.jpg",600],["hdr10",800,"scene02_hdr10800.jpg",800],["hdr10",1000,"scene02_hdr101000.jpg",1000],["hdr10",1500,"scene02_hdr101500.jpg",1500]]},"scene03":{"bars":true,"rows":[10,530],"hdr":true,"src_peak":895.1,"fall":132.3,"renders":[["sdr",50,"scene03_sdr50.jpg",99.7],["sdr",100,"scene03_sdr100.jpg",127.0],["sdr",150,"scene03_sdr150.jpg",154.4],["sdr",200,"scene03_sdr200.jpg",205.9],["sdr",300,"scene03_sdr300.jpg",308.8],["hdr10",400,"scene03_hdr10400.jpg",411.7],["hdr10",600,"scene03_hdr10600.jpg",617.6],["hdr10",800,"scene03_hdr10800.jpg",823.4],["hdr10",1000,"scene03_hdr101000.jpg",1000],["hdr10",1500,"scene03_hdr101500.jpg",1500]]},"scene04":{"bars":false,"rows":[0,540],"hdr":true,"src_peak":2487.3,"fall":289.6,"renders":[["sdr",50,"scene04_sdr50.jpg",164.3],["sdr",100,"scene04_sdr100.jpg",201.7],["sdr",150,"scene04_sdr150.jpg",233.8],["sdr",200,"scene04_sdr200.jpg",288.6],["sdr",300,"scene04_sdr300.jpg",433.0],["hdr10",400,"scene04_hdr10400.jpg",577.3],["hdr10",600,"scene04_hdr10600.jpg",865.9],["hdr10",800,"scene04_hdr10800.jpg",1154.6],["hdr10",1000,"scene04_hdr101000.jpg",1443.2],["hdr10",1500,"scene04_hdr101500.jpg",2164.8]]},"scene05":{"bars":true,"rows":[70,470],"hdr":true,"src_peak":124.3,"fall":4.0,"renders":[["sdr",50,"scene05_sdr50.jpg",50],["sdr",100,"scene05_sdr100.jpg",100],["sdr",150,"scene05_sdr150.jpg",150],["sdr",200,"scene05_sdr200.jpg",200],["sdr",300,"scene05_sdr300.jpg",300],["hdr10",400,"scene05_hdr10400.jpg",400],["hdr10",600,"scene05_hdr10600.jpg",600],["hdr10",800,"scene05_hdr10800.jpg",800],["hdr10",1000,"scene05_hdr101000.jpg",1000],["hdr10",1500,"scene05_hdr101500.jpg",1500]]},"scene06":{"bars":false,"rows":[0,540],"hdr":true,"src_peak":2404.5,"fall":263.1,"renders":[["sdr",50,"scene06_sdr50.jpg",157.5],["sdr",100,"scene06_sdr100.jpg",186.5],["sdr",150,"scene06_sdr150.jpg",210.9],["sdr",200,"scene06_sdr200.jpg",281.2],["sdr",300,"scene06_sdr300.jpg",421.8],["hdr10",400,"scene06_hdr10400.jpg",562.4],["hdr10",600,"scene06_hdr10600.jpg",843.7],["hdr10",800,"scene06_hdr10800.jpg",1124.9],["hdr10",1000,"scene06_hdr101000.jpg",1406.1],["hdr10",1500,"scene06_hdr101500.jpg",2061.2]]},"scene07":{"bars":false,"rows":[0,540],"hdr":true,"src_peak":10000.0,"fall":649.5,"renders":[["sdr",50,"scene07_sdr50.jpg",283.8],["sdr",100,"scene07_sdr100.jpg",297.3],["sdr",150,"scene07_sdr150.jpg",310.8],["sdr",200,"scene07_sdr200.jpg",357.0],["sdr",300,"scene07_sdr300.jpg",535.5],["hdr10",400,"scene07_hdr10400.jpg",714.1],["hdr10",600,"scene07_hdr10600.jpg",1071.1],["hdr10",800,"scene07_hdr10800.jpg",1428.1],["hdr10",1000,"scene07_hdr101000.jpg",1785.2],["hdr10",1500,"scene07_hdr101500.jpg",2677.7]]},"scene08":{"bars":false,"rows":[0,540],"hdr":false,"src_peak":100.0,"fall":24.405262883625152,"renders":[["sdr",50,"scene08_sdr.jpg",0],["sdr",100,"scene08_sdr.jpg",0],["sdr",150,"scene08_sdr.jpg",0],["sdr",200,"scene08_sdr.jpg",0],["sdr",300,"scene08_sdr.jpg",0],["hdr10",400,"scene08_sdr.jpg",0],["hdr10",600,"scene08_sdr.jpg",0],["hdr10",800,"scene08_sdr.jpg",0],["hdr10",1000,"scene08_sdr.jpg",0],["hdr10",1500,"scene08_sdr.jpg",0]]}}};
 /* Tesseract VP demo: a simulated Cube that answers the control page's /api calls in the browser. */
 (function () {
   'use strict';
@@ -13,51 +13,16 @@ window.TVP_REC = {"calib":{"sets":{"sdr":{"grey":null,"lut":null},"hdr":{"grey":
   const sdec = (v) => (v <= 0.04045 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4));
   const senc = (v) => (v <= 0.0031308 ? 12.92 * v : 1.055 * Math.pow(v, 1 / 2.4) - 0.055);
   const M709_2020 = [[0.627404, 0.329283, 0.043313], [0.069097, 0.91954, 0.011362], [0.016391, 0.088013, 0.895595]];
-  const M2020_709 = [[1.660491, -0.587641, -0.07285], [-0.124551, 1.1329, -0.008349], [-0.018151, -0.100579, 1.11873]];
   const M2020_XYZ = [[0.636958, 0.144617, 0.168881], [0.2627, 0.677998, 0.059302], [0, 0.028073, 1.060985]];
   const mul = (m, v) => [m[0][0] * v[0] + m[0][1] * v[1] + m[0][2] * v[2], m[1][0] * v[0] + m[1][1] * v[1] + m[1][2] * v[2], m[2][0] * v[0] + m[2][1] * v[1] + m[2][2] * v[2]];
-  const Y20 = (r, g, b) => 0.2627 * r + 0.678 * g + 0.0593 * b;
-  /* RGB to XYZ for primaries [[rx,ry],[gx,gy],[bx,by]] and D65 */
-  function rgbXYZ(p) {
-    const xyz = ([x, y]) => [x / y, 1, (1 - x - y) / y], P = p.map(xyz), w = xyz([0.3127, 0.329]);
-    const m = [[P[0][0], P[1][0], P[2][0]], [P[0][1], P[1][1], P[2][1]], [P[0][2], P[1][2], P[2][2]]], s = mul(inv(m), w);
-    return m.map((r) => r.map((v, i) => v * s[i]));
-  }
-  function inv(m) {
-    const [a, b, c] = m[0], [d, e, f] = m[1], [g, h, i] = m[2], A = e * i - f * h, B = f * g - d * i, Cc = d * h - e * g, det = a * A + b * B + c * Cc;
-    return [[A / det, (c * h - b * i) / det, (b * f - c * e) / det], [B / det, (a * i - c * g) / det, (c * d - a * f) / det], [Cc / det, (b * g - a * h) / det, (a * e - b * d) / det]];
-  }
   const mm = (a, b) => a.map((r) => [0, 1, 2].map((j) => r[0] * b[0][j] + r[1] * b[1][j] + r[2] * b[2][j]));
-  const P3 = [[0.68, 0.32], [0.265, 0.69], [0.15, 0.06]];
-  /* a colour at a luminance: c20 from BT.2020 linear proportions, cs from an sRGB hue */
-  const c20 = (r, g, b, n) => { const y = Y20(r, g, b) || 1; return [r / y * n, g / y * n, b / y * n]; };
-  const cs = (r, g, b, n) => c20(...mul(M709_2020, [sdec(r), sdec(g), sdec(b)]), n);
-  const lerp3 = (a, b, t) => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t];
-
-  /* ---------- drawing a source frame: linear light in nits, BT.2020 ---------- */
-  let seed = 1;
-  const rnd = () => ((seed = (seed * 16807) % 2147483647) - 1) / 2147483646;
-  const hash = (x, y) => { let h = (x * 374761393 + y * 668265263) | 0; h = (h ^ (h >>> 13)) * 1274126177; return ((h ^ (h >>> 16)) >>> 0) / 4294967296; };
-  function vnoise(x, y) {
-    const xi = Math.floor(x), yi = Math.floor(y), fx = x - xi, fy = y - yi, u = fx * fx * (3 - 2 * fx), v = fy * fy * (3 - 2 * fy);
-    const a = hash(xi, yi), b = hash(xi + 1, yi), c = hash(xi, yi + 1), d = hash(xi + 1, yi + 1);
-    return a + (b - a) * u + (c - a) * v + (a - b - c + d) * u * v;
-  }
-  const fbm = (x, y, o) => { let s = 0, a = 0.5, f = 1; for (let i = 0; i < (o || 4); i++, a *= 0.5, f *= 2) s += a * vnoise(x * f, y * f); return s; };
+  /* ---------- a source frame: display light relative to the picture's peak, BT.2020 ---------- */
   const band = (ar) => { const ph = ar > 16 / 9 + 0.01 ? Math.round(H * 16 / 9 / ar) : H, y0 = Math.round((H - ph) / 2); return [y0, y0 + ph]; };
   function Pic() { return new Float32Array(N * 3); }
   function each(img, x0, y0, x1, y1, f) {
     x0 = Math.max(0, x0 | 0); y0 = Math.max(0, y0 | 0); x1 = Math.min(W, Math.ceil(x1)); y1 = Math.min(H, Math.ceil(y1));
     for (let y = y0; y < y1; y++) for (let x = x0; x < x1; x++) { const c = f(x, y); if (c) { const i = (y * W + x) * 3; img[i] = c[0]; img[i + 1] = c[1]; img[i + 2] = c[2]; } }
   }
-  function glow(img, cx, cy, r, c, reach) {
-    const R = r * (reach || 3);
-    for (let y = Math.max(0, cy - R | 0); y < Math.min(H, cy + R + 1); y++) for (let x = Math.max(0, cx - R | 0); x < Math.min(W, cx + R + 1); x++) {
-      const d2 = ((x - cx) * (x - cx) + (y - cy) * (y - cy)) / (r * r); if (d2 > 9) continue;
-      const w = Math.exp(-d2), i = (y * W + x) * 3; img[i] += c[0] * w; img[i + 1] += c[1] * w; img[i + 2] += c[2] * w;
-    }
-  }
-  /* a mask drawn with canvas (0..1 a pixel), optionally blurred */
   const mcv = document.createElement('canvas'); mcv.width = W; mcv.height = H;
   const mg = mcv.getContext('2d', { willReadFrequently: true });
   function mask(draw, blur) {
@@ -81,70 +46,43 @@ window.TVP_REC = {"calib":{"sets":{"sdr":{"grey":null,"lut":null},"hdr":{"grey":
     const [y0, y1] = band(ar);
     img.fill(0, 0, y0 * W * 3); img.fill(0, y1 * W * 3);
   }
-  const MACBETH = [[115, 82, 68], [194, 150, 130], [98, 122, 157], [87, 108, 67], [133, 128, 177], [103, 189, 170], [214, 126, 44], [80, 91, 166], [193, 90, 99], [94, 60, 108], [157, 188, 64], [224, 163, 46],
-    [56, 61, 150], [70, 148, 73], [175, 54, 60], [231, 199, 31], [187, 86, 149], [8, 133, 161], [243, 243, 242], [200, 200, 200], [160, 160, 160], [122, 122, 121], [85, 85, 85], [52, 52, 52]];
-  function chart(img, x, y, cell, white) {
-    each(img, x - 3, y - 3, x + 6 * cell + 3, y + 4 * cell + 3, () => cs(0.1, 0.1, 0.1, white * 0.012));
-    MACBETH.forEach((c, i) => {
-      const lin = c.map((v) => sdec(v / 255)), px = x + (i % 6) * cell, py = y + ((i / 6) | 0) * cell, col = mul(M709_2020, lin).map((v) => v * white);
-      each(img, px + 1, py + 1, px + cell - 1, py + cell - 1, () => col);
-    });
-  }
   const text = (t, x, y, px, opt) => (g) => { g.font = `${(opt && opt.w) || 700} ${px}px "Sora", system-ui, sans-serif`; g.textAlign = (opt && opt.align) || 'left'; g.textBaseline = 'middle'; if (opt && opt.stroke) { g.lineWidth = opt.stroke; g.strokeText(t, x, y); } else g.fillText(t, x, y); };
 
-  /* ---------- the scenes: still pictures, made once ---------- */
-  /* a picture drawn on the canvas into nits: 'pq' reads the codes as PQ BT.2020, 'sdr' as sRGB BT.709 at 100 nits */
-  function fromCanvas(draw, mode) {
+  /* ---------- the scenes: still pictures; the films were tone mapped in advance for each HDR out and peak ---------- */
+  /* a picture drawn on the canvas, as sRGB display light, into BT.2020 relative light */
+  function fromCanvas(draw) {
     mg.setTransform(1, 0, 0, 1, 0, 0); mg.filter = 'none'; mg.fillStyle = '#000'; mg.fillRect(0, 0, W, H);
     draw(mg);
-    const d = mg.getImageData(0, 0, W, H).data, img = Pic(), L = new Float32Array(256);
-    for (let k = 0; k < 256; k++) L[k] = mode === 'pq' ? ipq(k / 255) : sdec(k / 255) * 100;
+    const d = mg.getImageData(0, 0, W, H).data, img = SRC, L = new Float32Array(256);
+    for (let k = 0; k < 256; k++) L[k] = sdec(k / 255);
     for (let i = 0, j = 0; i < N; i++, j += 3) {
       const r = L[d[i * 4]], g = L[d[i * 4 + 1]], b = L[d[i * 4 + 2]];
-      if (mode === 'pq') { img[j] = r; img[j + 1] = g; img[j + 2] = b; }
-      else { img[j] = 0.627404 * r + 0.329283 * g + 0.043313 * b; img[j + 1] = 0.069097 * r + 0.91954 * g + 0.011362 * b; img[j + 2] = 0.016391 * r + 0.088013 * g + 0.895595 * b; }
+      img[j] = 0.627404 * r + 0.329283 * g + 0.043313 * b; img[j + 1] = 0.069097 * r + 0.91954 * g + 0.011362 * b; img[j + 2] = 0.016391 * r + 0.088013 * g + 0.895595 * b;
     }
     return img;
   }
-  const loadImg = (src) => new Promise((ok, no) => { const i = new Image(); i.onload = () => ok(i); i.onerror = no; i.src = src; });
-  /* a still into its band (the middle of it, cut to the band's shape), the bars left black */
-  async function still(file, ar, mode) {
-    const im = await loadImg('img/' + file), [y0, y1] = band(ar), w = im.naturalWidth, h = im.naturalHeight;
+  const loadOnce = (src) => new Promise((ok, no) => { const i = new Image(); i.onload = () => ok(i); i.onerror = no; i.src = src; });
+  const loadImg = (src, n = 3) => loadOnce(src).catch((e) => (n > 1 ? new Promise((ok) => setTimeout(ok, 400)).then(() => loadImg(src, n - 1)) : Promise.reject(e)));
+  /* a picture into its band (the middle of it, cut to the band's shape), the bars left black */
+  function drawIn(im, ar) {
+    const [y0, y1] = band(ar), w = im.naturalWidth, h = im.naturalHeight;
     const sh = Math.min(h, w * (y1 - y0) / W), sw = sh * W / (y1 - y0);
-    return fromCanvas((g) => g.drawImage(im, (w - sw) / 2, (h - sh) / 2, sw, sh, 0, y0, W, y1 - y0), mode);
+    return fromCanvas((g) => g.drawImage(im, (w - sw) / 2, (h - sh) / 2, sw, sh, 0, y0, W, y1 - y0));
   }
-  function testCard() {
-    return fromCanvas((g) => {
-      g.fillStyle = '#3c3c3c'; g.fillRect(0, 0, W, H);
-      g.strokeStyle = '#e6e6e6'; g.lineWidth = 2;
-      for (let x = 0; x <= W; x += 60) { g.beginPath(); g.moveTo(x, 0); g.lineTo(x, H); g.stroke(); }
-      for (let y = 0; y <= H; y += 60) { g.beginPath(); g.moveTo(0, y); g.lineTo(W, y); g.stroke(); }
-      g.lineWidth = 3; g.strokeRect(1.5, 1.5, W - 3, H - 3);
-      g.beginPath(); g.arc(W / 2, H / 2, 240, 0, 7); g.stroke();
-      for (const [x, y] of [[90, 90], [W - 90, 90], [90, H - 90], [W - 90, H - 90]]) { g.beginPath(); g.arc(x, y, 50, 0, 7); g.stroke(); }
-      const bars = ['#bfbfbf', '#bfbf00', '#00bfbf', '#00bf00', '#bf00bf', '#bf0000', '#0000bf'];
-      bars.forEach((c, i) => { g.fillStyle = c; g.fillRect(240 + i * 480 / 7, 150, 480 / 7 + 1, 150); });
-      for (let i = 0; i < 16; i++) { const v = Math.round(i * 255 / 15); g.fillStyle = `rgb(${v},${v},${v})`; g.fillRect(240 + i * 30, 300, 30, 60); }
-      g.fillStyle = '#fff'; g.fillRect(240, 360, 240, 30); g.fillStyle = '#000'; g.fillRect(480, 360, 240, 30);
-      g.fillStyle = '#fff'; g.font = '600 18px "Sora", system-ui, sans-serif'; g.textAlign = 'center'; g.fillText('16:9 test pattern', W / 2, 425);
-      g.beginPath(); g.moveTo(W / 2, H / 2 - 12); g.lineTo(W / 2, H / 2 + 12); g.moveTo(W / 2 - 12, H / 2); g.lineTo(W / 2 + 12, H / 2); g.stroke();
-    }, 'sdr');
-  }
-  function game() {
-    seed = 17;
-    const img = Pic();
-    each(img, 0, 0, W, 300, (x, y) => lerp3(c20(0.08, 0.3, 1, 90), cs(0.75, 0.88, 1, 520), y / 300));
-    glow(img, 170, 70, 70, cs(1, 0.95, 0.85, 900)); glow(img, 170, 70, 9, cs(1, 1, 0.97, 10000), 2);
-    each(img, 0, 260, W, H, (x, y) => (y > 300 - 50 * fbm(x / 140, 2, 4) ? c20(0.2, 0.8, 0.12, 30 + 90 * fbm(x / 25, y / 25, 3)) : null));
-    paint(img, mask((g) => { g.beginPath(); g.moveTo(420, 300); g.lineTo(540, 300); g.lineTo(880, H); g.lineTo(80, H); g.fill(); }), (x, y) => cs(0.36, 0.36, 0.4, 25 + 10 * vnoise(x / 8, y / 8)));
-    paint(img, mask((g) => { g.setLineDash([24, 22]); g.lineWidth = 5; g.beginPath(); g.moveTo(480, 300); g.lineTo(480, H); g.stroke(); }), cs(1, 1, 1, 300));
-    paint(img, mask((g) => { g.beginPath(); g.roundRect(400, 400, 160, 70, 14); g.fill(); }, 1), c20(1, 0.05, 0.08, 140));
-    paint(img, mask(text('LAP 2/3', 40, 40, 26)), cs(1, 1, 1, 260));
-    paint(img, mask(text('212 km/h', 920, 500, 30, { align: 'right' })), c20(1, 0.5, 0.0, 420));
-    paint(img, mask((g) => { g.lineWidth = 3; g.beginPath(); g.arc(880, 80, 50, 0, 7); g.stroke(); }), cs(1, 1, 1, 220));
-    glow(img, 700, 330, 26, c20(1, 0.55, 0.05, 700)); glow(img, 700, 330, 8, cs(1, 0.95, 0.7, 3200), 2);
-    chart(img, 30, 420, 12, 120);
-    return img;
+  function testCard(g) {
+    g.fillStyle = '#3c3c3c'; g.fillRect(0, 0, W, H);
+    g.strokeStyle = '#e6e6e6'; g.lineWidth = 2;
+    for (let x = 0; x <= W; x += 60) { g.beginPath(); g.moveTo(x, 0); g.lineTo(x, H); g.stroke(); }
+    for (let y = 0; y <= H; y += 60) { g.beginPath(); g.moveTo(0, y); g.lineTo(W, y); g.stroke(); }
+    g.lineWidth = 3; g.strokeRect(1.5, 1.5, W - 3, H - 3);
+    g.beginPath(); g.arc(W / 2, H / 2, 240, 0, 7); g.stroke();
+    for (const [x, y] of [[90, 90], [W - 90, 90], [90, H - 90], [W - 90, H - 90]]) { g.beginPath(); g.arc(x, y, 50, 0, 7); g.stroke(); }
+    const bars = ['#bfbfbf', '#bfbf00', '#00bfbf', '#00bf00', '#bf00bf', '#bf0000', '#0000bf'];
+    bars.forEach((c, i) => { g.fillStyle = c; g.fillRect(240 + i * 480 / 7, 150, 480 / 7 + 1, 150); });
+    for (let i = 0; i < 16; i++) { const v = Math.round(i * 255 / 15); g.fillStyle = `rgb(${v},${v},${v})`; g.fillRect(240 + i * 30, 300, 30, 60); }
+    g.fillStyle = '#fff'; g.fillRect(240, 360, 240, 30); g.fillStyle = '#000'; g.fillRect(480, 360, 240, 30);
+    g.fillStyle = '#fff'; g.font = '600 18px "Sora", system-ui, sans-serif'; g.textAlign = 'center'; g.fillText('16:9 test pattern', W / 2, 425);
+    g.beginPath(); g.moveTo(W / 2, H / 2 - 12); g.lineTo(W / 2, H / 2 + 12); g.moveTo(W / 2 - 12, H / 2); g.lineTo(W / 2 + 12, H / 2); g.stroke();
   }
   /* burned-in subtitles in the bottom bar */
   /* short enough that its rows stay under 10% lit, so they still count as bar rows */
@@ -156,18 +94,18 @@ window.TVP_REC = {"calib":{"sets":{"sdr":{"grey":null,"lut":null},"hdr":{"grey":
   const AU_DDP = { in: { codec: 'eac3', atmos: 1, dtsx: 0, ch: '', src: 'hal' }, out: { type: 'DD+', bitstream: 1, ch: 8, rate: 48000, atmos: 1, dtsx: 0, from: 'hal' } };
   const AU_DD = { in: { codec: 'ac3', atmos: 0, dtsx: 0, ch: '5.1', src: 'kodi' }, out: { type: 'DD', bitstream: 1, ch: 6, rate: 48000, atmos: 0, dtsx: 0, from: 'kodi' } };
   const SC = [
-    { id: 'film239', label: '4K HDR10 film, 2.39:1 scope', app: KODI, w: 3840, h: 2160, fps: 23.976, hdr: 'HDR10', md: [1000, 0.005, 'P3-D65'], cll: [180, 40], file: 'Scope film (demo).mkv', ar: 2.39, codec: 'hevc', au: AU_KODI, build: () => still('scope.jpg', 16 / 9, 'pq') },
-    { id: 'film239subs', label: '4K HDR10 film, 2.39:1 with burned-in subtitles', app: KODI, w: 3840, h: 2160, fps: 23.976, hdr: 'HDR10', md: [1000, 0.005, 'P3-D65'], cll: [180, 40], file: 'Scope film, subtitled (demo).mkv', ar: 2.39, subs: true, codec: 'hevc', au: AU_KODI, build: () => still('scope.jpg', 16 / 9, 'pq') },
-    { id: 'film185', label: '4K HDR10 film, 1.85:1', app: KODI, w: 3840, h: 2160, fps: 24, hdr: 'HDR10', md: [1000, 0.0001, 'P3-D65'], cll: [1000, 260], file: 'Flat film (demo).mkv', ar: 1.85, codec: 'hevc', au: AU_KODI, build: () => still('flat.jpg', 1.85, 'pq') },
-    { id: 'imax190', label: '4K HDR10 IMAX film, a 1.90:1 shot', app: KODI, w: 3840, h: 2160, fps: 23.976, hdr: 'HDR10', md: [1000, 0.005, 'P3-D65'], cll: [400, 120], file: 'IMAX film (demo).mkv', ar: 1.9, codec: 'hevc', au: AU_KODI, build: () => still('imax.jpg', 1.9, 'pq') },
-    { id: 'imax239', label: '4K HDR10 IMAX film, a 2.39:1 shot', app: KODI, w: 3840, h: 2160, fps: 23.976, hdr: 'HDR10', md: [1000, 0.005, 'P3-D65'], cll: [400, 120], file: 'IMAX film (demo).mkv', ar: 2.39, codec: 'hevc', au: AU_KODI, build: async () => { const i = await still('imax.jpg', 1.9, 'pq'); bars(i, 2.39); return i; } },
-    { id: 'dv', label: '4K Dolby Vision film, 2.00:1', app: KODI, w: 3840, h: 2160, fps: 23.976, hdr: 'Dolby Vision', md: [1000, 0.0001, 'P3-D65'], cll: [2050, 180], file: 'Dolby Vision film (demo, profile 8.1).mkv', ar: 2, codec: 'hevc', au: AU_KODI, build: () => still('dv.jpg', 2, 'pq') },
-    { id: 'tv', label: '1080p SDR TV show, 16:9', app: KODI, w: 1920, h: 1080, fps: 25, hdr: 'SDR', file: 'TV show S01E02 (demo).mkv', ar: 16 / 9, codec: 'h264', au: AU_DD, build: () => still('tv.jpg', 16 / 9, 'sdr') },
-    { id: 'pattern', label: 'Test pattern: grid and colour bars, 1080p SDR', app: KODI, w: 1920, h: 1080, fps: 23.976, hdr: 'SDR', file: 'Test pattern (demo).mkv', ar: 16 / 9, codec: 'h264', au: AU_DD, build: testCard },
-    { id: 'video50', label: 'Streaming app: 4K HDR10 video, 50 fps', app: 'com.example.video', w: 3840, h: 2160, fps: 50, hdr: 'HDR10', md: [1000, 0.005, 'BT.2020'], cll: [0, 0], ar: 16 / 9, codec: 'vp9', au: AU_DDP, build: () => still('video.jpg', 16 / 9, 'pq') },
-    { id: 'hdmi', label: 'HDMI input: game console 4K60 HDR10', app: 'hdmi', w: 3840, h: 2160, fps: 60, hdr: 'HDR10', ar: 16 / 9, hdmi: true, au: { in: null, out: { type: '', bitstream: 0, ch: 8, rate: 48000, atmos: 0, dtsx: 0, from: 'hal' } }, build: game },
-    { id: 'netflix', label: 'Netflix (protected: no picture capture, like the real Cube)', app: 'com.netflix.ninja', w: 3840, h: 2160, fps: 23.976, hdr: 'HDR10', dvTitle: true, md: [1000, 0.0001, 'P3-D65'], cll: [0, 0], ar: 2, codec: 'hevc', protected: true, au: AU_DDP, build: () => still('stream.jpg', 2, 'pq') },
-    { id: 'menus', label: 'Nothing playing (menus)', app: 'launcher', menus: true, ar: 16 / 9, build: () => still('menus.jpg', 16 / 9, 'sdr') },
+    { id: 'film239', label: '4K HDR10 film, 2.39:1 scope', app: KODI, w: 3840, h: 2160, fps: 23.976, hdr: 'HDR10', md: [1000, 0.005, 'P3-D65'], cll: [180, 40], file: 'Scope film (demo).mkv', ar: 2.39, codec: 'hevc', au: AU_KODI, r: 'scene05' },
+    { id: 'film239subs', label: '4K HDR10 film, 2.39:1 with burned-in subtitles', app: KODI, w: 3840, h: 2160, fps: 23.976, hdr: 'HDR10', md: [1000, 0.005, 'P3-D65'], cll: [180, 40], file: 'Scope film, subtitled (demo).mkv', ar: 2.39, subs: true, codec: 'hevc', au: AU_KODI, r: 'scene01' },
+    { id: 'film185', label: '4K HDR10 film, 1.85:1', app: KODI, w: 3840, h: 2160, fps: 24, hdr: 'HDR10', md: [1000, 0.0001, 'P3-D65'], cll: [1000, 260], file: 'Flat film (demo).mkv', ar: 1.85, codec: 'hevc', au: AU_KODI, r: 'scene03' },
+    { id: 'imax190', label: '4K HDR10 IMAX film, a 1.90:1 shot', app: KODI, w: 3840, h: 2160, fps: 23.976, hdr: 'HDR10', md: [1000, 0.005, 'P3-D65'], cll: [400, 120], file: 'IMAX film (demo).mkv', ar: 1.9, codec: 'hevc', au: AU_KODI, r: 'scene02' },
+    { id: 'imax239', label: '4K HDR10 IMAX film, a 2.39:1 shot', app: KODI, w: 3840, h: 2160, fps: 23.976, hdr: 'HDR10', md: [1000, 0.005, 'P3-D65'], cll: [400, 120], file: 'IMAX film (demo).mkv', ar: 2.39, codec: 'hevc', au: AU_KODI, r: 'scene02' },
+    { id: 'dv', label: '4K Dolby Vision film, 16:9', app: KODI, w: 3840, h: 2160, fps: 23.976, hdr: 'Dolby Vision', md: [1000, 0.0001, 'P3-D65'], cll: [2050, 180], file: 'Dolby Vision film (demo, profile 8.1).mkv', ar: 16 / 9, codec: 'hevc', au: AU_KODI, r: 'scene04' },
+    { id: 'tv', label: '1080p SDR TV show, 16:9', app: KODI, w: 1920, h: 1080, fps: 25, hdr: 'SDR', file: 'TV show S01E02 (demo).mkv', ar: 16 / 9, codec: 'h264', au: AU_DD, r: 'scene08' },
+    { id: 'pattern', label: 'Test pattern: grid and colour bars, 1080p SDR', app: KODI, w: 1920, h: 1080, fps: 23.976, hdr: 'SDR', file: 'Test pattern (demo).mkv', ar: 16 / 9, codec: 'h264', au: AU_DD, draw: testCard },
+    { id: 'video50', label: 'Streaming app: 4K HDR10 video, 50 fps', app: 'com.example.video', w: 3840, h: 2160, fps: 50, hdr: 'HDR10', md: [1000, 0.005, 'BT.2020'], cll: [0, 0], ar: 16 / 9, codec: 'vp9', au: AU_DDP, r: 'scene06' },
+    { id: 'hdmi', label: 'HDMI input: game console 4K60 HDR10', app: 'hdmi', w: 3840, h: 2160, fps: 60, hdr: 'HDR10', ar: 16 / 9, hdmi: true, au: { in: null, out: { type: '', bitstream: 0, ch: 8, rate: 48000, atmos: 0, dtsx: 0, from: 'hal' } }, r: 'scene07' },
+    { id: 'netflix', label: 'Netflix (protected: no picture capture, like the real Cube)', app: 'com.netflix.ninja', w: 3840, h: 2160, fps: 23.976, hdr: 'HDR10', dvTitle: true, md: [1000, 0.0001, 'P3-D65'], cll: [0, 0], ar: 16 / 9, codec: 'hevc', protected: true, au: AU_DDP, r: 'scene04' },
+    { id: 'menus', label: 'Nothing playing (menus)', app: 'launcher', menus: true, ar: 16 / 9, img: 'menus.jpg' },
   ];
 
   /* ---------- state ---------- */
@@ -183,14 +121,36 @@ window.TVP_REC = {"calib":{"sets":{"sdr":{"grey":null,"lut":null},"hdr":{"grey":
   function setScene(id) {
     const s = SC.find((x) => x.id === id) || SC[0];
     if (scene && !scene.menus && scene.fps && scene !== s) st.lastFilm = scene;
-    st.scen = s.id; scene = s; sdrL = null; st.paused = false;
+    st.scen = s.id; scene = s; st.paused = false;
     clearTimeout(det.wait);
     det = { v: -1, h: 0, keepB: 0 }; hist.length = 0; outFrozen = null; cuts++;
     F = null; toneKey = placeKey = warpKey = '';
     save();
-    if (!s.ready) s.ready = Promise.resolve(s.build()).then((img) => { s.base = img; if (s.subs) s.subMask = subsMask(s.ar); });
+    if (!s.ready) s.ready = loadScene(s).catch((e) => { s.ready = null; console.warn('demo: a picture did not load', e); });
     subShown = !!s.subs;
     s.ready.then(() => { if (scene === s) changed(); });
+  }
+  /* a scene's pictures: one per HDR out and peak for the films (rendered in advance), one for the rest */
+  const RS = REC.renders;
+  async function loadScene(s) {
+    s.imgs = {};
+    const R = s.r && RS[s.r];
+    if (R) {
+      s.cll = [Math.round(R.src_peak), Math.round(R.fall)];
+      if (s.md && R.src_peak > s.md[0]) s.md = [4000, s.md[1], s.md[2]];
+      await Promise.all([...new Set(R.renders.map((x) => x[2]))].map(async (f) => { s.imgs[f] = await loadImg('img/r/' + f); }));
+    } else if (s.img) s.imgs[s.img] = await loadImg('img/' + s.img);
+    if (s.subs) s.subMask = subsMask(s.ar);
+    s.base = true;
+  }
+  /* the picture for the HDR out and peak in use: SDR the nearest SDR render, HDR10 the nearest HDR10 one, passthrough the 1500-nit one */
+  function pick() {
+    const R = scene.r && RS[scene.r];
+    if (!R) return null;
+    const oh = outHdr(), mode = oh >= 1 && isHdr() ? 'hdr10' : 'sdr', want = oh === 2 ? 1e9 : peakN();
+    let best = null;
+    for (const x of R.renders) if (x[0] === mode && (!best || Math.abs(x[1] - want) < Math.abs(best[1] - want))) best = x;
+    return best || R.renders[0];
   }
   /* the live state: the shape on screen and the HDR the app sends */
   function inHdr() {
@@ -270,8 +230,12 @@ window.TVP_REC = {"calib":{"sets":{"sdr":{"grey":null,"lut":null},"hdr":{"grey":
   function detect(subOn) {
     const rowMax = (y) => { let m = 0; for (let i = y * OW * 3, e = i + OW * 3; i < e; i++) if (S2[i] > m) m = S2[i]; return m; };
     let top = 0, bot = OH;
-    while (top < OH / 2 && rowMax(top) < 0.05) top++;
-    while (bot > OH / 2 && rowMax(bot - 1) < 0.05) bot--;
+    const R = !pattern && scene.r && RS[scene.r];
+    if (R) [top, bot] = (R.bars ? R.rows : band(scene.ar)).map((y) => Math.round(y / 2));   /* a film's own black isn't a bar */
+    else {
+      while (top < OH / 2 && rowMax(top) < 0.0005) top++;
+      while (bot > OH / 2 && rowMax(bot - 1) < 0.0005) bot--;
+    }
     det.top = top; det.bot = bot;
     const v = 2 * Math.min(top, OH - bot) / OH;
     clearTimeout(det.wait);
@@ -313,38 +277,7 @@ window.TVP_REC = {"calib":{"sets":{"sdr":{"grey":null,"lut":null},"hdr":{"grey":
     return { v, h, ar, md, on, ct, cb, cl, cr, bx, by, bw, bh, m, nls };
   }
 
-  /* ---------- the stand-in tone curve: BT.2390's EETF from the mastering peak to your peak ---------- */
-  let curveKey = '', scaleLut = null;
   const LUTN = 8192;
-  function eetf(Lw, Lmax) {
-    const Pw = pq(Lw), maxL = Math.min(1, pq(Lmax) / Pw), KS = Math.max(0, 1.5 * maxL - 0.5);
-    return (n) => {
-      if (Lmax >= Lw) return Math.min(n, Lmax);
-      const E1 = Math.min(1, pq(n) / Pw);
-      if (E1 < KS) return n;
-      const T = (E1 - KS) / (1 - KS), T2 = T * T, T3 = T2 * T;
-      return ipq(((2 * T3 - 3 * T2 + 1) * KS + (T3 - 2 * T2 + T) * (1 - KS) + (-2 * T3 + 3 * T2) * maxL) * Pw);
-    };
-  }
-  /* the curve starts from the mastering peak, or the picture's own brightest part if that is higher */
-  const srcPeak = () => Math.max(scene.hdmi ? 10000 : scene.md ? scene.md[0] : 1000, meas.raw || 0);
-  function curveLut() {
-    const key = [srcPeak(), peakN(), tmOn()].join();
-    if (key === curveKey) return scaleLut;
-    const f = tmOn() ? eetf(srcPeak(), peakN()) : (n) => n;
-    scaleLut = new Float32Array(LUTN);
-    for (let k = 1; k < LUTN; k++) { const n = Math.pow(k / (LUTN - 1), 2) * 10000; scaleLut[k] = f(n) / n; }
-    scaleLut[0] = 1; curveKey = key; curveFn = f;
-    return scaleLut;
-  }
-  let curveFn = (n) => n, sdrL = null;
-  /* HDR content that arrives as SDR (a console told SDR only): the source fits it to 100 nits itself */
-  function sdrCurve() {
-    if (sdrL) return sdrL;
-    const f = eetf(srcPeak(), 100); sdrL = new Float32Array(LUTN);
-    for (let k = 1; k < LUTN; k++) { const n = Math.pow(k / (LUTN - 1), 2) * 10000; sdrL[k] = f(n) / n; }
-    sdrL[0] = 1; return sdrL;
-  }
 
   /* ---------- one output frame, at the size the page draws (480 x 270): tone map, colour, calibrate, place, warp ---------- */
   const OW = TW, OH = TH, ON = OW * OH, ENCN = 4096;
@@ -370,18 +303,24 @@ window.TVP_REC = {"calib":{"sets":{"sdr":{"grey":null,"lut":null},"hdr":{"grey":
       }
     }
   }
+  let srcKey = '';
   function ensureSource() {
-    if (!forceSrc || !scene.base) return false;
-    forceSrc = false;
-    const src = SRC;
-    src.set(scene.base);
+    if (!scene.base) return false;
+    const pk = pick(), key = (pk ? pk[2] : '') + (pattern ? pattern.id + pattern.index : '') + subShown;
+    if (!forceSrc && key === srcKey) return false;
+    forceSrc = false; srcKey = key; curPick = pk;
+    const src = SRC, R = scene.r && RS[scene.r];
+    if (pk) drawIn(scene.imgs[pk[2]], R.bars ? 16 / 9 : scene.ar);
+    else if (scene.img) drawIn(scene.imgs[scene.img], 16 / 9);
+    else fromCanvas(scene.draw);
     if (pattern) drawPattern(src);
     half(src);
     detect(subShown && !pattern);
-    if (subShown && !pattern) { paint(src, scene.subMask, cs(1, 1, 1, isHdr() ? 140 : 90)); half(src); }
+    if (subShown && !pattern) { paint(src, scene.subMask, [0.8, 0.8, 0.8]); half(src); }
     measure();
     return true;
   }
+  let curPick = null;
   const TONE_KEYS = ['out_gamut', 'out_hdr', 'out_gamma', 'gamut_limit', 'prim_rx', 'prim_ry', 'prim_gx', 'prim_gy', 'prim_bx', 'prim_by', 'target_nits', 'target_nits_hdr', 'apps_dv', 'edid_mode', 'edid_hdr', 'edid_depth',
     'cal_black', 'cal_white', 'cal_gamma', 'cal_r_gain', 'cal_g_gain', 'cal_b_gain', 'cal_r_off', 'cal_g_off', 'cal_b_off', 'calh_black', 'calh_white', 'calh_gamma', 'calh_r_gain', 'calh_g_gain', 'calh_b_gain', 'calh_r_off', 'calh_g_off', 'calh_b_off'];
   const PLACE_KEYS = ['aspect_mode', 'aspect_lens', 'aspect_scope', 'aspect_subs', 'aspect_min', 'aspect_force', 'aspect_nls', 'mask_top', 'mask_bottom', 'mask_left', 'mask_right'];
@@ -391,7 +330,7 @@ window.TVP_REC = {"calib":{"sets":{"sdr":{"grey":null,"lut":null},"hdr":{"grey":
   function ensureFrame() {
     if (!scene.base) return null;
     const src = ensureSource();
-    const tk = keyOf(TONE_KEYS) + (pattern ? pattern.id + pattern.hdr : '') + scene.id;
+    const tk = keyOf(TONE_KEYS) + srcKey + scene.id;
     let changedTone = src || tk !== toneKey;
     if (changedTone) { if (tk !== toneKey) { toneKey = tk; toneInfo = toneSetup(); } tone(); }
     const pk = keyOf(PLACE_KEYS) + det.v + ',' + det.keepB;
@@ -410,12 +349,9 @@ window.TVP_REC = {"calib":{"sets":{"sdr":{"grey":null,"lut":null},"hdr":{"grey":
     return F;
   }
   const render = ensureFrame;
-  /* everything that depends only on the settings: the curve and the per-channel code tables */
+  /* the per-channel code tables: output gamma and calibration */
   function toneSetup() {
-    const p = P(), sdrIn = pattern ? !pattern.hdr : !isHdr(), pass = !sdrIn && !tmOn(), g = gammaOut();
-    const to709 = +p.out_gamut >= 0.5 && +p.out_gamut < 1.5 && !sdrIn && outHdr() !== 1 && !pass;
-    const lim = !sdrIn && !to709 && !pass && +p.gamut_limit > 0.5 ? limitMatrix() : null;
-    const pre = !sdrIn && tmOn() ? 'calh_' : 'cal_';
+    const p = P(), g = gammaOut(), pre = isHdr() && tmOn() && !pattern ? 'calh_' : 'cal_';
     const cg = +p[pre + 'gamma'] || 0, cw = (+p[pre + 'white'] || 100) / 100, cb = (+p[pre + 'black'] || 0) / 219, encG = 1 / g, calG = (g + cg) / g;
     ['r', 'g', 'b'].forEach((c, k) => {
       const gain = cw * (+p[pre + c + '_gain'] || 100) / 100, off = cb + (+p[pre + c + '_off'] || 0) / 219, T = ENC[k];
@@ -423,46 +359,20 @@ window.TVP_REC = {"calib":{"sets":{"sdr":{"grey":null,"lut":null},"hdr":{"grey":
         let v = Math.pow((i / ENCN) * (i / ENCN), encG);
         if (cg && v > 0) v = Math.pow(v, calG);
         v = v * gain + off;
-        T[i] = i === 0 ? 0 : clamp(Math.round(v * 255), 1, 252);   /* the demo's picture never reaches full level or exact black */
+        T[i] = clamp(Math.round(v * 255), 1, 252);   /* the demo's picture never reaches full level or exact black */
       }
     });
-    const hdrSrc = !pattern && scene.hdr !== 'SDR' && !scene.menus;
-    return { sdrIn, hdrSrc, g, to709, lim, lut: curveLut(), sdrLut: hdrSrc && sdrIn ? sdrCurve() : null, peak: peakN(), c709: to709 || sdrIn };
+    return { g, c709: false };
   }
-  const KNEE = 0.75, TOP = 0.96;
+  /* the picture is already tone mapped: only coded for the output (the code tables keep it off exact black and full level) */
   function tone() {
-    const T = toneInfo, lut = T.lut, sl = T.sdrLut, ip = 1 / T.peak, E0 = ENC[0], E1 = ENC[1], E2 = ENC[2], K = LUTN - 1, q = 1 / 10000;
-    const M = T.to709 ? M2020_709 : T.lim ? T.lim.to : null, B = T.lim ? T.lim.back : null, to709 = T.to709;
-    const m00 = M && M[0][0], m01 = M && M[0][1], m02 = M && M[0][2], m10 = M && M[1][0], m11 = M && M[1][1], m12 = M && M[1][2], m20 = M && M[2][0], m21 = M && M[2][1], m22 = M && M[2][2];
+    const E0 = ENC[0], E1 = ENC[1], E2 = ENC[2];
     for (let j = 0; j < ON * 3; j += 3) {
-      let r = S2[j], g = S2[j + 1], b = S2[j + 2];
-      const m = r > g ? (r > b ? r : b) : (g > b ? g : b);
-      if (T.sdrIn) {
-        if (sl) { if (m > 0) { const k = sl[Math.min(K, (Math.sqrt(m * q) * K + 0.5) | 0)] * 0.01; r *= k; g *= k; b *= k; } }
-        else { r *= 0.01; g *= 0.01; b *= 0.01; }
-      } else {
-        if (m > 0) { const k = lut[Math.min(K, (Math.sqrt(m * q) * K + 0.5) | 0)] * ip; r *= k; g *= k; b *= k; }
-        if (M) {
-          let a0 = m00 * r + m01 * g + m02 * b, a1 = m10 * r + m11 * g + m12 * b, a2 = m20 * r + m21 * g + m22 * b;
-          const y = to709 ? 0.2126 * a0 + 0.7152 * a1 + 0.0722 * a2 : 0.2627 * r + 0.678 * g + 0.0593 * b, lo = a0 < a1 ? (a0 < a2 ? a0 : a2) : (a1 < a2 ? a1 : a2);
-          if (lo < 0 && y > 0) { const s = y / (y - lo); a0 = y + (a0 - y) * s; a1 = y + (a1 - y) * s; a2 = y + (a2 - y) * s; }
-          if (to709) { r = a0; g = a1; b = a2; }
-          else { r = B[0][0] * a0 + B[0][1] * a1 + B[0][2] * a2; g = B[1][0] * a0 + B[1][1] * a1 + B[1][2] * a2; b = B[2][0] * a0 + B[2][1] * a1 + B[2][2] * a2; }
-        }
-      }
-      /* a soft shoulder on the brightest channel, so highlights ease off below full instead of clipping */
-      const m2 = r > g ? (r > b ? r : b) : (g > b ? g : b);
-      if (m2 > KNEE) { const k = (KNEE + (TOP - KNEE) * (1 - Math.exp(-(m2 - KNEE) / (TOP - KNEE)))) / m2; r *= k; g *= k; b *= k; }
-      else if (m2 <= 0 && (j / (OW * 3) | 0) >= det.top && (j / (OW * 3) | 0) < det.bot) { CODES[j] = CODES[j + 1] = CODES[j + 2] = 1; continue; }
+      const r = S2[j], g = S2[j + 1], b = S2[j + 2];
       CODES[j] = E0[r <= 0 ? 0 : r >= 1 ? ENCN : (Math.sqrt(r) * ENCN + 0.5) | 0];
       CODES[j + 1] = E1[g <= 0 ? 0 : g >= 1 ? ENCN : (Math.sqrt(g) * ENCN + 0.5) | 0];
       CODES[j + 2] = E2[b <= 0 ? 0 : b >= 1 ? ENCN : (Math.sqrt(b) * ENCN + 0.5) | 0];
     }
-  }
-  function limitMatrix() {
-    const p = P(), prim = +p.gamut_limit > 1.5 ? [[+p.prim_rx, +p.prim_ry], [+p.prim_gx, +p.prim_gy], [+p.prim_bx, +p.prim_by]] : P3;
-    const T = rgbXYZ(prim), to = mm(inv(T), M2020_XYZ);
-    return { to, back: inv(to) };
   }
   /* the source frame into the screen: crop, box (with the non-linear stretch), masks */
   function place() {
@@ -590,11 +500,11 @@ window.TVP_REC = {"calib":{"sets":{"sdr":{"grey":null,"lut":null},"hdr":{"grey":
     adl: [], sets: [{ id: 'grey', name: 'Greyscale', hdr: false, patches: ['0%', '10%', '20%', '30%', '40%', '50%', '60%', '70%', '80%', '90%', '100%'] }],
   };
   function drawPattern(img) {
-    const id = pattern.id, s = (v) => [v * 100, v * 100, v * 100];
+    const id = pattern.id, s = (v) => [v, v, v];
     img.fill(0);
     if (id === 'ramp') each(img, 0, 0, W, H, (x) => s(sdec(x / (W - 1))));
-    else if (id === 'hramp') each(img, 0, 0, W, H, (x) => { const n = ipq(x / (W - 1)); return [n, n, n]; });
-    else if (id === 'bars') { const c = [[1, 1, 1], [1, 1, 0], [0, 1, 1], [0, 1, 0], [1, 0, 1], [1, 0, 0], [0, 0, 1]]; each(img, 0, 0, W, H, (x) => mul(M709_2020, c[Math.min(6, (x / W * 7) | 0)].map((v) => sdec(v * 0.75))).map((v) => v * 100)); }
+    else if (id === 'hramp') each(img, 0, 0, W, H, (x) => { const n = Math.min(1, ipq(x / (W - 1)) / 1000); return [n, n, n]; });
+    else if (id === 'bars') { const c = [[1, 1, 1], [1, 1, 0], [0, 1, 1], [0, 1, 0], [1, 0, 1], [1, 0, 0], [0, 0, 1]]; each(img, 0, 0, W, H, (x) => mul(M709_2020, c[Math.min(6, (x / W * 7) | 0)].map((v) => sdec(v * 0.75)))); }
     else if (id === 'black') each(img, 0, 0, W, H, (x) => s(sdec(((x / W * 10) | 0) / 255)));
     else if (id === 'white') each(img, 0, 0, W, H, (x) => s(sdec((245 + ((x / W * 11) | 0)) / 255)));
     else if (id === 'grey') { const v = sdec(pattern.index / 10); each(img, W * 0.34, H * 0.34, W * 0.66, H * 0.66, () => s(v)); }
@@ -604,19 +514,21 @@ window.TVP_REC = {"calib":{"sets":{"sdr":{"grey":null,"lut":null},"hdr":{"grey":
   const hist = [], meas = { raw: 0, curve: 0, fall: 0, hl: 0, hist: new Array(128).fill(0) };
   const PQBIN = new Uint8Array(LUTN), NITS = new Float32Array(LUTN), FINE = new Uint32Array(LUTN);
   for (let k = 0; k < LUTN; k++) { NITS[k] = Math.pow(k / (LUTN - 1), 2) * 10000; PQBIN[k] = Math.round(pq(NITS[k]) * 127); }
+  /* the levels in nits: the picture's at its peak; a film's brightest part is its source's */
   function measure() {
-    const h = new Array(128).fill(0), tgt = peakN(), K = LUTN - 1;
+    const h = new Array(128).fill(0), R = scene.r && RS[scene.r], pk = curPick, peak = pk && R.hdr ? pk[1] : 100, tgt = peakN(), K = LUTN - 1;
     let n = 0, sum = 0, hn = 0, hs = 0;
     FINE.fill(0);
     for (let j = 0; j < ON * 3; j += 3) {
-      const r = S2[j], g = S2[j + 1], b = S2[j + 2], m0 = r > g ? (r > b ? r : b) : (g > b ? g : b), m = m0 > 10000 ? 10000 : m0;
+      const r = S2[j], g = S2[j + 1], b = S2[j + 2], m = Math.min(10000, (r > g ? (r > b ? r : b) : (g > b ? g : b)) * peak);
       const k = (Math.sqrt(m / 10000) * K + 0.5) | 0;
       FINE[k]++; h[PQBIN[k]] += 64;
       if (m > 0.01) { n++; sum += m; if (m > tgt) { hn++; hs += m; } }
     }
     let k = K, acc = 0;
     for (; k > 0; k--) { acc += FINE[k]; if (acc > ON * 0.00001) break; }
-    meas.raw = NITS[k]; meas.curve = NITS[k]; meas.fall = n ? sum / n : 0; meas.hl = hn ? hs / hn : 0; meas.hist = h;
+    meas.raw = R && R.hdr ? R.src_peak : NITS[k]; meas.curve = meas.raw; meas.fall = R && R.hdr ? R.fall : n ? sum / n : 0; meas.hl = hn ? hs / hn : 0; meas.hist = h;
+    meas.target = pk && pk[3] ? pk[3] : tgt;
   }
 
   /* ---------- the analysis outputs from the held frame: thumb, waveform, scopes, picture stats ---------- */
@@ -720,7 +632,6 @@ window.TVP_REC = {"calib":{"sets":{"sdr":{"grey":null,"lut":null},"hdr":{"grey":
   }
 
   /* ---------- /api/status and /api/info ---------- */
-  const GRIDX = () => CVP.GRID;
   function status() {
     ensureFrame();
     const p = P(), active = !!scene.base && tmOn() && !st.paused && !pattern;
@@ -728,14 +639,8 @@ window.TVP_REC = {"calib":{"sets":{"sdr":{"grey":null,"lut":null},"hdr":{"grey":
     const peak = peakN();
     if (active) { hist.push([+meas.raw.toFixed(1), +meas.curve.toFixed(1), 0, peak]); while (hist.length > 240) hist.shift(); }
     const H240 = new Array(240 - hist.length).fill([0, 0, 0, 0]).concat(hist);
-    curveLut();
-    const ck = curveKey + isHdr();
-    if (ck !== curveFor) {
-      const g = GRIDX(); curveFor = ck; curveOut = [];
-      for (let k = 1; k < g.length; k++) curveOut.push([+g[k].toPrecision(5), +Math.min(peak, isHdr() ? curveFn(Math.min(g[k], 10000)) : g[k] * peak / 100).toPrecision(5)]);
-    }
-    const curve = curveOut;
-    const lastM = { raw_peak: +meas.raw.toFixed(1), curve_peak: +meas.curve.toFixed(1), fall: +meas.fall.toFixed(2), avg_hl: +meas.hl.toFixed(1), scene_target: peak, target_raw: peak };
+    const curve = [];   /* the page draws its own curve from the settings */
+    const lastM = { raw_peak: +meas.raw.toFixed(1), curve_peak: +meas.curve.toFixed(1), fall: +meas.fall.toFixed(2), avg_hl: +meas.hl.toFixed(1), scene_target: Math.max(peak, meas.target || 0), target_raw: Math.max(peak, meas.target || 0) };
     const s = {
       frame: dtmFrames, fps: active ? scene.fps : 0,
       dtm: { active, idle_s: active ? 0 : seenHdr ? 9 : -1, reason: active ? '' : seenHdr ? 'no HDR10 frames: SDR, menus or paused' : 'no HDR10 video yet' },
@@ -751,7 +656,7 @@ window.TVP_REC = {"calib":{"sets":{"sdr":{"grey":null,"lut":null},"hdr":{"grey":
     if (active) Object.assign(s, lastM, { change: 0 });
     return s;
   }
-  let osdOn = 0, dtmFrames = 0, seenHdr = false, curveFor = '', curveOut = [];
+  let osdOn = 0, dtmFrames = 0, seenHdr = false;
   function info() {
     const o = output(), p = P(), hdr = inHdr(), [iw, ih] = inSize(), tm = tmOn(), oh = outHdr(), playing = !scene.menus;
     const sig = pattern ? (pattern.hdr ? (pattern.direct || oh === 1 ? 'HDR10-GAMMA_ST2084' : 'SDR') : 'SDR')
@@ -935,7 +840,7 @@ window.TVP_REC = {"calib":{"sets":{"sdr":{"grey":null,"lut":null},"hdr":{"grey":
   const bar = document.createElement('div');
   bar.id = 'tvpDemo';
   bar.innerHTML = `<b class="dtag">Demo</b><label class="dpick"><span>Playing</span><select id="tvpScen" aria-label="What the simulated Cube plays">${SC.map((s) => `<option value="${s.id}">${s.label}</option>`).join('')}</select></label>
-    <button type="button" id="tvpPause" class="dbtn">Pause</button><span class="dnote">A simulated Cube with an XGIMI TITAN behind an AV7702mkII, in your browser. Demo: the picture uses a simple stand-in curve, not Tesseract VP's dynamic tone mapping.</span><button type="button" id="tvpReset" class="dbtn" title="Back to the starting settings">Reset demo</button>`;
+    <button type="button" id="tvpPause" class="dbtn">Pause</button><span class="dnote">A simulated Cube with an XGIMI TITAN behind an AV7702mkII, in your browser. Demo: the films were tone mapped in advance by Tesseract VP for the HDR out and peak you pick; the tone mapping sliders don't re-render them.</span><button type="button" id="tvpReset" class="dbtn" title="Back to the starting settings">Reset demo</button>`;
   document.body.insertBefore(bar, document.body.firstChild);
   /* the page sizes itself to the window in its fit layout: take the bar's height off what it sets */
   const app = document.getElementById('app');
