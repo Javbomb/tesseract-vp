@@ -167,7 +167,8 @@ window.TVP_REC = {"calib":{"sets":{"sdr":{"grey":null,"lut":null},"hdr":{"grey":
   const AU_DDP = { in: { codec: 'eac3', atmos: 1, dtsx: 0, ch: '', src: 'hal' }, out: { type: 'DD+', bitstream: 1, ch: 8, rate: 48000, atmos: 1, dtsx: 0, from: 'hal' } };
   const AU_DD = { in: { codec: 'ac3', atmos: 0, dtsx: 0, ch: '5.1', src: 'kodi' }, out: { type: 'DD', bitstream: 1, ch: 6, rate: 48000, atmos: 0, dtsx: 0, from: 'kodi' } };
   const SC = [
-    { id: 'film239', label: '4K HDR10 film, 2.39:1 scope', app: KODI, w: 3840, h: 2160, fps: 23.976, hdr: 'HDR10', md: [1000, 0.005, 'P3-D65'], cll: [180, 40], file: 'Scope film (demo).mkv', ar: 2.39, subs: true, codec: 'hevc', au: AU_KODI, build: () => still('scope.jpg', 16 / 9, 'pq') },
+    { id: 'film239', label: '4K HDR10 film, 2.39:1 scope', app: KODI, w: 3840, h: 2160, fps: 23.976, hdr: 'HDR10', md: [1000, 0.005, 'P3-D65'], cll: [180, 40], file: 'Scope film (demo).mkv', ar: 2.39, codec: 'hevc', au: AU_KODI, build: () => still('scope.jpg', 16 / 9, 'pq') },
+    { id: 'film239subs', label: '4K HDR10 film, 2.39:1 with burned-in subtitles', app: KODI, w: 3840, h: 2160, fps: 23.976, hdr: 'HDR10', md: [1000, 0.005, 'P3-D65'], cll: [180, 40], file: 'Scope film, subtitled (demo).mkv', ar: 2.39, subs: true, codec: 'hevc', au: AU_KODI, build: () => still('scope.jpg', 16 / 9, 'pq') },
     { id: 'film185', label: '4K HDR10 film, 1.85:1', app: KODI, w: 3840, h: 2160, fps: 24, hdr: 'HDR10', md: [1000, 0.0001, 'P3-D65'], cll: [1000, 260], file: 'Flat film (demo).mkv', ar: 1.85, codec: 'hevc', au: AU_KODI, build: () => still('flat.jpg', 1.85, 'pq') },
     { id: 'imax190', label: '4K HDR10 IMAX film, a 1.90:1 shot', app: KODI, w: 3840, h: 2160, fps: 23.976, hdr: 'HDR10', md: [1000, 0.005, 'P3-D65'], cll: [400, 120], file: 'IMAX film (demo).mkv', ar: 1.9, codec: 'hevc', au: AU_KODI, build: () => still('imax.jpg', 1.9, 'pq') },
     { id: 'imax239', label: '4K HDR10 IMAX film, a 2.39:1 shot', app: KODI, w: 3840, h: 2160, fps: 23.976, hdr: 'HDR10', md: [1000, 0.005, 'P3-D65'], cll: [400, 120], file: 'IMAX film (demo).mkv', ar: 2.39, codec: 'hevc', au: AU_KODI, build: async () => { const i = await still('imax.jpg', 1.9, 'pq'); bars(i, 2.39); return i; } },
@@ -194,12 +195,13 @@ window.TVP_REC = {"calib":{"sets":{"sdr":{"grey":null,"lut":null},"hdr":{"grey":
     const s = SC.find((x) => x.id === id) || SC[0];
     if (scene && !scene.menus && scene.fps && scene !== s) st.lastFilm = scene;
     st.scen = s.id; scene = s; sdrL = null; st.paused = false;
-    clearTimeout(det.wait); clearTimeout(subT); subShown = false;
+    clearTimeout(det.wait);
     det = { v: -1, h: 0, keepB: 0 }; hist.length = 0; outFrozen = null; cuts++;
     F = null; toneKey = placeKey = warpKey = '';
     save();
     if (!s.ready) s.ready = Promise.resolve(s.build()).then((img) => { s.base = img; if (s.subs) s.subMask = subsMask(s.ar); });
-    s.ready.then(() => { if (scene !== s) return; changed(); if (s.subs) subT = setTimeout(() => { if (scene === s) { subShown = true; changed(); } }, 1500); });
+    subShown = !!s.subs;
+    s.ready.then(() => { if (scene === s) changed(); });
   }
   /* the live state: the shape on screen and the HDR the app sends */
   function inHdr() {
@@ -274,7 +276,7 @@ window.TVP_REC = {"calib":{"sets":{"sdr":{"grey":null,"lut":null},"hdr":{"grey":
   }
 
   /* ---------- aspect: the page's own arithmetic (brain/aspect.c), on our frame ---------- */
-  let det = { v: -1, h: 0, keepB: 0 }, cuts = 0, subShown = false, subT = 0;
+  let det = { v: -1, h: 0, keepB: 0 }, cuts = 0, subShown = false;
   /* whole rows near black from the top and bottom; the subtitle line is not picture */
   function detect(subOn) {
     const rowMax = (y) => { let m = 0; for (let i = y * OW * 3, e = i + OW * 3; i < e; i++) if (S2[i] > m) m = S2[i]; return m; };
@@ -285,8 +287,7 @@ window.TVP_REC = {"calib":{"sets":{"sdr":{"grey":null,"lut":null},"hdr":{"grey":
     clearTimeout(det.wait);
     if (det.v < 0 || Math.abs(v - det.v) <= 0.012 || +P().asp_precise <= 0.5) det.v = v;
     else det.wait = setTimeout(() => { det.v = v; schedule(); }, (v > det.v ? 18 : 6) / (scene.fps || 60) * 1000);
-    if (!subOn && top > 0) det.clean = true;
-    if (subOn && det.clean && +P().subs_ignore > 0) {
+    if (subOn && top > 0 && +P().subs_ignore > 0) {
       const [, y1] = band(scene.ar), textBottom = y1 + (H - y1) * 0.45 + 11;
       det.keepB = Math.round(10000 * Math.min(H - y1, textBottom - y1 + H / 100) / H);
     }
