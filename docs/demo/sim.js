@@ -146,17 +146,6 @@ window.TVP_REC = {"calib":{"sets":{"sdr":{"grey":null,"lut":null},"hdr":{"grey":
     chart(img, 30, 420, 12, 120);
     return img;
   }
-  function menus() {
-    const img = Pic(), s = (r, g, b, v) => cs(r, g, b, 100 * v);
-    each(img, 0, 0, W, H, (x, y) => s(0.32, 0.36, 0.48, 0.035 + 0.03 * y / H));
-    paint(img, mask(text('Home', 40, 34, 22)), s(1, 1, 1, 0.9));
-    paint(img, mask((g) => { g.beginPath(); g.roundRect(40, 70, 880, 200, 14); g.fill(); }), (x, y) => lerp3(s(0.15, 0.35, 0.75, 0.25), s(0.95, 0.55, 0.25, 0.45), (x - 40) / 880 * 0.7 + (y - 70) / 600));
-    paint(img, mask(text('Tesseract VP', 80, 170, 34)), s(1, 1, 1, 1));
-    const tiles = [[0.85, 0.2, 0.2], [0.15, 0.45, 0.85], [0.95, 0.7, 0.15], [0.2, 0.65, 0.35], [0.6, 0.25, 0.75], [0.15, 0.7, 0.75]];
-    for (let r = 0; r < 2; r++) for (let i = 0; i < 6; i++) { const x = 40 + i * 150, y = 300 + r * 115; paint(img, mask((g) => { g.beginPath(); g.roundRect(x, y, 136, 96, 10); g.fill(); }), s(...tiles[(i + r * 2) % 6], 0.3)); }
-    paint(img, mask((g) => { g.lineWidth = 4; g.beginPath(); g.roundRect(38, 298, 140, 100, 12); g.stroke(); }), s(1, 1, 1, 1));
-    return img;
-  }
   /* burned-in subtitles in the bottom bar */
   /* short enough that its rows stay under 10% lit, so they still count as bar rows */
   const subLine = 'Hold on.';
@@ -178,7 +167,7 @@ window.TVP_REC = {"calib":{"sets":{"sdr":{"grey":null,"lut":null},"hdr":{"grey":
     { id: 'video50', label: 'Streaming app: 4K HDR10 video, 50 fps', app: 'com.example.video', w: 3840, h: 2160, fps: 50, hdr: 'HDR10', md: [1000, 0.005, 'BT.2020'], cll: [0, 0], ar: 16 / 9, codec: 'vp9', au: AU_DDP, build: () => still('video.jpg', 16 / 9, 'pq') },
     { id: 'hdmi', label: 'HDMI input: game console 4K60 HDR10', app: 'hdmi', w: 3840, h: 2160, fps: 60, hdr: 'HDR10', ar: 16 / 9, hdmi: true, au: { in: null, out: { type: '', bitstream: 0, ch: 8, rate: 48000, atmos: 0, dtsx: 0, from: 'hal' } }, build: game },
     { id: 'netflix', label: 'Netflix (protected: no picture capture, like the real Cube)', app: 'com.netflix.ninja', w: 3840, h: 2160, fps: 23.976, hdr: 'HDR10', dvTitle: true, md: [1000, 0.0001, 'P3-D65'], cll: [0, 0], ar: 2, codec: 'hevc', protected: true, au: AU_DDP, build: () => still('stream.jpg', 2, 'pq') },
-    { id: 'menus', label: 'Nothing playing (menus)', app: 'launcher', menus: true, ar: 16 / 9, build: menus },
+    { id: 'menus', label: 'Nothing playing (menus)', app: 'launcher', menus: true, ar: 16 / 9, build: () => still('menus.jpg', 16 / 9, 'sdr') },
   ];
 
   /* ---------- state ---------- */
@@ -283,6 +272,7 @@ window.TVP_REC = {"calib":{"sets":{"sdr":{"grey":null,"lut":null},"hdr":{"grey":
     let top = 0, bot = OH;
     while (top < OH / 2 && rowMax(top) < 0.05) top++;
     while (bot > OH / 2 && rowMax(bot - 1) < 0.05) bot--;
+    det.top = top; det.bot = bot;
     const v = 2 * Math.min(top, OH - bot) / OH;
     clearTimeout(det.wait);
     if (det.v < 0 || Math.abs(v - det.v) <= 0.012 || +P().asp_precise <= 0.5) det.v = v;
@@ -336,7 +326,8 @@ window.TVP_REC = {"calib":{"sets":{"sdr":{"grey":null,"lut":null},"hdr":{"grey":
       return ipq(((2 * T3 - 3 * T2 + 1) * KS + (T3 - 2 * T2 + T) * (1 - KS) + (-2 * T3 + 3 * T2) * maxL) * Pw);
     };
   }
-  const srcPeak = () => (scene.hdmi ? 10000 : scene.md ? scene.md[0] : 1000);
+  /* the curve starts from the mastering peak, or the picture's own brightest part if that is higher */
+  const srcPeak = () => Math.max(scene.hdmi ? 10000 : scene.md ? scene.md[0] : 1000, meas.raw || 0);
   function curveLut() {
     const key = [srcPeak(), peakN(), tmOn()].join();
     if (key === curveKey) return scaleLut;
@@ -432,12 +423,13 @@ window.TVP_REC = {"calib":{"sets":{"sdr":{"grey":null,"lut":null},"hdr":{"grey":
         let v = Math.pow((i / ENCN) * (i / ENCN), encG);
         if (cg && v > 0) v = Math.pow(v, calG);
         v = v * gain + off;
-        T[i] = v <= 0 ? 0 : v >= 1 ? 255 : Math.round(v * 255);
+        T[i] = i === 0 ? 0 : clamp(Math.round(v * 255), 1, 252);   /* the demo's picture never reaches full level or exact black */
       }
     });
     const hdrSrc = !pattern && scene.hdr !== 'SDR' && !scene.menus;
     return { sdrIn, hdrSrc, g, to709, lim, lut: curveLut(), sdrLut: hdrSrc && sdrIn ? sdrCurve() : null, peak: peakN(), c709: to709 || sdrIn };
   }
+  const KNEE = 0.75, TOP = 0.96;
   function tone() {
     const T = toneInfo, lut = T.lut, sl = T.sdrLut, ip = 1 / T.peak, E0 = ENC[0], E1 = ENC[1], E2 = ENC[2], K = LUTN - 1, q = 1 / 10000;
     const M = T.to709 ? M2020_709 : T.lim ? T.lim.to : null, B = T.lim ? T.lim.back : null, to709 = T.to709;
@@ -458,6 +450,10 @@ window.TVP_REC = {"calib":{"sets":{"sdr":{"grey":null,"lut":null},"hdr":{"grey":
           else { r = B[0][0] * a0 + B[0][1] * a1 + B[0][2] * a2; g = B[1][0] * a0 + B[1][1] * a1 + B[1][2] * a2; b = B[2][0] * a0 + B[2][1] * a1 + B[2][2] * a2; }
         }
       }
+      /* a soft shoulder on the brightest channel, so highlights ease off below full instead of clipping */
+      const m2 = r > g ? (r > b ? r : b) : (g > b ? g : b);
+      if (m2 > KNEE) { const k = (KNEE + (TOP - KNEE) * (1 - Math.exp(-(m2 - KNEE) / (TOP - KNEE)))) / m2; r *= k; g *= k; b *= k; }
+      else if (m2 <= 0 && (j / (OW * 3) | 0) >= det.top && (j / (OW * 3) | 0) < det.bot) { CODES[j] = CODES[j + 1] = CODES[j + 2] = 1; continue; }
       CODES[j] = E0[r <= 0 ? 0 : r >= 1 ? ENCN : (Math.sqrt(r) * ENCN + 0.5) | 0];
       CODES[j + 1] = E1[g <= 0 ? 0 : g >= 1 ? ENCN : (Math.sqrt(g) * ENCN + 0.5) | 0];
       CODES[j + 2] = E2[b <= 0 ? 0 : b >= 1 ? ENCN : (Math.sqrt(b) * ENCN + 0.5) | 0];
@@ -845,15 +841,15 @@ window.TVP_REC = {"calib":{"sets":{"sdr":{"grey":null,"lut":null},"hdr":{"grey":
     switch (path) {
       case '/api/status': return J(status());
       case '/api/info': return J(info());
-      case '/api/picture': { const f = await fresh('pic'); return f ? J(stats(f)) : J({ frame: 0 }); }
-      case '/api/thumb': { if (scene.protected) return B(EMPTY_THUMB); const f = await fresh('thumb'); return B(f ? thumb(f) : EMPTY_THUMB); }
+      case '/api/picture': { const f = await fresh('pic' + (qs.get('c') || '')); return f ? J(stats(f)) : J({ frame: 0 }); }
+      case '/api/thumb': { if (scene.protected) return B(EMPTY_THUMB); const f = await fresh('thumb' + (qs.get('c') || '')); return B(f ? thumb(f) : EMPTY_THUMB); }
       case '/api/wavehist': {
         if (scene.protected) return B(new Uint32Array([960, 3, 0, 0, 0, 1]).buffer);
         const m = qs.get('mode') === 'parade' ? 'rgb' : qs.get('mode') || 'rgb';
         const f = await fresh('wave' + m + qs.get('merge') + qs.get('color'));
         return B(f ? wave(f, m, +qs.get('merge') || 1, qs.get('color') === '1') : EMPTY_WAVE);
       }
-      case '/api/scopes': { if (scene.protected) return B(EMPTY_SCOPES); const f = await fresh('scopes'); return B(f ? scopes(f) : EMPTY_SCOPES); }
+      case '/api/scopes': { if (scene.protected) return B(EMPTY_SCOPES); const f = await fresh('scopes' + (qs.get('c') || '')); return B(f ? scopes(f) : EMPTY_SCOPES); }
       case '/api/params': setParams(body); return OK();
       case '/api/defaults': {
         const p = P(), keep = { target_nits: p.target_nits, target_nits_hdr: p.target_nits_hdr };
